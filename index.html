@@ -3,23 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Где МЫ?</title>
+    <title>Видеофон со звуком</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Загрузка пользовательского шрифта */
+        /* Загрузка пользовательского шрифта - ОБНОВЛЕННЫЙ ПУТЬ */
+        @font-face {
+            font-family: 'Rufont';
+            src: url('./rufont.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap; /* Для лучшего отображения при загрузке */
+        }
+        
+        /* Альтернативный вариант загрузки шрифта */
         @font-face {
             font-family: 'Rufont';
             src: url('rufont.ttf') format('truetype');
+            src: local('Rufont'),
+                 url('./fonts/rufont.ttf') format('truetype'),
+                 url('../rufont.ttf') format('truetype');
             font-weight: normal;
             font-style: normal;
-        }
-        
-        /* Фолбэк шрифты на случай, если Rufont не загрузится */
-        @font-face {
-            font-family: 'Rufont';
-            src: local('Arial'), local('Helvetica');
-            font-weight: normal;
-            font-style: normal;
+            font-display: swap;
         }
         
         * {
@@ -29,9 +34,15 @@
         }
         
         body {
-            font-family: 'Rufont', 'Montserrat', 'Arial', sans-serif;
+            font-family: 'Rufont', 'Arial', 'Helvetica', sans-serif;
             color: white;
             overflow-x: hidden;
+            /* Применяем кастомный шрифт ко всему документу */
+        }
+        
+        /* Резервный шрифт, если Rufont не загрузится */
+        .fallback-font {
+            font-family: 'Arial', 'Helvetica', sans-serif;
         }
         
         /* Видеофон */
@@ -84,6 +95,7 @@
             letter-spacing: 2px;
             text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
             color: #FFD700;
+            font-family: 'Rufont', 'Arial', sans-serif;
         }
         
         .subtitle {
@@ -95,6 +107,7 @@
             margin-right: auto;
             line-height: 1.6;
             text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
+            font-family: 'Rufont', 'Arial', sans-serif;
         }
         
         /* Стили для ссылок */
@@ -105,12 +118,14 @@
             margin: 0 auto 50px;
             backdrop-filter: blur(5px);
             border: 2px solid rgba(255, 215, 0, 0.3);
+            font-family: 'Rufont', 'Arial', sans-serif;
         }
         
         p {
             font-size: 1.2rem;
             line-height: 1.8;
             margin-bottom: 25px;
+            font-family: 'Rufont', 'Arial', sans-serif;
         }
         
         /* Желтые ссылки */
@@ -121,6 +136,7 @@
             transition: all 0.3s ease;
             border-bottom: 2px solid transparent;
             padding-bottom: 2px;
+            font-family: 'Rufont', 'Arial', sans-serif;
         }
         
         a:hover {
@@ -180,6 +196,7 @@
             text-align: center;
             min-width: 150px;
             margin-bottom: 10px;
+            font-family: 'Rufont', 'Arial', sans-serif;
         }
         
         /* Ползунок громкости */
@@ -302,6 +319,7 @@
             letter-spacing: 1px;
             transition: all 0.3s ease;
             text-decoration: none;
+            font-family: 'Rufont', 'Arial', sans-serif;
         }
         
         .nav-button:hover {
@@ -319,10 +337,27 @@
         li {
             margin-bottom: 10px;
             line-height: 1.6;
+            font-family: 'Rufont', 'Arial', sans-serif;
+        }
+        
+        /* Сообщение о загрузке шрифта */
+        .font-load-message {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border: 1px solid #FFD700;
+            font-size: 12px;
+            z-index: 1000;
+            display: none;
         }
     </style>
 </head>
 <body>
+    <!-- Сообщение о статусе шрифта -->
+    <div id="font-status" class="font-load-message"></div>
+    
     <!-- Видеофон -->
     <div class="video-background">
         <video autoplay muted loop id="bg-video">
@@ -337,7 +372,7 @@
         <header>
             <h1>Видеофон со звуком</h1>
             <div class="subtitle">
-                Эта страница использует пользовательский шрифт Rufont и видео "vessel.mp4" со звуком, которое воспроизводится бесконечно на фоне
+                Эта страница использует пользовательский шрифт Rufont и видео "vessel.mp4" со звуком
             </div>
         </header>
         
@@ -362,8 +397,6 @@
             
             <p>Страница полностью адаптивна и корректно отображается на всех устройствах. При изменении размера окна браузера видео и интерфейс автоматически подстраиваются.</p>
             
-            <p>Технологии, использованные для создания этой страницы: <a href="https://developer.mozilla.org/ru/docs/Web/HTML" target="_blank">HTML5</a>, <a href="https://developer.mozilla.org/ru/docs/Web/CSS" target="_blank">CSS3</a> с пользовательскими шрифтами и <a href="https://developer.mozilla.org/ru/docs/Web/JavaScript" target="_blank">JavaScript</a> для интерактивности.</p>
-            
             <div class="nav-buttons">
                 <a href="#video-control" class="nav-button">Управление видео</a>
                 <a href="#about" class="nav-button">О проекте</a>
@@ -384,8 +417,78 @@
             </div>
         </div>
     </div>
-    
+
     <script>
+        // Функция для проверки загрузки шрифта
+        function checkFontLoaded(fontName) {
+            return new Promise((resolve) => {
+                // Создаем тестовый элемент
+                const testElement = document.createElement('span');
+                testElement.style.fontFamily = fontName;
+                testElement.style.fontSize = '40px';
+                testElement.style.position = 'absolute';
+                testElement.style.left = '-9999px';
+                testElement.textContent = 'mmmmmmmmmmlli';
+                document.body.appendChild(testElement);
+                
+                const originalWidth = testElement.offsetWidth;
+                
+                // Меняем на стандартный шрифт
+                testElement.style.fontFamily = 'serif';
+                const fallbackWidth = testElement.offsetWidth;
+                
+                document.body.removeChild(testElement);
+                
+                // Если ширина отличается, шрифт загрузился
+                const isLoaded = Math.abs(originalWidth - fallbackWidth) > 5;
+                resolve(isLoaded);
+            });
+        }
+        
+        // Проверяем загрузку шрифта при загрузке страницы
+        document.addEventListener('DOMContentLoaded', async function() {
+            const fontStatus = document.getElementById('font-status');
+            
+            // Даем время на загрузку шрифта
+            setTimeout(async () => {
+                const isFontLoaded = await checkFontLoaded('Rufont');
+                
+                if (isFontLoaded) {
+                    fontStatus.textContent = 'Шрифт Rufont успешно загружен';
+                    fontStatus.style.color = '#4CAF50';
+                    fontStatus.style.borderColor = '#4CAF50';
+                    fontStatus.style.display = 'block';
+                    
+                    // Скрываем сообщение через 3 секунды
+                    setTimeout(() => {
+                        fontStatus.style.display = 'none';
+                    }, 3000);
+                } else {
+                    fontStatus.textContent = 'Шрифт Rufont не найден. Используется запасной шрифт. Убедитесь, что файл rufont.ttf находится в той же папке, что и HTML-файл.';
+                    fontStatus.style.color = '#FF5252';
+                    fontStatus.style.borderColor = '#FF5252';
+                    fontStatus.style.display = 'block';
+                    
+                    // Добавляем класс fallback-font для резервного шрифта
+                    document.body.classList.add('fallback-font');
+                }
+            }, 1000);
+            
+            // Если шрифт не загрузится за 5 секунд, показываем сообщение
+            setTimeout(async () => {
+                if (!document.querySelector('#font-status').textContent.includes('успешно')) {
+                    const isFontLoaded = await checkFontLoaded('Rufont');
+                    if (!isFontLoaded) {
+                        fontStatus.textContent = 'Шрифт Rufont не найден. Используется запасной шрифт. Убедитесь, что файл rufont.ttf находится в той же папке, что и HTML-файл.';
+                        fontStatus.style.color = '#FF5252';
+                        fontStatus.style.borderColor = '#FF5252';
+                        fontStatus.style.display = 'block';
+                        document.body.classList.add('fallback-font');
+                    }
+                }
+            }, 5000);
+        });
+        
         // Элементы управления видео
         const videoToggle = document.getElementById('video-toggle');
         const videoIcon = document.getElementById('video-icon');
@@ -481,33 +584,6 @@
                     }
                 </style>
             `;
-        });
-        
-        // Проверка поддержки пользовательского шрифта
-        document.addEventListener('DOMContentLoaded', function() {
-            // Проверяем, загрузился ли пользовательский шрифт
-            setTimeout(() => {
-                const testElement = document.createElement('span');
-                testElement.style.fontFamily = 'Rufont, sans-serif';
-                testElement.style.fontSize = '40px';
-                testElement.style.position = 'absolute';
-                testElement.style.left = '-9999px';
-                testElement.textContent = 'iii';
-                document.body.appendChild(testElement);
-                
-                const originalWidth = testElement.offsetWidth;
-                
-                testElement.style.fontFamily = 'Arial, sans-serif';
-                const fallbackWidth = testElement.offsetWidth;
-                
-                document.body.removeChild(testElement);
-                
-                if (Math.abs(originalWidth - fallbackWidth) < 5) {
-                    console.log('Пользовательский шрифт Rufont не загрузился, используется запасной шрифт');
-                } else {
-                    console.log('Пользовательский шрифт Rufont успешно загружен');
-                }
-            }, 1000);
         });
         
         // Убедимся, что видео зациклено правильно
