@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Где Мы?</title>
+    <title>Где МЫ?</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* Загрузка пользовательского шрифта */
@@ -16,7 +16,7 @@
         
         /* Фолбэк шрифты на случай, если Rufont не загрузится */
         @font-face {
-            font-family: 'rufont';
+            font-family: 'Rufont';
             src: local('Arial'), local('Helvetica');
             font-weight: normal;
             font-style: normal;
@@ -101,11 +101,10 @@
         .content {
             background: rgba(0, 0, 0, 0.7);
             padding: 40px;
-            border-radius: 15px;
             max-width: 900px;
             margin: 0 auto 50px;
             backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            border: 2px solid rgba(255, 215, 0, 0.3);
         }
         
         p {
@@ -130,7 +129,7 @@
             text-shadow: 0 0 10px rgba(255, 237, 78, 0.5);
         }
         
-        /* Контроль видео и звука */
+        /* Контроль видео */
         .media-controls {
             position: fixed;
             bottom: 30px;
@@ -139,49 +138,48 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px;
         }
         
-        .video-control, .music-control {
+        .video-control {
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: rgba(0, 0, 0, 0.8);
-            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.9);
             padding: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.7);
             border: 2px solid #FFD700;
         }
         
         .control-toggle {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: rgba(20, 20, 20, 0.9);
+            width: 70px;
+            height: 70px;
+            background: rgba(30, 30, 30, 0.95);
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             transition: all 0.3s ease;
             margin-bottom: 10px;
+            border: 2px solid #FFD700;
         }
         
         .control-toggle:hover {
-            transform: scale(1.1);
-            background: rgba(40, 40, 40, 0.9);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            transform: scale(1.05);
+            background: rgba(50, 50, 50, 0.95);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
         }
         
         .control-toggle i {
-            font-size: 24px;
+            font-size: 28px;
             color: #FFD700;
         }
         
         .control-status {
-            font-size: 0.9rem;
+            font-size: 1rem;
             font-weight: 600;
             text-align: center;
-            min-width: 120px;
+            min-width: 150px;
+            margin-bottom: 10px;
         }
         
         /* Ползунок громкости */
@@ -192,31 +190,29 @@
         
         .volume-slider input {
             width: 100%;
-            height: 5px;
+            height: 6px;
             -webkit-appearance: none;
             appearance: none;
             background: #333;
-            border-radius: 5px;
             outline: none;
         }
         
         .volume-slider input::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
+            width: 18px;
+            height: 18px;
             background: #FFD700;
             cursor: pointer;
+            border: 1px solid #000;
         }
         
         .volume-slider input::-moz-range-thumb {
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
+            width: 18px;
+            height: 18px;
             background: #FFD700;
             cursor: pointer;
-            border: none;
+            border: 1px solid #000;
         }
         
         /* Адаптивность */
@@ -239,16 +235,17 @@
             }
             
             .control-toggle {
-                width: 50px;
-                height: 50px;
+                width: 60px;
+                height: 60px;
             }
             
             .control-toggle i {
-                font-size: 20px;
+                font-size: 24px;
             }
             
-            .video-control, .music-control {
-                padding: 10px;
+            .control-status {
+                font-size: 0.9rem;
+                min-width: 130px;
             }
         }
         
@@ -268,22 +265,20 @@
             .media-controls {
                 bottom: 15px;
                 right: 15px;
-                flex-direction: row;
-                gap: 10px;
             }
             
             .control-toggle {
-                width: 45px;
-                height: 45px;
+                width: 55px;
+                height: 55px;
             }
             
             .control-toggle i {
-                font-size: 18px;
+                font-size: 22px;
             }
             
             .control-status {
-                font-size: 0.8rem;
-                min-width: 100px;
+                font-size: 0.85rem;
+                min-width: 120px;
             }
         }
         
@@ -291,7 +286,7 @@
         .nav-buttons {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
             margin-top: 30px;
             flex-wrap: wrap;
         }
@@ -301,7 +296,6 @@
             padding: 12px 25px;
             background: rgba(255, 215, 0, 0.2);
             border: 2px solid #FFD700;
-            border-radius: 50px;
             color: #FFD700;
             font-weight: 700;
             text-transform: uppercase;
@@ -314,6 +308,17 @@
             background: rgba(255, 215, 0, 0.4);
             transform: translateY(-3px);
             box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+        
+        /* Список в контенте */
+        ul {
+            margin-left: 20px;
+            margin-bottom: 25px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+            line-height: 1.6;
         }
     </style>
 </head>
@@ -339,18 +344,21 @@
         <div class="content">
             <p>Добро пожаловать на демонстрационную страницу! Здесь реализовано несколько ключевых функций:</p>
             
-            <p>На фоне воспроизводится видео <a href="#video">"vessel.mp4"</a> со звуком в бесконечном цикле. Вы можете управлять звуком видео с помощью элементов управления в правом нижнем углу.</p>
+            <p>На фоне воспроизводится видео <a href="#video">"vessel.mp4"</a> со звуком в бесконечном цикле. Вы можете управлять звуком видео с помощью элемента управления в правом нижнем углу.</p>
             
             <p>Для текста используется пользовательский шрифт <a href="#font">"Rufont"</a>, который загружается из файла rufont.ttf. Все текстовые элементы страницы используют этот шрифт.</p>
             
             <p>Все ссылки на странице выделены <a href="#links">ярким желтым цветом</a>, что делает их хорошо заметными на фоне видео. При наведении на ссылку вы увидите анимационные эффекты.</p>
             
-            <p>В правом нижнем углу расположены элементы управления:
+            <p>Особенности страницы:</p>
             <ul>
-                <li>Управление звуком видео (включение/выключение и регулировка громкости)</li>
-                <li>Управление фоновой музыкой (включение/выключение)</li>
+                <li>Видеофон с файлом vessel.mp4 со звуком</li>
+                <li>Пользовательский шрифт Rufont из файла rufont.ttf</li>
+                <li>Желтые ссылки с эффектами при наведении</li>
+                <li>Квадратные элементы управления без закруглений</li>
+                <li>Только управление звуком видео (без музыки)</li>
+                <li>Полностью адаптивный дизайн</li>
             </ul>
-            </p>
             
             <p>Страница полностью адаптивна и корректно отображается на всех устройствах. При изменении размера окна браузера видео и интерфейс автоматически подстраиваются.</p>
             
@@ -358,39 +366,24 @@
             
             <div class="nav-buttons">
                 <a href="#video-control" class="nav-button">Управление видео</a>
-                <a href="#music-control" class="nav-button">Управление музыкой</a>
                 <a href="#about" class="nav-button">О проекте</a>
+                <a href="#contact" class="nav-button">Контакты</a>
             </div>
         </div>
     </div>
     
-    <!-- Элементы управления медиа -->
+    <!-- Элемент управления видео -->
     <div class="media-controls">
-        <!-- Управление видео -->
         <div class="video-control">
             <div class="control-toggle" id="video-toggle">
                 <i class="fas fa-volume-mute" id="video-icon"></i>
             </div>
             <div class="control-status" id="video-status">Видео без звука</div>
-            <div class="volume-slider" id="video-volume-container">
+            <div class="volume-slider" id="video-volume-container" style="display: none;">
                 <input type="range" min="0" max="1" step="0.01" value="0.5" id="video-volume">
             </div>
         </div>
-        
-        <!-- Управление музыкой -->
-        <div class="music-control">
-            <div class="control-toggle" id="music-toggle">
-                <i class="fas fa-play" id="music-icon"></i>
-            </div>
-            <div class="control-status" id="music-status">Музыка выключена</div>
-        </div>
     </div>
-    
-    <!-- Аудио элемент для фоновой музыки -->
-    <audio id="background-music" loop>
-        <source src="https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3" type="audio/mpeg">
-        Ваш браузер не поддерживает аудио элемент.
-    </audio>
     
     <script>
         // Элементы управления видео
@@ -401,20 +394,12 @@
         const videoVolumeContainer = document.getElementById('video-volume-container');
         const bgVideo = document.getElementById('bg-video');
         
-        // Элементы управления музыкой
-        const musicToggle = document.getElementById('music-toggle');
-        const musicIcon = document.getElementById('music-icon');
-        const musicStatus = document.getElementById('music-status');
-        const backgroundMusic = document.getElementById('background-music');
-        
         // Переменные состояния
         let isVideoMuted = true; // Видео начинается без звука
-        let isMusicPlaying = false;
         let videoVolumeLevel = 0.5; // Начальная громкость видео
         
         // Инициализация громкости видео
         bgVideo.volume = 0;
-        videoVolume.value = 0;
         
         // Функция переключения звука видео
         function toggleVideoSound() {
@@ -423,14 +408,23 @@
                 bgVideo.muted = false;
                 bgVideo.volume = videoVolumeLevel;
                 videoIcon.classList.remove('fa-volume-mute');
-                videoIcon.classList.add('fa-volume-up');
+                
+                // Определяем иконку в зависимости от уровня громкости
+                if (videoVolumeLevel === 0) {
+                    videoIcon.classList.add('fa-volume-mute');
+                } else if (videoVolumeLevel < 0.5) {
+                    videoIcon.classList.add('fa-volume-down');
+                } else {
+                    videoIcon.classList.add('fa-volume-up');
+                }
+                
                 videoStatus.textContent = 'Звук видео: ВКЛ';
                 videoVolumeContainer.style.display = 'block';
                 videoVolume.value = videoVolumeLevel;
             } else {
                 // Выключаем звук видео
                 bgVideo.muted = true;
-                videoIcon.classList.remove('fa-volume-up');
+                videoIcon.classList.remove('fa-volume-up', 'fa-volume-down');
                 videoIcon.classList.add('fa-volume-mute');
                 videoStatus.textContent = 'Видео без звука';
                 videoVolumeContainer.style.display = 'none';
@@ -438,66 +432,29 @@
             isVideoMuted = !isVideoMuted;
         }
         
-        // Функция переключения музыки
-        function toggleMusic() {
-            if (isMusicPlaying) {
-                backgroundMusic.pause();
-                musicIcon.classList.remove('fa-pause');
-                musicIcon.classList.add('fa-play');
-                musicStatus.textContent = 'Музыка выключена';
-            } else {
-                backgroundMusic.play().catch(error => {
-                    console.log("Автовоспроизведение музыки заблокировано. Нажмите на иконку еще раз.");
-                    musicStatus.textContent = 'Нажмите для воспроизведения';
-                });
-                musicIcon.classList.remove('fa-play');
-                musicIcon.classList.add('fa-pause');
-                musicStatus.textContent = 'Музыка включена';
-            }
-            isMusicPlaying = !isMusicPlaying;
-        }
-        
         // Обработчик изменения громкости видео
         videoVolume.addEventListener('input', function() {
             videoVolumeLevel = parseFloat(this.value);
             if (!isVideoMuted) {
                 bgVideo.volume = videoVolumeLevel;
+                
                 // Обновляем иконку в зависимости от уровня громкости
+                videoIcon.classList.remove('fa-volume-mute', 'fa-volume-down', 'fa-volume-up');
+                
                 if (videoVolumeLevel === 0) {
-                    videoIcon.classList.remove('fa-volume-up');
                     videoIcon.classList.add('fa-volume-mute');
                 } else if (videoVolumeLevel < 0.5) {
-                    videoIcon.classList.remove('fa-volume-mute', 'fa-volume-up');
                     videoIcon.classList.add('fa-volume-down');
                 } else {
-                    videoIcon.classList.remove('fa-volume-mute', 'fa-volume-down');
                     videoIcon.classList.add('fa-volume-up');
                 }
             }
         });
         
-        // Обработчики кликов по переключателям
+        // Обработчик клика по переключателю видео
         videoToggle.addEventListener('click', toggleVideoSound);
-        musicToggle.addEventListener('click', toggleMusic);
         
-        // Автовоспроизведение музыки при взаимодействии с документом
-        document.addEventListener('click', function initAudio() {
-            if (!isMusicPlaying) {
-                backgroundMusic.volume = 0.5;
-                // Удаляем этот обработчик после первого клика
-                document.removeEventListener('click', initAudio);
-            }
-        });
-        
-        // Изменение иконки при окончании музыки
-        backgroundMusic.addEventListener('ended', function() {
-            isMusicPlaying = false;
-            musicIcon.classList.remove('fa-pause');
-            musicIcon.classList.add('fa-play');
-            musicStatus.textContent = 'Музыка выключена';
-        });
-        
-        // Обработка ошибок при загрузке медиа
+        // Обработка ошибок при загрузке видео
         bgVideo.addEventListener('error', function() {
             videoStatus.textContent = 'Ошибка загрузки видео';
             videoToggle.style.opacity = '0.5';
@@ -524,12 +481,6 @@
                     }
                 </style>
             `;
-        });
-        
-        backgroundMusic.addEventListener('error', function() {
-            musicStatus.textContent = 'Ошибка загрузки музыки';
-            musicToggle.style.opacity = '0.5';
-            musicToggle.style.cursor = 'not-allowed';
         });
         
         // Проверка поддержки пользовательского шрифта
@@ -563,6 +514,16 @@
         bgVideo.addEventListener('ended', function() {
             this.currentTime = 0;
             this.play();
+        });
+        
+        // Автовоспроизведение видео при взаимодействии с документом
+        document.addEventListener('click', function initVideo() {
+            // Попытка воспроизвести видео, если оно было остановлено
+            if (bgVideo.paused) {
+                bgVideo.play().catch(e => {
+                    console.log("Автовоспроизведение видео заблокировано");
+                });
+            }
         });
     </script>
 </body>
