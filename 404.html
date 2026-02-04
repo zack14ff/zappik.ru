@@ -1,33 +1,365 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link rel="stylesheet" href="../404.css">
-    <!-- Google Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Russo+One&display=swap"
-      rel="stylesheet"
-    />
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAME OVER</title>
+    <style>
+        @font-face {
+            font-family: 'Undertale';
+            src: url('./fonts/undertale.ttf') format('truetype');
+        }
 
-    <link rel="stylesheet" href="404.css" />
-    <title>ОШИБОЧКА?</title>
-  </head>
-  <body>
-    <div class="content">
-      <h1>404</h1>
-      <h2>ОШИБКА?</h2>
-      <p>
-        The page you are looking for was moved, removed, renamed, or might never
-        existed.
-      </p>
-      <div class="action">
-        <a href="index.html"><button>BACK</button></a>
-        <a href="index.html"><button>CONTACT US</button></a>
-      </div>
-      <img src="cat.gif" alt="cat" />
+        @font-face {
+            font-family: 'ComicSans';
+            src: url('./fonts/fnt_comicsans.ttf') format('truetype');
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            font-family: 'Undertale', 'ComicSans', cursive;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #gameOverScreen {
+            text-align: center;
+            padding: 20px;
+        }
+
+        #gameOverText {
+            font-size: 48px;
+            color: #ffffff;
+            text-shadow: 0 0 10px #ffffff;
+            margin-bottom: 30px;
+            letter-spacing: 3px;
+            animation: pulse 1.5s infinite;
+        }
+
+        #message {
+            font-size: 24px;
+            color: #fff;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        #choices {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .choice-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-family: 'Undertale', 'ComicSans', cursive;
+            font-size: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+            position: relative;
+            text-align: left;
+            width: 300px;
+            transition: all 0.3s ease;
+        }
+
+        .choice-btn:hover {
+            color: #fbff00;
+            text-shadow: 0 0 5px #fbff00;
+        }
+
+        .choice-btn::before {
+            content: "*";
+            position: absolute;
+            left: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #fffb00;
+            font-size: 24px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Анимация мерцания */
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        /* Эффекты крови */
+        .blood-drop {
+            position: absolute;
+            background: #2c2c2c;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        /* Стиль для активного выбора */
+        .selected {
+            color: #fffb00;
+            text-shadow: 0 0 10px #fbff00;
+        }
+
+        /* Секретная страница */
+        #secretScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        #secretContent {
+            max-width: 600px;
+            padding: 30px;
+        }
+
+        #secretContent h1 {
+            color: #ff0000;
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #ff0000;
+        }
+
+        #secretContent p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin: 15px 0;
+        }
+
+        #continueBtn {
+            background: #ff0000;
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            font-family: 'Undertale', 'ComicSans', cursive;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 30px;
+            border: 2px solid #000;
+            transition: all 0.3s ease;
+        }
+
+        #continueBtn:hover {
+            background: #ff6666;
+            box-shadow: 0 0 15px #ff0000;
+        }
+
+        /* Счетчик попыток */
+        #attempts {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 16px;
+            color: #666;
+        }
+
+        /* Музыкальный эффект (визуальный) */
+        .music-note {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0;
+            animation: floatUp 2s forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="gameOverScreen">
+        <div id="gameOverText"><img src="./asset/logo/gameover.png" alt="GameOver"></div>
+        <div id="message">
+            Не удалось найти запрашиваемую страницу.<br>
+           
+        </div>
+        <div id="choices">
+            <button class="choice-btn" onclick="loadGame()">Продолжить</button>
+            <button class="choice-btn" onclick="returnToMenu()">Вернуться в меню</button>
+            <button class="choice-btn" onclick="tobySecret()">РЕШИМОСТЬ</button>
+        </div>
     </div>
-  </body>
+
+    <div id="secretScreen">
+        <div id="secretContent">
+            <h1>Ты Решим</h1>
+            <p>Ты походу пересверкал своей душой</p>
+            <p>Ты обязан быть отвергнутым из-за</p>
+            <p>....</p>
+            <button id="continueBtn" onclick="goHome()">Продолжить</button>
+        </div>
+    </div>
+
+    <div id="attempts">Попыток: <span id="attemptCount">1</span></div>
+
+    <script>
+        // Счетчик попыток
+        let attempts = localStorage.getItem('gameOverAttempts') || 0;
+        attempts++;
+        localStorage.setItem('gameOverAttempts', attempts);
+        document.getElementById('attemptCount').textContent = attempts;
+
+        // Создание эффектов крови
+        function createBloodEffect() {
+            setInterval(() => {
+                const drop = document.createElement('div');
+                drop.className = 'blood-drop';
+                drop.style.width = Math.random() * 15 + 5 + 'px';
+                drop.style.height = drop.style.width;
+                drop.style.left = Math.random() * 100 + 'vw';
+                drop.style.top = '-20px';
+                drop.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
+                
+                document.body.appendChild(drop);
+                
+                // Удалить каплю после анимации
+                setTimeout(() => {
+                    if (drop.parentNode) {
+                        drop.parentNode.removeChild(drop);
+                    }
+                }, 3000);
+            }, 500);
+        }
+
+        // Добавить CSS для падения капель
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fall {
+                0% { transform: translateY(0); opacity: 0.7; }
+                100% { transform: translateY(100vh); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Создание музыкальных нот
+        function createMusicNotes() {
+            const notes = ['♪', '♫', '♬', '♩'];
+            setInterval(() => {
+                const note = document.createElement('div');
+                note.className = 'music-note';
+                note.textContent = notes[Math.floor(Math.random() * notes.length)];
+                note.style.left = Math.random() * 100 + 'vw';
+                note.style.top = Math.random() * 100 + 'vh';
+                note.style.color = '#' + Math.floor(Math.random()*16777215).toString(16);
+                
+                document.body.appendChild(note);
+                
+                // Удалить ноту после анимации
+                setTimeout(() => {
+                    if (note.parentNode) {
+                        note.parentNode.removeChild(note);
+                    }
+                }, 2000);
+            }, 1000);
+        }
+
+        // Функции выбора
+        function loadGame() {
+            // Анимация выбора
+            const btn = event.target;
+            btn.classList.add('selected');
+            
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
+        }
+
+        function returnToMenu() {
+            // Анимация выбора
+            const btn = event.target;
+            btn.classList.add('selected');
+            
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
+        }
+
+        function tobySecret() {
+            // Анимация выбора
+            const btn = event.target;
+            btn.classList.add('selected');
+            
+            setTimeout(() => {
+                document.getElementById('secretScreen').style.display = 'flex';
+                // Создать эффект свечения
+                document.getElementById('secretScreen').style.boxShadow = '0 0 50px #ff00ff';
+            }, 1000);
+        }
+
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+
+        // Инициализация эффектов
+        window.onload = function() {
+            createBloodEffect();
+            createMusicNotes();
+            
+            // Добавить эффект мерцания тексту
+            setInterval(() => {
+                const text = document.getElementById('gameOverText');
+                text.style.textShadow = `0 0 ${Math.random() * 20 + 5}px #ff0000`;
+            }, 300);
+        };
+
+        // Эффект при наведении на кнопки
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.choice-btn');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    // Создать маленькую кровавую каплю при наведении
+                    const smallDrop = document.createElement('div');
+                    smallDrop.className = 'blood-drop';
+                    smallDrop.style.width = '3px';
+                    smallDrop.style.height = '3px';
+                    smallDrop.style.left = (this.offsetLeft + Math.random() * this.offsetWidth) + 'px';
+                    smallDrop.style.top = (this.offsetTop + this.offsetHeight) + 'px';
+                    smallDrop.style.animation = 'fall 1s linear forwards';
+                    
+                    document.body.appendChild(smallDrop);
+                    
+                    setTimeout(() => {
+                        if (smallDrop.parentNode) {
+                            smallDrop.parentNode.removeChild(smallDrop);
+                        }
+                    }, 1000);
+                });
+            });
+        });
+    </script>
+</body>
 </html>
