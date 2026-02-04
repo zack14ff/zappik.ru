@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кланы и Страны - Minecraft Server</title>
+    <style>
+        @font-face {
+            font-family: 'Minecraft';
+            src: url('./../../fonts/minecraft.ttf') format('truetype');
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Minecraft', sans-serif;
+            color: white;
+            min-height: 100vh;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            border: 2px solid #444;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            color: #ffcc00;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
+            margin: 0;
+        }
+
+        .info-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ffcc00;
+            color: #000;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .info-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.8);
+        }
+
+        .clans-container {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #444;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: #ffcc00;
+            font-size: 28px;
+            text-align: center;
+            margin: 0 0 20px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .clan-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+        }
+
+        .clan-item {
+            background: rgba(50, 50, 50, 0.5);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #666;
+            transition: all 0.3s ease;
+            width: calc(33.333% - 20px);
+            min-width: 280px;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+
+        .clan-item:hover {
+            background: rgba(70, 70, 70, 0.7);
+            transform: translateY(-5px);
+            border-color: #ffcc00;
+            box-shadow: 0 5px 15px rgba(255, 204, 0, 0.3);
+        }
+
+        .clan-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .clan-icon {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #ffcc00;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .clan-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .clan-name {
+            font-size: 22px;
+            font-weight: bold;
+            color: #ffcc00;
+        }
+
+        .clan-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #ccc;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .clan-description {
+            font-size: 14px;
+            color: #ddd;
+            line-height: 1.4;
+            margin: 10px 0;
+        }
+
+        .members-list {
+            font-size: 13px;
+            color: #bbb;
+            margin: 5px 0;
+        }
+
+        .leader-tag {
+            background: #ff0000;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            margin-left: 5px;
+        }
+
+        .back-button {
+            display: block;
+            margin: 30px auto;
+            background: #ffcc00;
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            font-family: 'Minecraft', sans-serif;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            max-width: 200px;
+        }
+
+        .back-button:hover {
+            background: #ffd700;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.8);
+        }
+
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .overview-card {
+            background: rgba(50, 50, 50, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #666;
+        }
+
+        .overview-value {
+            font-size: 24px;
+            color: #ffcc00;
+            font-weight: bold;
+        }
+
+        .overview-label {
+            font-size: 14px;
+            color: #ccc;
+            margin-top: 5px;
+        }
+
+        /* Info Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-content {
+            background: rgba(0, 0, 0, 0.9);
+            margin: 5% auto;
+            padding: 30px;
+            border: 2px solid #ffcc00;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .close-modal {
+            color: #ffcc00;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+        }
+
+        .close-modal:hover {
+            color: #fff;
+        }
+
+        .modal h2 {
+            color: #ffcc00;
+            text-align: center;
+            margin-top: 0;
+        }
+
+        .modal-steps {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .modal-steps li {
+            padding: 12px 0;
+            border-bottom: 1px solid #444;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .modal-steps li:last-child {
+            border-bottom: none;
+        }
+
+        .step-number {
+            background: #ffcc00;
+            color: #000;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .highlight {
+            color: #ffcc00;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .clan-item {
+                width: calc(50% - 15px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .clan-item {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-overlay"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>КЛАНЫ И СТРАНЫ</h1>
+            <button class="info-button" onclick="openModal()">?</button>
+        </div>
+
+        <div class="stats-overview">
+            <div class="overview-card">
+                <div class="overview-value">12</div>
+                <div class="overview-label">КЛАНОВ</div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-value">8</div>
+                <div class="overview-label">СТРАН</div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-value">156</div>
+                <div class="overview-label">УЧАСТНИКОВ</div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-value">42</div>
+                <div class="overview-label">АЛЬЯНСОВ</div>
+            </div>
+        </div>
+
+        <div class="clans-container">
+            <h2 class="section-title">СПИСОК КЛАНОВ</h2>
+            <div class="clan-list">
+                <div class="clan-item" onclick="window.location.href='#error'">
+                    <div class="clan-header">
+                        <div class="clan-icon">
+                            <img src="./../../asset/empty1.png" alt="Клан Алмаз">
+                        </div>
+                        <div class="clan-name">Шаблон</div>
+                    </div>
+                    <div class="clan-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">1</div>
+                            <div class="stat-label">УЧАСТНИКОВ</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">1</div>
+                            <div class="stat-label">ОЧКОВ</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">42</div>
+                            <div class="stat-label">ПОБЕД</div>
+                        </div>
+                    </div>
+                    <div class="clan-description">
+                        Лучший клан сервера с самыми опытными строителями и воинами.
+                    </div>
+                    <div class="members-list">
+                        <strong>Лидер:</strong> AlexMaster <span class="leader-tag">ЛИДЕР</span>
+                    </div>
+                </div>
+
+                <div class="clan-item" onclick="window.location.href='#error'">
+                    <div class="clan-header">
+                        <div class="clan-icon">
+                            <img src="./../../asset/empty1.png" alt="Клан Огонь">
+                        </div>
+                        <div class="clan-name">КРА-щаблон</div>
+                    </div>
+                    <div class="clan-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">1</div>
+                            <div class="stat-label">УЧАСТНИКОВ</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">24</div>
+                            <div class="stat-label">Ололо</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">1</div>
+                            <div class="stat-label">ПОБЕД</div>
+                        </div>
+                    </div>
+                    <div class="clan-description">
+                        Боевой клан, специализирующийся на PvP и рейдах.
+                    </div>
+                    <div class="members-list">
+                        <strong>Столица:</strong> около спавна
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <a href="../bttr/index.html" class="back-button">Назад к списку</a>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2>КАК ДОБАВИТЬ СВОЙ КЛАН</h2>
+            <ul class="modal-steps">
+                <li>
+                    <div class="step-number">1</div>
+                    <div>Соберите команду минимум из <span class="highlight">2 активных игроков</span></div>
+                </li>
+                <li>
+                    <div class="step-number">2</div>
+                    <div>Придумайте <span class="highlight">уникальное название</span> и создайте символику (флаг, эмблему)</div>
+                </li>
+                <li>
+                    <div class="step-number">3</div>
+                    <div>Займите территорию для базы клана и постройте <span class="highlight">представительство</span></div>
+                </li>
+                <li>
+                    <div class="step-number">4</div>
+                    <div>Создайте заявку на форуме сервера с информацией:
+                        <ul style="margin-top: 5px; margin-left: 20px;">
+                            <li>Название клана</li>
+                            <li>Список участников</li>
+                            <li>Координаты базы</li>
+                            <li>Описание целей клана</li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <div class="step-number">5</div>
+                    <div>Дождитесь одобрения администрации и получения <span class="highlight">официального статуса</span></div>
+                </li>
+                <li>
+                    <div class="step-number">6</div>
+                    <div>Начинайте участвовать в <span class="highlight">клановых мероприятиях</span> и развивайте свой клан!</div>
+                </li>
+            </ul>
+            <div style="margin-top: 20px; text-align: center; color: #ffcc00;">
+                <p><a href="https://bttr.h4ck.me/profile/zakaper2001" style="color: #ffcc00; text-decoration: underline;">Подать заявку</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Массив фонов
+        const backgrounds = [
+            './../../asset/bg1.png',
+            './../../asset/bg.png',
+            './../../asset/bg3.png'
+        ];
+
+        // Выбор случайного фона
+        function getRandomBackground() {
+            const randomIndex = Math.floor(Math.random() * backgrounds.length);
+            return backgrounds[randomIndex];
+        }
+
+        // Установка фона при загрузке страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.style.backgroundImage = `url('${getRandomBackground()}')`;
+        });
+
+        // Modal functions
+        function openModal() {
+            document.getElementById('infoModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('infoModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('infoModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Close modal with ESC key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
