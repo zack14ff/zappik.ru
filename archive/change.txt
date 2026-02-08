@@ -21,3 +21,5 @@
                         <div class="player-description">ХЗ кто</div>
                     </div>
                 </div>
+
+                
