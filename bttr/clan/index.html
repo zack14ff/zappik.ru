@@ -3,12 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Каталог построек – Minecraft</title>
+    <title>Каталог построек – BTTR</title>
     <meta name="description"
-          content="Каталог удивительных построек сервера Minecraft: замки, фермы, шахты и другие сооружения с галереей изображений.">
-    <!-- ------------- CSS ------------- -->
+          content="Каталог удивительных построек сервера BTTR: замки, фермы, шахты и другие сооружения с галереей изображений.">
+    <!-- ---------- Шрифты ---------- -->
+    <link rel="preload"
+          href="../../fonts/minecraft.ttf"
+          as="font"
+          type="font/ttf"
+          crossorigin>
+
     <style>
-        /* ---------- Переменные (тёмная тема) ---------- */
+        /* -------------------- Переменные (тёмная тема) -------------------- */
         :root{
             --bg-primary   : #0a0a0a;
             --bg-card      : rgba(30,30,30,.9);
@@ -51,7 +57,7 @@
             white-space:nowrap;border:0;
         }
 
-        /* ----------------- Шапка ----------------- */
+        /* -------------------- Шапка -------------------- */
         header{
             text-align:center;
             padding:2rem 0;
@@ -68,7 +74,7 @@
         }
         header p{font-size:1rem;color:var(--text-secondary);}
 
-        /* ----------------- Управление ----------------- */
+        /* -------------------- Управление -------------------- */
         .controls{
             display:flex;
             flex-wrap:wrap;
@@ -122,7 +128,7 @@
             box-shadow:0 0 10px rgba(var(--accent-rgb),.5);
         }
 
-        /* ----------------- Сетка построек ----------------- */
+        /* -------------------- Сетка построек -------------------- */
         .grid{
             display:grid;
             grid-template-columns:repeat(auto-fit,minmax(350px,1fr));
@@ -179,15 +185,28 @@
             margin:0;
         }
 
+        /* ---- Координаты + кнопка копирования ---- */
         .coords{
             background:rgba(var(--accent-rgb),.1);
             color:var(--accent);
             padding:.4rem .8rem;
             border-radius:.5rem;
             border:1px solid rgba(var(--accent-rgb),.3);
-            display:inline-block;
-            margin:.5rem 0;
+            display:inline-flex;
+            align-items:center;
+            gap:.5rem;
             font-size:.875rem;
+        }
+        .copy-coords{
+            background:transparent;
+            border:none;
+            color:var(--accent);
+            font-size:1rem;
+            cursor:pointer;
+        }
+        .copy-coords:hover,
+        .copy-coords:focus-visible{
+            color:#fff;
         }
 
         .image{
@@ -276,7 +295,7 @@
             color:var(--accent);
         }
 
-        /* ----------------- Lightbox ----------------- */
+        /* -------------------- Lightbox -------------------- */
         .lightbox{
             display:none;
             position:fixed;
@@ -363,7 +382,7 @@
             width:100%;height:100%;object-fit:cover;
         }
 
-        /* ----------------- Адаптивность ----------------- */
+        /* -------------------- Адаптивность -------------------- */
         @media (max-width:768px){
             .grid{grid-template-columns:1fr;}
             header h1{font-size:2.2rem;}
@@ -372,7 +391,7 @@
             .controls{flex-direction:column;align-items:stretch;}
         }
 
-        /* ----------------- Предпочтения ----------------- */
+        /* -------------------- Предпочтения -------------------- */
         @media (prefers-reduced-motion:reduce){
             *,*::before,*::after{transition:none!important;}
         }
@@ -383,14 +402,17 @@
     </style>
 </head>
 <body>
-    <!-- ================== Шапка ================== -->
-    <header class="site-header">
+    <!-- ==================== Шапка ==================== -->
+    <header>
         <h1>ПОСТРОЙКИ СЕРВЕРА</h1>
-        <p>Каталог самых удивительных сооружений нашего мира</p>
+        <p>Страница в разработке!</p>
+        <p>Zakap тут работает</p>
+        <p><img src="https://starlightskins.lunareclipse.studio/render/reading/zakap/full" alt="reading guides"></p>
+        <p>Поддержите JansickGD в создания сайта</p>
     </header>
 
     <main class="container">
-        <!-- ================== Управление ================== -->
+        <!-- ==================== Управление ==================== -->
         <section class="controls" aria-label="Управление каталогом">
             <div class="stats">
                 Всего построек: <span id="total-count">0</span>
@@ -411,13 +433,13 @@
             </div>
         </section>
 
-        <!-- ================== Сетка построек ================== -->
+        <!-- ==================== Сетка построек ==================== -->
         <section id="buildings" class="grid" aria-live="polite"></section>
 
-        <p id="no-results" class="no-results" hidden>По запросу ничего не найдено.</p>
+        <p id="no-results" class="no-results" hidden>Ещё не построено!</p>
     </main>
 
-    <!-- ================== Lightbox (галерея) ================== -->
+    <!-- ==================== Lightbox (галерея) ==================== -->
     <div id="lightbox"
          class="lightbox"
          role="dialog"
@@ -425,6 +447,7 @@
          aria-hidden="true"
          aria-label="Галерея изображений">
         <button class="close-btn" aria-label="Закрыть галерею">&times;</button>
+
         <div class="lb-content">
             <img id="lb-img" src="" alt="">
             <button class="nav prev" aria-label="Предыдущее изображение">&#9664;</button>
@@ -434,9 +457,9 @@
         </div>
     </div>
 
-    <!-- ================== JavaScript ================== -->
+    <!-- ==================== JavaScript ==================== -->
     <script>
-        /* ------------------- Данные построек ------------------- */
+        /* ------------ Данные построек ------------ */
         const buildings = [
             {
                 name: "Замок Алекса",
@@ -580,22 +603,22 @@
             }
         ];
 
-        /* ------------------- Элементы UI ------------------- */
-        const grid          = document.getElementById('buildings');
-        const totalCount    = document.getElementById('total-count');
-        const searchInput   = document.getElementById('search-input');
-        const filterBtns    = document.querySelectorAll('.filter-btn');
-        const noResults     = document.getElementById('no-results');
+        /* ------------------- UI-элементы ------------------- */
+        const grid           = document.getElementById('buildings');
+        const totalCount     = document.getElementById('total-count');
+        const searchInput    = document.getElementById('search-input');
+        const filterBtns     = document.querySelectorAll('.filter-btn');
+        const noResults      = document.getElementById('no-results');
 
-        const lightbox      = document.getElementById('lightbox');
-        const lbImg         = document.getElementById('lb-img');
-        const lbCloseBtn    = lightbox.querySelector('.close-btn');
-        const lbPrevBtn     = lightbox.querySelector('.prev');
-        const lbNextBtn     = lightbox.querySelector('.next');
-        const lbCounter     = document.getElementById('lb-counter');
-        const lbThumbs      = document.getElementById('lb-thumbs');
+        const lightbox       = document.getElementById('lightbox');
+        const lbImg          = document.getElementById('lb-img');
+        const lbCloseBtn     = lightbox.querySelector('.close-btn');
+        const lbPrevBtn      = lightbox.querySelector('.prev');
+        const lbNextBtn      = lightbox.querySelector('.next');
+        const lbCounter      = document.getElementById('lb-counter');
+        const lbThumbs       = document.getElementById('lb-thumbs');
 
-        let currentBuilding = null;   // объект из массива `buildings`
+        let currentBuilding = null;   // объект в массиве buildings
         let currentImgIdx   = 0;
         let activeFilter    = 'all';
         let debounceTimer   = null;
@@ -612,7 +635,7 @@
                 card.dataset.index = i;
                 card.tabIndex = 0;
 
-                // Header (иконка + название)
+                /* Header (иконка + название) */
                 const header = document.createElement('header');
                 header.className = 'card-header';
 
@@ -628,13 +651,24 @@
                 header.append(icon, title);
                 card.appendChild(header);
 
-                // Координаты
+                /* Координаты + кнопка копировать */
                 const coords = document.createElement('div');
                 coords.className = 'coords';
-                coords.textContent = `x=${b.coords.x}, y=${b.coords.y}, z=${b.coords.z}`;
+
+                const code = document.createElement('code');
+                code.textContent = `x=${b.coords.x}, y=${b.coords.y}, z=${b.coords.z}`;
+                coords.appendChild(code);
+
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'copy-coords';
+                copyBtn.type = 'button';
+                copyBtn.setAttribute('aria-label','Копировать координаты');
+                copyBtn.textContent = '©';
+                coords.appendChild(copyBtn);
+
                 card.appendChild(coords);
 
-                // Основное изображение - открывает галерею
+                /* Основное изображение (открывает Lightbox) */
                 const figure = document.createElement('figure');
                 figure.className = 'image';
                 figure.tabIndex = 0;
@@ -649,18 +683,18 @@
 
                 const overlay = document.createElement('div');
                 overlay.className = 'overlay';
-                overlay.innerHTML = `<span>📷 ${b.images.length} фото</span>`;
+                overlay.innerHTML = `<span> º ${b.images.length} фото</span>`;
 
                 figure.append(img, overlay);
                 card.appendChild(figure);
 
-                // Описание
+                /* Описание */
                 const desc = document.createElement('p');
                 desc.className = 'description';
                 desc.textContent = b.description;
                 card.appendChild(desc);
 
-                // Список игроков
+                /* Список игроков (аватарка + ник) */
                 const playersSec = document.createElement('section');
                 playersSec.className = 'players';
 
@@ -678,7 +712,6 @@
 
                     const avatar = document.createElement('img');
                     avatar.className = 'player-avatar';
-                    // mineskin uses lower‑case nicknames
                     avatar.src = `https://mineskin.eu/helm/${p.name.toLowerCase()}`;
                     avatar.alt = `${p.name} avatar`;
 
@@ -701,22 +734,21 @@
             totalCount.textContent = buildings.length;
         }
 
-        /* ------------------- Фильтрация & Поиск ------------------- */
+        /* ------------------- Фильтрация и поиск ------------------- */
         function applyFilters() {
             const term = searchInput.value.trim().toLowerCase();
             let visible = 0;
 
-            const cards = document.querySelectorAll('.card');
-            cards.forEach(card => {
+            document.querySelectorAll('.card').forEach(card => {
                 const typeMatch = activeFilter === 'all' || card.dataset.type === activeFilter;
                 const name = card.dataset.name.toLowerCase();
                 const desc = card.querySelector('.description').textContent.toLowerCase();
-                const players = Array.from(card.querySelectorAll('.player-link')).map(a=>a.textContent.toLowerCase());
+                const playerNames = Array.from(card.querySelectorAll('.player-link')).map(a=>a.textContent.toLowerCase());
 
                 const textMatch = term === '' ||
                                   name.includes(term) ||
                                   desc.includes(term) ||
-                                  players.some(p=>p.includes(term));
+                                  playerNames.some(p=>p.includes(term));
 
                 const show = typeMatch && textMatch;
                 card.style.display = show ? '' : 'none';
@@ -744,7 +776,7 @@
         /* ------------------- Lightbox ------------------- */
         function openLightbox(buildingIdx) {
             currentBuilding = buildings[buildingIdx];
-            currentImgIdx    = 0;
+            currentImgIdx   = 0;
             updateLightbox();
             lightbox.setAttribute('aria-hidden','false');
             document.body.style.overflow = 'hidden';
@@ -785,28 +817,43 @@
             updateLightbox();
         }
 
-        // Делегирование клика по миниатюрам в сетке
+        /* Клики по изображениям в карточках */
         grid.addEventListener('click', e => {
             const fig = e.target.closest('.image');
-            if (!fig) return;
-            const idx = Number(fig.dataset.index);
-            if (!isNaN(idx)) openLightbox(idx);
-        });
-        // Открыть по клавише Enter/Space
-        grid.addEventListener('keydown', e => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                const fig = e.target.closest('.image');
-                if (!fig) return;
-                const idx = Number(fig.dataset.index);
-                if (!isNaN(idx)) openLightbox(idx);
+            if (fig) {
+                openLightbox(Number(fig.dataset.index));
+                return;
+            }
+
+            // Кнопка копировать координаты
+            if (e.target.classList.contains('copy-coords')) {
+                const code = e.target.closest('.coords').querySelector('code');
+                const txt = code.textContent;
+                navigator.clipboard.writeText(txt).then(() => {
+                    const original = e.target.textContent;
+                    e.target.textContent = '✅';
+                    setTimeout(() => e.target.textContent = original, 1500);
+                }).catch(() => alert('Не удалось скопировать координаты'));
+                e.stopPropagation();
             }
         });
 
+        /* Открытие Lightbox клавишами Enter/Space */
+        grid.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                const fig = e.target.closest('.image');
+                if (fig) {
+                    openLightbox(Number(fig.dataset.index));
+                    e.preventDefault();
+                }
+            }
+        });
+
+        /* Управление Lightbox */
         lbCloseBtn.addEventListener('click', closeLightbox);
         lbPrevBtn.addEventListener('click', () => changeImg(-1));
         lbNextBtn.addEventListener('click', () => changeImg(1));
 
-        // Управление клавиатурой, пока открыт Lightbox
         document.addEventListener('keydown', e => {
             if (lightbox.getAttribute('aria-hidden') === 'false') {
                 if (e.key === 'Escape') closeLightbox();
@@ -815,7 +862,6 @@
             }
         });
 
-        // Клик вне изображения закрывает галерею
         lightbox.addEventListener('click', e => {
             if (e.target === lightbox) closeLightbox();
         });
@@ -831,7 +877,7 @@
                     c.style.transition = 'all .5s ease';
                     c.style.opacity = 1;
                     c.style.transform = 'translateY(0)';
-                }, i*100);
+                }, i * 100);
             });
         });
     </script>
