@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarGuy</title>
+    <link rel="icon" type="image/png" href="../../asset/logo/bttr.png">
+    <style>
+        @font-face {
+            font-family: 'Minecraft';
+            src: url('../fonts/minecraft.ttf') format('truetype');
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Minecraft', sans-serif;
+            color: white;
+            min-height: 100vh;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            border: 2px solid #444;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            color: #ffcc00;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
+            margin: 0;
+        }
+
+        .player-profile {
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
+            margin-bottom: 40px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #444;
+        }
+
+        .player-avatar {
+            width: 200px;
+            height: 200px;
+            border: 5px solid #ffffff00;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0);
+            flex-shrink: 0;
+        }
+
+        .player-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .player-details {
+            flex: 1;
+        }
+
+        .stats-section {
+            margin: 30px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: rgba(50, 50, 50, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #666;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            color: #ffcc00;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #ccc;
+            margin-top: 5px;
+        }
+
+        .info-section {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 2px solid #444;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: rgba(50, 50, 50, 0.5);
+            border-radius: 8px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #ffcc00;
+            min-width: 180px;
+        }
+
+        .info-value {
+            flex: 1;
+        }
+
+        .status-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            color: #00ff00;
+            font-weight: bold;
+        }
+
+        .screenshots-section {
+            margin-top: 30px;
+        }
+
+        .screenshots-section h2 {
+            text-align: center;
+            color: #ffcc00;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .screenshot-item {
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #444;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .screenshot-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .screenshot-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .screenshot-caption {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        /* Lightbox styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .lightbox-content {
+            margin: auto;
+            display: block;
+            width: 90%;
+            max-width: 900px;
+            max-height: 80%;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #ffcc00;
+        }
+
+        .caption-text {
+            margin: auto;
+            display: block;
+            width: 90%;
+            max-width: 900px;
+            text-align: center;
+            color: #ccc;
+            padding: 10px 0;
+        }
+
+        .back-button {
+            display: block;
+            margin: 30px auto;
+            background: #ffcc00;
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            font-family: 'Minecraft', sans-serif;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            max-width: 200px;
+        }
+
+        .back-button:hover {
+            background: #ffd700;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.8);
+        }
+
+        .section-title {
+            color: #ffcc00;
+            font-size: 28px;
+            text-align: center;
+            margin: 30px 0 20px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .achievements-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .achievements-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #444;
+        }
+
+        .achievements-list li:last-child {
+            border-bottom: none;
+        }
+
+        .achievement-icon {
+            color: #00ff00;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-overlay"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Faрт Гай</h1>
+        </div>
+
+        <div class="player-profile">
+            <div class="player-avatar">
+                <img src="../../asset/a.png" alt="idk">
+            </div>
+            
+            <div class="player-details">
+                <h2 style="color: #ffcc00; margin-top: 0;">ПРОФИЛЬ ИГРОКА</h2>
+                <p style="font-size: 16px; line-height: 1.6;">
+                    Инфы нет
+                </p>
+                
+                <div class="stats-section">
+                    <h3 style="color: #ffcc00;">СТАТИСТИКА</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value">С января</div>
+                            <div class="stat-label">Началось</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">Красный Коралл</div>
+                            <div class="stat-label">Любимый Блок</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2 class="section-title">ИНФОРМАЦИЯ</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="status-icon">✓</div>
+                    <div class="info-label">ЛИЦЕНЗИЯ:</div>
+                    <div class="info-value">нет</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="status-icon">🔨</div>
+                    <div class="info-label">СПОСОБНОСТИ:</div>
+                    <div class="info-value">Как у админов</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2 class="section-title">Что делал</h2>
+            <ul class="achievements-list">
+                <li><span class="achievement-icon">★</span> ставил кучу бедрока бедрок</li>
+                <li><span class="achievement-icon">★</span> Делал коробки</li>
+                <li><span class="achievement-icon">★</span> Говорил о далёких землях</li>
+            </ul>
+        </div>
+
+        <div class="screenshots-section">
+            <h2 class="section-title">СКРИНШОТЫ</h2>
+            <div class="screenshots-grid">
+                <div class="screenshot-item" onclick="openLightbox('../asset/404mg.png', 'ХЗ')">
+                    <img src="../asset/404mg.png" alt="Постройка 1">
+                    <div class="screenshot-caption">Что то</div>
+                </div>
+                
+                <div class="screenshot-item" onclick="openLightbox('../asset/404mg.png', 'чувак')">
+                    <img src="../asset/404mg.png" alt="Постройка 2">
+                    <div class="screenshot-caption">Как так?</div>
+                </div>
+            </div>
+        </div>
+
+        <a href="./index.html" class="back-button">Назад к игрокам</a>
+    </div>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="close">&times;</span>
+        <img class="lightbox-content" id="lightbox-img">
+        <div class="caption-text" id="caption"></div>
+    </div>
+
+    <script>
+        // Массив фонов (такой же как в главной странице)
+        const backgrounds = [
+            '../../asset/bg1.png'
+        ];
+
+        // Выбор случайного фона
+        function getRandomBackground() {
+            const randomIndex = Math.floor(Math.random() * backgrounds.length);
+            return backgrounds[randomIndex];
+        }
+
+        // Установка фона при загрузке страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.style.backgroundImage = `url('${getRandomBackground()}')`;
+        });
+
+        // Lightbox functions
+        function openLightbox(imageSrc, captionText) {
+            document.getElementById('lightbox').style.display = 'block';
+            document.getElementById('lightbox-img').src = imageSrc;
+            document.getElementById('caption').innerHTML = captionText;
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+        }
+
+        // Close lightbox when pressing ESC key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+    </script>
+</body>
+</html>
