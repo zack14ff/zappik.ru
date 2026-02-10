@@ -1,5 +1,558 @@
-undertest
-and works
-<h1>
-<a href="reindev/index.html" class="back-button">Уйти с зоны работы</a>
-</h1>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3 ВКЛАДКИ???</title>
+    <style>
+        /* ────────────────────── Основные стили ────────────────────── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #00ff00;
+            line-height: 1.4;
+            padding: 20px;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(0, 30, 0, 0.1),
+                    rgba(0, 30, 0, 0.1) 1px,
+                    transparent 1px,
+                    transparent 20px
+                );
+        }
+
+        /* ────────────────────── Терминал контейнер ────────────────────── */
+        .cmd-window {
+            max-width: 800px;
+            margin: 20px auto;
+            background: #001100;
+            border: 2px solid #00aa00;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .cmd-titlebar {
+            background: #002200;
+            padding: 8px 12px;
+            border-bottom: 1px solid #00aa00;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cmd-title {
+            font-weight: bold;
+            color: #00ff00;
+        }
+
+        .cmd-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .cmd-control {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .control-close { background: #ff5555; }
+        .control-minimize { background: #ffcc00; }
+        .control-maximize { background: #00cc44; }
+
+        .cmd-content {
+            padding: 20px;
+            min-height: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        /* ────────────────────── Терминальный вывод ────────────────────── */
+        .cmd-output {
+            margin-bottom: 20px;
+        }
+
+        .cmd-prompt {
+            color: #00ff00;
+            margin-bottom: 15px;
+        }
+
+        .cmd-text {
+            color: #00cc00;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .cmd-highlight {
+            color: #00ffff;
+            font-weight: bold;
+        }
+
+        /* ────────────────────── Список серверов ────────────────────── */
+        .servers-list {
+            margin: 20px 0;
+            border: 1px solid #005500;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .server-header {
+            background: #002200;
+            padding: 10px;
+            border-bottom: 1px solid #005500;
+            font-weight: bold;
+        }
+
+        .server-item {
+            padding: 15px;
+            border-bottom: 1px solid #003300;
+            transition: background 0.3s ease;
+            cursor: pointer;
+        }
+
+        .server-item:last-child {
+            border-bottom: none;
+        }
+
+        .server-item:hover {
+            background: rgba(0, 50, 0, 0.3);
+        }
+
+        .server-item.online {
+            background: rgba(0, 40, 0, 0.2);
+        }
+
+        .server-item.offline {
+            background: rgba(40, 0, 0, 0.2);
+        }
+
+        .server-item.maintenance {
+            background: rgba(40, 40, 0, 0.2);
+        }
+
+        .server-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #00ff00;
+        }
+
+        .server-status {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+
+        .status-online {
+            background: rgba(0, 255, 0, 0.2);
+            color: #00ff00;
+            border: 1px solid #00ff00;
+        }
+
+        .status-offline {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff0000;
+            border: 1px solid #ff0000;
+        }
+
+        .status-maintenance {
+            background: rgba(255, 255, 0, 0.2);
+            color: #ffff00;
+            border: 1px solid #ffff00;
+        }
+
+        .server-details {
+            font-size: 0.9rem;
+            color: #00aa00;
+            margin: 8px 0;
+        }
+
+        .server-detail {
+            margin: 3px 0;
+        }
+
+        .server-description {
+            font-size: 0.95rem;
+            color: #00cc66;
+            margin-top: 8px;
+            line-height: 1.4;
+        }
+
+        /* ────────────────────── Командная строка ────────────────────── */
+        .cmd-input-line {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .cmd-prompt-input {
+            color: #00ff00;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .cmd-input {
+            background: transparent;
+            border: none;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            flex: 1;
+            outline: none;
+            caret-color: #00ff00;
+        }
+
+        .cmd-input::placeholder {
+            color: #005500;
+        }
+
+        /* ────────────────────── Кнопки действий ────────────────────── */
+        .server-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: rgba(0, 40, 0, 0.3);
+            border: 1px solid #00aa00;
+            color: #00ff00;
+            padding: 6px 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            background: rgba(0, 255, 0, 0.2);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+
+        /* ────────────────────── Адаптивность ────────────────────── */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .cmd-content {
+                padding: 15px;
+                min-height: 400px;
+            }
+
+            .server-item {
+                padding: 12px;
+            }
+
+            .server-name {
+                font-size: 1.1rem;
+            }
+
+            .server-actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .action-btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cmd-content {
+                padding: 10px;
+            }
+
+            .server-details {
+                font-size: 0.8rem;
+            }
+
+            .server-description {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* ────────────────────── Анимации ────────────────────── */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        /* ────────────────────── Типографский эффект ────────────────────── */
+        .typewriter {
+            overflow: hidden;
+            border-right: .15em solid #00ff00;
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: .15em;
+            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #00ff00; }
+        }
+
+        /* ────────────────────── Стили для скроллбара ────────────────────── */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 20, 0, 0.2);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #005500;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00aa00;
+        }
+    </style>
+</head>
+<body>
+    <div class="cmd-window">
+        <div class="cmd-titlebar">
+            <div class="cmd-title">BTTR_list.exe</div>
+            <div class="cmd-controls">
+                <div class="cmd-control control-minimize"></div>
+                <div class="cmd-control control-maximize"></div>
+                <div class="cmd-control control-close"></div>
+            </div>
+        </div>
+        
+        <div class="cmd-content" id="cmdContent">
+            <div class="cmd-output">
+                <div class="cmd-prompt">C:\Users\BTTR\DataBase&gt;</div>
+                <div class="cmd-text">RUINE_RUNE host [Version 10.1.1989.2364]</div>
+                <div class="cmd-text">(c) Zaphost Corporation. All rights reserved.</div>
+                <br>
+                <div class="cmd-text">&gt; <span class="cmd-highlight">BTTR_list.exe</span></div>
+                <div class="cmd-text">Initializing server list...</div>
+                <div class="cmd-text">Found 3-1 servers in database.</div>
+                <br>
+                <div class="cmd-text">SERVER LIST:</div>
+            </div>
+
+            <div class="servers-list">
+                <div class="server-header">
+                    SERVER NAME              STATUS       PLAYERS      VERSION
+                </div>
+                
+                <!-- Сервер 1 -->
+                <div class="server-item online" onclick="selectServer('classic')">
+                    <div class="server-name">
+                        Reindev
+                        <span class="server-status status-online">Имеется Страница</span>
+                    </div>
+                    <div class="server-details">
+                        <div class="server-detail">....</div>
+                    </div>
+                    <div class="server-description">
+                        Ядро самого сервера BTTR
+                    </div>
+                    <div class="server-actions">
+                        <button class="action-btn" onclick="window.location.href='reindev/index.html'; event.stopPropagation();">ПРОСМОТРЕТЬ</button>
+                        <button class="action-btn" onclick="showInfo('classic'); event.stopPropagation();">...........</button>
+                        <button class="action-btn" onclick="showRules('classic'); event.stopPropagation();">........</button>
+                    </div>
+                </div>
+
+                <!-- Сервер 2 -->
+                <div class="server-item maintenance" onclick="selectServer('skyblock')">
+                    <div class="server-name">
+                        INDEV+
+                        <span class="server-status status-maintenance">НЕ ГОТОВ</span>
+                    </div>
+                    <div class="server-details">
+                        <div class="server-detail">.....</div>
+                        <div class="server-detail">.....</div>
+                        <div class="server-detail">.....</div>
+                    </div>
+                    <div class="server-description">
+                        .....
+                    </div>
+                    <div class="server-actions">
+                        <button class="action-btn" onclick="window.location.href='reindev/index.html'; event.stopPropagation();">VIEW DETAILS</button>
+                        <button class="action-btn" onclick="showInfo('skyblock'); event.stopPropagation();">.....</button>
+                        <button class="action-btn" onclick="showRules('skyblock'); event.stopPropagation();">.....</button>
+                    </div>
+                </div>
+
+                <!-- Сервер 3 -->
+                <div class="server-item offline" onclick="window.location.href='servers/pvp.html'">
+    <div class="server-name">
+        BTA
+        <span class="server-status status-offline">НЕТ СТРАНИЦЫ</span>
+    </div>
+    <div class="server-details">
+        <div class="server-detail">....</div>
+        <div class="server-detail">.....</div>
+        <div class="server-detail">....</div>
+    </div>
+    <div class="server-description">
+        ...........
+    </div>
+    <div class="server-actions">
+        <button class="action-btn" onclick="window.location.href='reindev/index.html'; event.stopPropagation();">VIEW DETAILS</button>
+        <button class="action-btn" onclick="window.location.href='reindev/index.html'; event.stopPropagation();">INFO</button>
+        <button class="action-btn" onclick="window.location.href='reindev/index.html'; event.stopPropagation();">RULES</button>
+    </div>
+</div>
+
+            </div>
+
+            <div class="cmd-output">
+                <br>
+                <div class="cmd-text">Use commands:</div>
+                <div class="cmd-text">  <span class="cmd-highlight">ZAKAP? &lt;S00N&gt;</span> - S00N</div>
+                <br>
+                <div class="cmd-input-line">
+                    <span class="cmd-prompt-input">C:\Users\BTTR\DataBase&gt;</span>
+                    <input type="text" class="cmd-input" id="commandInput" placeholder="Type command here..." autofocus>
+                    <span class="blink">|</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Функции серверов
+        function selectServer(serverName) {
+            console.log(`Selected server: ${serverName}`);
+        }
+
+
+        // Обработка командной строки
+        const commandInput = document.getElementById('commandInput');
+        let outputHistory = [];
+        
+        commandInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const command = this.value.trim().toLowerCase();
+                addToOutputHistory(`C:\\Users\\BTTR\\DataBase\\Z-edition> ${command}`);
+                processCommand(command);
+                this.value = '';
+            }
+        });
+
+        function addToOutputHistory(text) {
+            const output = document.querySelector('.cmd-output:last-child');
+            const newLine = document.createElement('div');
+            newLine.className = 'cmd-text';
+            newLine.textContent = text;
+            output.appendChild(newLine);
+            
+            // Прокрутка вниз
+            const cmdContent = document.getElementById('cmdContent');
+            cmdContent.scrollTop = cmdContent.scrollHeight;
+        }
+
+        function processCommand(command) {
+            let response = '';
+            
+            if (command === '' || command === 'help') {
+                response = '> Available commands:\n' +
+                          '  connect <server> - Connect to server\n' +
+                          '  info <server> - Show server info\n' +
+                          '  rules <server> - Show server rules\n' +
+                          '  refresh - Refresh server list\n' +
+                          '  help - Show this help\n' +
+                          '  exit - Close application';
+            }
+            else if (command.startsWith('connect')) {
+                const server = command.split(' ')[1];
+                const responses = {
+                    'classic': 'Connecting to Classic Survival... SUCCESS!',
+                    'skyblock': 'Connecting to SkyBlock... FAILED (Maintenance)',
+                    'pvp': 'Connecting to PvP Arena... FAILED (Offline)'
+                };
+                response = responses[server] || 'Server not found';
+            }
+            else if (command.startsWith('zakap')) {
+                const server = command.split(' ')[1];
+                const responses = {
+                    'Кто ': 'Я...',
+                    'Что': 'Я',
+                    'Почему': 'я сошёл с рельс'
+                };
+                response = responses[server] || 'Server not found';
+            }
+            else if (command === 'exit') {
+                response = 'Не приминимо...';
+                setTimeout(() => {
+                    alert('error D.W');
+                }, 1000);
+            }
+            else {
+                response = `'${command}' is not recognized as an internal or external command,\noperable program or batch file.`;
+            }
+            
+            // Разбиваем ответ на строки и добавляем каждую
+            const lines = response.split('\n');
+            lines.forEach(line => {
+                addToOutputHistory(line);
+            });
+        }
+
+        // Анимация курсора
+        setInterval(() => {
+            const blinkCursor = document.querySelector('.blink');
+            if (blinkCursor) {
+                blinkCursor.style.opacity = blinkCursor.style.opacity === '0' ? '1' : '0';
+            }
+        }, 500);
+
+        // Фокус на input при загрузке
+        window.addEventListener('load', function() {
+            commandInput.focus();
+        });
+
+        // Добавление интерактивности для заголовка окна
+        document.querySelector('.control-close').addEventListener('click', function() {
+            if (confirm('Закрыть Вкладку??')) {
+                alert('НЕ ПРИМЕНИМО');
+            }
+        });
+
+        document.querySelector('.control-minimize').addEventListener('click', function() {
+           
+        });
+
+        document.querySelector('.control-maximize').addEventListener('click', function() {
+            
+        });
+
+        // Добавление эффекта печатания для начального текста
+        document.addEventListener('DOMContentLoaded', function() {
+            const welcomeText = document.querySelector('.cmd-text:first-child');
+            if (welcomeText) {
+                welcomeText.classList.add('typewriter');
+            }
+        });
+    </script>
+</body>
+</html>

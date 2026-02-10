@@ -24,7 +24,10 @@
 
                 
 
-
+                <div class="cmd-text">  <span class="cmd-highlight">connect &lt;server_name&gt;</span> - Connect to server</div>
+                <div class="cmd-text">  <span class="cmd-highlight">info &lt;server_name&gt;</span> - Show server information</div>
+                <div class="cmd-text">  <span class="cmd-highlight">rules &lt;server_name&gt;</span> - View server rules</div>
+                <div class="cmd-text">  <span class="cmd-highlight">refresh</span> - Refresh server list</div>
 
 
 Добавил секции серверов bttr
