@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>INDEV+ – Игроки</title>
+<link rel="icon" type="image/png" href="../../asset/logo/bttr.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet">
+
+<style>
+/* ──────────────────────────────────────────────────────
+   1. Общее оформление, фон‑обои
+   ────────────────────────────────────────────────────── */
+html,body{
+    margin:0; padding:0;
+    width:100%; height:100%;
+    font-family:'Press Start 2P',sans-serif;
+    overflow:hidden;                     /* скрыть скролл браузера */
+    image-rendering:pixelated;          /* пиксель‑арт */
+}
+.desktop{
+    position:relative;
+    width:100%; height:100%;
+    background:url('assets/wallpaper.jpg') center/cover no-repeat fixed;
+}
+
+/* ──────────────────────────────────────────────────────
+   2. Окно‑приложение (вид Windows 98)
+   ────────────────────────────────────────────────────── */
+.window{
+    position:fixed;                     /* фиксируем к окну браузера */
+    inset:0;                             /* сразу «на весь экран» */
+    background:#c0c0c0;
+    border:2px outset #fff;
+    box-shadow:4px 4px #808080;
+    display:flex;
+    flex-direction:column;
+    z-index:10;
+    /*  При нормальном (не развёрнутом) виде будет уменьшенный размер  */
+    transition:all .2s;
+}
+.window.minimized{display:none;}        /* скрыто при минимизации */
+
+/*   Шапка окна (заголовок + кнопки) */
+.title-bar{
+    background:#000080;                 /* синий заголовок */
+    color:#fff;
+    padding:4px 8px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    user-select:none;
+    cursor:move;                        /* визуальная подсказка, но движение отключаем */
+}
+.title-bar .left{
+    display:flex;
+    align-items:center;
+}
+.title-bar .icon{
+    width:16px;height:16px;
+    margin-right:6px;
+}
+.title-bar .title{
+    font-size:0.9rem;
+}
+.title-bar .controls button{
+    width:18px;height:18px;
+    margin-left:4px;
+    background:#e0e0e0;
+    border:none;
+    font-weight:bold;
+    cursor:pointer;
+}
+.title-bar .controls button:hover{
+    background:#ffcc00;
+    color:#000;
+}
+
+/*   Содержимое окна  */
+.content{
+    flex:1;
+    overflow:auto;
+    padding:1rem;
+}
+
+/* ──────────────────────────────────────────────────────
+   3. Навык‑дерево (чистый CSS)
+   ────────────────────────────────────────────────────── */
+.list-tree{
+    --clr:#000;               /* цвет соединяющих линий */
+    --font:0.94rem;
+    --item-h:2;               /* высота строки */
+    --offset:2.5rem;           /* от линии до текста */
+    --thick:2px;               /* толщина линий */
+    --style:solid;
+    font-size:var(--font);
+}
+.list-tree ul{
+    display:grid;
+    list-style:none;
+    margin:0; padding:0;
+}
+.list-tree li{
+    position:relative;
+    line-height:var(--item-h);
+    padding-left:var(--offset);
+    border-left:var(--thick) var(--style) var(--clr);
+}
+.list-tree li::before{
+    content:"";
+    position:absolute;
+    top:calc(var(--item-h)/2*-1*var(--font)+var(--thick));
+    left:calc(var(--thick)*-1);
+    width:calc(var(--offset)+var(--thick)*2);
+    height:calc(var(--item-h)*var(--font));
+    border-left:var(--thick) var(--style) var(--clr);
+    border-bottom:var(--thick) var(--style) var(--clr);
+}
+.list-tree li::after{
+    content:"";
+    position:absolute;
+    width:6px;height:6px;
+    border-radius:50%;
+    background:var(--clr);
+    top:calc(var(--item-h)/2*1rem);
+    left:var(--offset);
+    transform:translate(-50%,-50%);
+}
+.list-tree li:first-child::before{border-top:none;}
+.list-tree li:last-child::before{border-left:none;}
+
+.list-tree a{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-decoration:none;
+    color:#000;
+    font-size:0.85rem;
+}
+.list-tree a img{
+    width:var(--btn-w,80px);
+    height:var(--btn-h,80px);
+    object-fit:cover;
+    background:#3c2a1d;
+    border:2px solid #777;
+    border-radius:4px;
+    transition:transform .15s;
+}
+.list-tree a:hover img{transform:scale(1.08);}
+.list-tree a span{
+    margin-top:0.3rem;
+    text-align:center;
+    text-shadow:1px 1px #fff;
+}
+
+/* ──────────────────────────────────────────────────────
+   4. Модальное окно‑ошибка (стиль Windows)
+   ────────────────────────────────────────────────────── */
+#errorOverlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+}
+.error-box{
+    background:#fff;
+    border:2px solid #000;
+    box-shadow:4px 4px #808080;
+    width:340px;
+    padding:1rem;
+    font-family:'Press Start 2P',sans-serif;
+    display:grid;
+    grid-template-columns:40px 1fr;
+    gap:0.8rem;
+}
+.error-box img{
+    width:32px;height:32px;
+}
+.error-box h3{
+    margin:0 0 0.3rem;
+    font-size:1rem;
+}
+.error-box p{
+    margin:0 0 0.8rem;
+    font-size:0.85rem;
+}
+.error-box button{
+    justify-self:end;
+    padding:0.4rem 0.8rem;
+    background:#c0c0c0;
+    border:2px outset #fff;
+    cursor:pointer;
+}
+.error-box button:hover{
+    background:#ffcc00;
+}
+
+/* ──────────────────────────────────────────────────────
+   5. Адаптив (мобильные)
+   ────────────────────────────────────────────────────── */
+@media (max-width:720px){
+    .title-bar .title{font-size:0.7rem;}
+    .list-tree{--offset:2rem;}
+    .list-tree li::before,.list-tree li::after{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="desktop">
+
+    <!-- ==================== ОКНО ==================== -->
+    <div class="window" id="win">
+
+        <!-- ----- Заголовок окна ----- -->
+        <div class="title-bar" id="titleBar">
+            <div class="left">
+                <img src="../../asset/logo/pixels.png" alt="icon" class="icon">
+                <span class="title">INDEV+ – Папка Игроков</span>
+            </div>
+            <div class="controls">
+                <button id="btnMin" title="Свернуть">_</button>
+                <button id="GASTER" title="Развернуть/Восстановить">□</button>
+                <button id="btnClose" title="Закрыть">✖</button>
+            </div>
+        </div>
+
+        <!-- ----- Содержимое (дерево навыков) ----- -->
+        <div class="content">
+            <section class="list-tree">
+                <ul>
+                    <!-- Корень – сервер -->
+                    <li><a href="#" style="--btn-w:96px;--btn-h:96px;">
+                        <img src="../../asset/logo/bttr.png" alt="Server">
+                        <span>INDEV+ - ГАЙД</span>
+                    </a>
+                                        <li><a href="index.html" style="--btn-w:96px;--btn-h:96px;">
+                        <img src="../../asset/logo/pixels.png" alt="Server">
+                        <span>Вернуться</span>
+                    </a>
+                    <ul>
+                        <!-- ==== Игрок 1 ==== -->
+                        <li><a href="#html"
+                               style="--btn-w:96px;--btn-h:96px;">
+                            <img src="https://mineskin.eu/helm/server" alt="Volkov">
+                            <span>Игрок34 - Неизвестный</span>
+                        </a>
+                            <ul>
+                                <li><a href="#html"
+                                       style="--btn-w:80px;--btn-h:80px;">
+                                    <img src="https://mineskin.eu/helm/zalupa" alt="Alpha">
+                                    <span>Игрок23 - Пустой</span>
+                                </a></li>
+                                <li><a href="#html"
+                                       style="--btn-w:80px;--btn-h:80px;">
+                                    <img src="https://mineskin.eu/helm/lolguy" alt="Beta">
+                                    <span>Игрок12 - Данко</span>
+                                </a></li>
+                                                                <li><a href="#html"
+                                       style="--btn-w:80px;--btn-h:80px;">
+                                    <img src="../../asset/screns/ad1.png" alt="Beta">
+                                    <span>Тест</span>
+                                </a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    </li>
+                </ul>
+            </section>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== ОКНО ОШИБКИ ==================== -->
+<div id="errorOverlay">
+    <div class="error-box">
+        <img src="data:image/svg+xml;charset=UTF-8,
+            %3Csvg xmlns%3D%22http%3A//www.w3.org/2000/svg%22
+            width%3D%2232%22 height%3D%2232%22 viewBox%3D%220%200%2032%2032%22%3E
+            %3Cpath fill%3D%22%23c00%22 d%3D%22M16%200C7.16%200%200%207.16%200%2016s7.16%2016
+            16%2016%2016-7.16%2016-16S24.84%200%2016%200zm0%2029.33c-7.35%200-13.33-5.98-13.33-13.33S
+            8.65%202.67%2016%202.67%2029.33%208.65%2029.33%2016%2023.35%2029.33%2016%2029.33zM15%208h2v10h-2V8zm0%2012h2v2h-2v-2z%22/%3E%3C/svg%3E"
+            alt="error">
+        <div class="msg">
+            <h3>Ошибка</h3>
+            <p>Нельзя закрыть окно от другого Пользователя.</p>
+            <button id="errorOk">Отменить</button>
+        </div>
+    </div>
+</div>
+
+<script>
+/* -------------------------------------------------
+   Кнопка «Закрыть» → модальное окно‑ошибка
+   ------------------------------------------------- */
+const btnClose = document.getElementById('btnClose');
+const errorOverlay = document.getElementById('errorOverlay');
+const btnOk = document.getElementById('errorOk');
+
+btnClose.addEventListener('click', e => {
+    e.preventDefault();          // отменяем обычный переход
+    errorOverlay.style.display = 'flex';
+});
+btnOk.addEventListener('click', () => errorOverlay.style.display = 'none');
+
+/* -------------------------------------------------
+   Кнопка «Свернуть» – скрыть/показать окно
+   ------------------------------------------------- */
+const btnMin = document.getElementById('btnMin');
+const win    = document.getElementById('win');
+
+let savedState = null;            // запомним параметры до минимизации
+btnMin.addEventListener('click', () => {
+    if (win.classList.contains('minimized')) {
+        win.classList.remove('minimized');
+        // если перед скрытием мы были в «неразвёрнутом» виде – восстанавливаем размеры
+        if (savedState) {
+            win.style.removeProperty('width');
+            win.style.removeProperty('height');
+            win.style.removeProperty('top');
+            win.style.removeProperty('left');
+            win.style.removeProperty('transform');
+            savedState = null;
+        }
+    } else {
+        win.classList.add('minimized');
+    }
+});
+
+/* -------------------------------------------------
+   Кнопка «Развернуть/Восстановить»
+   - по умолчанию окно «развёрнуто» (заполняет экран)
+   - при нажатии уменьшаем до 800×600 и центрируем
+   ------------------------------------------------- */
+const btnMax = document.getElementById('btnMax');
+let isMaximized = true;   // стартовое состояние – полноэкранно
+
+btnMax.addEventListener('click', () => {
+    if (isMaximized) {
+        // Переходим в обычный (неразвёрнутый) вид
+        win.style.width  = '800px';
+        win.style.height = '600px';
+        win.style.top    = '50%';
+        win.style.left   = '50%';
+        win.style.transform = 'translate(-50%,-50%)';
+        win.style.inset = 'auto';          // отключаем inset:0
+        isMaximized = false;
+    } else {
+        // Возвращаем «развёрнутый» вид
+        win.style.removeProperty('width');
+        win.style.removeProperty('height');
+        win.style.removeProperty('top');
+        win.style.removeProperty('left');
+        win.style.removeProperty('transform');
+        win.style.inset = '0';
+        isMaximized = true;
+    }
+});
+</script>
+</body>
+</html>

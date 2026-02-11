@@ -1,0 +1,757 @@
+# Абюз
+
+                <div class="player-item" onclick="window.location.href='empty.html'">
+                    <div class="player-icon">
+                        <img src="../asset/komi.png" alt="komi">
+                    </div>
+                    <div class="player-info">
+                        <div class="player-name">Komithepotion</div>
+                        <div class="player-description">Игрок который Сделал "ХАЙПЕРЛУПУ" и проложил пути к вашим домам и к нам</div>
+                    </div>
+                </div>
+                
+                <div class="player-item" onclick="window.location.href='empty.html'">
+                    <div class="player-icon">
+                        <img src="../asset/empty1.png" alt="astolfo">
+                    </div>
+                    <div class="player-info">
+                        <div class="player-name">DS__Astolfo</div>
+                        <div class="player-description">ХЗ кто</div>
+                    </div>
+                </div>
+
+                
+
+                <div class="cmd-text">  <span class="cmd-highlight">connect &lt;server_name&gt;</span> - Connect to server</div>
+                <div class="cmd-text">  <span class="cmd-highlight">info &lt;server_name&gt;</span> - Show server information</div>
+                <div class="cmd-text">  <span class="cmd-highlight">rules &lt;server_name&gt;</span> - View server rules</div>
+                <div class="cmd-text">  <span class="cmd-highlight">refresh</span> - Refresh server list</div>
+
+                        <button class="action-btn" onclick="showInfo('classic'); event.stopPropagation();">TEST1</button>
+                        <button class="action-btn" onclick="showRules('classic'); event.stopPropagation();">VIEW2</button>
+
+
+                        <button class="action-btn" onclick="showInfo('skyblock'); event.stopPropagation();">VIEW DETAILS</button>
+                        <button class="action-btn" onclick="showRules('skyblock'); event.stopPropagation();">VIEW DETAILS</button>
+
+            else if (command.startsWith('connect')) {
+                const server = command.split(' ')[1];
+                const responses = {
+                    'classic': 'Connecting to Classic Survival... SUCCESS!',
+                    'skyblock': 'Connecting to SkyBlock... FAILED (Maintenance)',
+                    'pvp': 'Connecting to PvP Arena... FAILED (Offline)'
+                };
+                response = responses[server] || 'Server not found';
+            }
+            else if (command.startsWith('zakap')) {
+                const server = command.split(' ')[1];
+                const responses = {
+                    '': 'Я...',
+                    'Что': 'Я',
+                    'Почему': 'я сошёл с рельс'
+                };
+                response = responses[server] || 'Server not found';
+            }
+
+
+
+# INDEV+
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>INDEV+ – сервер в стиле Minecraft</title>
+
+    <!-- Включаем пиксельный шрифт. Можно заменить на Minecraftia / Press Start 2P -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <style>
+        /* -------------------- Общие стили -------------------- */
+        :root {
+            --bg-color: #2a2a2a;               /* фон меню */
+            --accent: #ffcc00;                  /* золотой акцент, как в MC */
+            --font: 'Press Start 2P', monospace;/* пиксельный шрифт */
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: var(--bg-color);
+            font-family: var(--font);
+            color: #fff;
+            image-rendering: pixelated;        /* сохраняет чёткость пикселей */
+        }
+
+        /* -------------------- Центральный блок -------------------- */
+        .menu {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 380px;          /* ширина, как у меню Minecraft */
+            transform: translate(-50%, -50%);
+            background: #3d3d3d;
+            border: 8px solid #4d4d4d;      /* имитируем рамку */
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .menu h1 {
+            margin: 0 0 20px;
+            font-size: 24px;
+            letter-spacing: 2px;
+            color: var(--accent);
+            text-shadow: 2px 2px #000;
+        }
+
+        /* -------------------- Кнопки -------------------- */
+        .menu .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .pixel-btn {
+            display: block;               /* ссылка выглядит как блок */
+            width: var(--btn-w, 200px);    /* значение задаётся в inline‑style */
+            height: var(--btn-h, 40px);
+            background-image: var(--btn-img);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            border: 2px solid #908d82;     /* тонкая рамка как в MC */
+            box-sizing: border-box;
+            cursor: pointer;
+            image-rendering: pixelated;
+            transition: transform .1s, box-shadow .1s;
+        }
+
+        .pixel-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 6px 2px rgba(255,255,255,.4);
+        }
+
+        .pixel-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Подпись под кнопкой (если нужно) */
+        .pixel-btn span {
+            display: block;
+            line-height: var(--btn-h, 40px);
+            color: #fff;
+            text-shadow: 1px 1px #000;
+            font-size: 14px;
+        }
+
+        /* -------------------- Нижний футер -------------------- */
+        footer {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 12px;
+            color: #bbb;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Меню в стиле Minecraft -->
+    <div class="menu">
+        <h1>INDEV+</h1>
+
+        <div class="buttons">
+            <!-- Кнопка 1: Постройки игроков -->
+            <a href="builds.html"
+               class="pixel-btn"
+               style="
+                    --btn-img:url('../../asset/404mg.png');
+                    --btn-w:240px;               /* точная ширина в пикселях */
+                    --btn-h:50px;                /* точная высота */
+               ">
+                <span>Постройки</span>
+            </a>
+
+            <!-- Кнопка 2: Игроки -->
+            <a href="players.html"
+               class="pixel-btn"
+               style="
+                    --btn-img:url('../../asset/404mg.png');
+                    --btn-w:240px;
+                    --btn-h:50px;
+               ">
+                <span>Игроки</span>
+            </a>
+
+            <!-- Кнопка 3: О сервере -->
+            <a href="about.html"
+               class="pixel-btn"
+               style="
+                    --btn-img:url('../../asset/404mg.png');
+                    --btn-w:240px;
+                    --btn-h:50px;
+               ">
+                <span>О сервере</span>
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        © 2026 INDEV+ • <a href="mailto:admin@indevplus.example.com" style="color:#ffcc00;">admin@indevplus.example.com</a>
+    </footer>
+
+</body>
+</html>
+
+
+
+# bruh:
+
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>INDEV+ – База игрока Volkov (Minecraft‑стиль)</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet">
+
+<style>
+/* ──────────────────────────────────────────────────────
+   1. Общие настройки
+   ────────────────────────────────────────────────────── */
+html,body{
+    margin:0; padding:0;
+    width:100%; height:100%;
+    font-family:'Press Start 2P',sans-serif;
+    background:#2a2a2a;
+    overflow:hidden;
+    image‑rendering:pixelated;          /* резкие пиксели, как в MC */
+}
+
+/* ──────────────────────────────────────────────────────
+   2. Фоновое изображение «земля Minecraft» (необязательно)
+   ────────────────────────────────────────────────────── */
+.desktop{
+    position:relative;
+    width:100%; height:100%;
+    background:url('assets/mc/bg.png') center/cover no-repeat fixed;
+}
+
+/* ──────────────────────────────────────────────────────
+   3. Окно‑инвентарь
+   ────────────────────────────────────────────────────── */
+.inv-window{
+    position:absolute;
+    width:512px;                     /* типичный размер инвентаря в 1.7.3 */
+    top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    background:#a0a0a0;               /* основной фон окна (заполняет texture‑bg) */
+    border:8px solid #5a381e;          /* «коричневая» рамка */
+    box-shadow:4px 4px #302010;
+}
+
+/*   3.1 Заголовок окна (похож на панель с именем игрока)   */
+.inv-header{
+    background:#615c4c;
+    color:#fff;
+    padding:4px 8px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+.inv-header img{width:16px;height:16px;cursor:pointer;}
+.inv-header .title{
+    font-size:0.9rem;
+    text-shadow:1px 1px #000;
+}
+
+/*   3.2 Сетка слотов (9 × 5)   */
+.inv-grid{
+    display:grid;
+    grid-template-columns:repeat(9,18px);
+    grid-template-rows:repeat(5,18px);
+    gap:2px;
+    padding:12px;
+    background:url('assets/mc/slot.png') repeat;
+}
+
+/*   3.3 Отдельный слот с картинкой (скриншот базы)   */
+.slot{
+    width:18px;height:18px;
+    position:relative;
+    cursor:pointer;
+}
+.slot img{
+    width:100%; height:100%;
+    object-fit:cover;
+    image-rendering:pixelated;
+    border:1px solid #666;
+}
+.slot:hover .tooltip{
+    opacity:1;
+    transform:translate(-50%,-120%);
+}
+
+/*   3.4 Тултип (подсказка с именем базы)   */
+.tooltip{
+    position:absolute;
+    left:50%; top:0;
+    width:max-content;
+    max-width:200px;
+    padding:4px 6px;
+    background:#222;
+    color:#ffcc00;
+    font-size:0.75rem;
+    border:1px solid #777;
+    border-radius:2px;
+    transform:translate(-50%,-100%);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .15s, transform .15s;
+    white-space:pre-line;
+}
+
+/* ──────────────────────────────────────────────────────
+   4. Модальное окно‑ошибка (при попытке закрыть)
+   ────────────────────────────────────────────────────── */
+#errorOverlay{
+    display:none;
+    position:fixed; inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center; justify-content:center;
+    z-index:9999;
+}
+.error-box{
+    background:#fff;
+    border:2px solid #000;
+    box-shadow:4px 4px #808080;
+    width:340px; padding:1rem;
+    font-family:'Press Start 2P',sans-serif;
+    display:grid;
+    grid-template-columns:40px 1fr;
+    gap:0.8rem;
+}
+.error-box img{width:32px;height:32px;}
+.error-box h3{margin:0 0 .3rem; font-size:1rem;}
+.error-box p{margin:0 0 .8rem; font-size:0.85rem;}
+.error-box button{
+    justify-self:end; padding:.4rem .8rem;
+    background:#c0c0c0; border:2px outset #fff; cursor:pointer;
+}
+.error-box button:hover{background:#ffcc00;}
+</style>
+</head>
+<body>
+
+<div class="desktop">
+
+    <!-- ==================== ОКНО‑ИНВЕНТАРЬ ==================== -->
+    <div class="inv-window" id="invWindow">
+
+        <!-- ----- Заголовок ----- -->
+        <div class="inv-header">
+            <div class="left">
+                <img src="assets/mc/close.png" alt="close" id="closeBtn" title="Закрыть">
+                <span class="title">Игрок : Volkov</span>
+            </div>
+            <div class="right">
+                <!-- При желании можно добавить кнопку «Сохранить» -->
+            </div>
+        </div>
+
+        <!-- ----- Сетка слотов (9 × 5) ----- -->
+        <div class="inv-grid">
+
+            <!-- 1‑я строка (9 слотов) -->
+            <div class="slot">
+                <a href="bases/volkov/alpha.html">
+                    <img src="assets/mc/base‑α.png" alt="База Alpha">
+                    <div class="tooltip">База <b>Alpha</b>
+Размер:  500 × 300 м
+Дата:   12 марта 2025</div>
+                </a>
+            </div>
+            <div class="slot">
+                <a href="bases/volkov/beta.html">
+                    <img src="assets/mc/base‑β.png" alt="База Beta">
+                    <div class="tooltip">База <b>Beta</b>
+Размер:  420 × 260 м
+Дата:   22 апреля 2025</div>
+                </a>
+            </div>
+
+            <!-- оставшиеся слоты – пустые (можно добавить больше) -->
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+
+            <!-- 2‑я строка (можно заполнить дальше) -->
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+
+            <!-- 3‑я‑5‑я строки – просто пустые слоты, их можно заполнить по‑желанию -->
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+            <div class="slot"><img src="assets/mc/slot.png" alt=""></div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== ОКНО ОШИБКИ ==================== -->
+<div id="errorOverlay">
+    <div class="error-box">
+        <img src="data:image/svg+xml;charset=UTF-8,
+            %3Csvg xmlns%3D%22http%3A//www.w3.org/2000/svg%22
+            width%3D%2232%22 height%3D%2232%22 viewBox%3D%220%200%2032%2032%22%3E
+            %3Cpath fill%3D%22%23c00%22 d%3D%22M16%200C7.16%200%200%207.16%200%2016s7.16%2016
+            16%2016%2016-7.16%2016-16S24.84%200%2016%200zm0%2029.33c-7.35%200-13.33-5.98-13.33-13.33S
+            8.65%202.67%2016%202.67%2029.33%208.65%2029.33%2016%2023.35%2029.33%2016%2029.33zM15%208h2v10h-2V8zm0%2012h2v2h-2v-2z%22/%3E%3C/svg%3E"
+            alt="error">
+        <div class="msg">
+            <h3>Ошибка</h3>
+            <p>Окно закрыть нельзя – это приложение работает в браузере.</p>
+            <button id="errorOk">OK</button>
+        </div>
+    </div>
+</div>
+
+<script>
+/* -------------------------------------------------
+   Кнопка «Закрыть» → модальное окно‑ошибка
+   ------------------------------------------------- */
+const closeBtn   = document.getElementById('closeBtn');
+const errorOverlay = document.getElementById('errorOverlay');
+const errorOk    = document.getElementById('errorOk');
+
+closeBtn.addEventListener('click', e => {
+    e.preventDefault();
+    errorOverlay.style.display = 'flex';
+});
+errorOk.addEventListener('click', () => errorOverlay.style.display = 'none');
+</script>
+
+</body>
+</html>
+
+
+# test about bruh VIEW2
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>INDEV+ – Информация об игроке</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet">
+
+<style>
+/* ──────────────────────────────────────
+   Общие стили и фон‑обои
+   ────────────────────────────────────── */
+html,body{
+    margin:0; padding:0;
+    width:100%; height:100%;
+    font-family:'Press Start 2P',sans-serif;
+    overflow:hidden;
+    image-rendering:pixelated;
+}
+.desktop{
+    position:relative;
+    width:100%; height:100%;
+    background:url('assets/wallpaper.jpg') center/cover no-repeat fixed;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
+    gap:1rem;
+    padding:1rem;
+}
+
+/* ──────────────────────────────────────
+   Окна‑приложения (Windows‑style)
+   ────────────────────────────────────── */
+.win{
+    background:#c0c0c0;
+    border:2px outset #fff;
+    box-shadow:4px 4px #808080;
+    display:flex;
+    flex-direction:column;
+    min-height:200px;
+    overflow:hidden;
+    position:relative;
+}
+
+/*   заголовок окна   */
+.win .title{
+    background:#000080;                 /* синий заголовок */
+    color:#fff;
+    padding:4px 8px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    user-select:none;
+}
+.win .title .icon{
+    width:16px;height:16px;
+    margin-right:6px;
+}
+.win .title .text{
+    font-size:0.9rem;
+    flex-grow:1;
+}
+.win .title .controls button{
+    width:18px;height:18px;
+    margin-left:4px;
+    background:#e0e0e0;
+    border:none;
+    font-weight:bold;
+    cursor:pointer;
+}
+.win .title .controls button:hover{
+    background:#ffcc00;
+    color:#000;
+}
+
+/*   содержимое окна   */
+.win .body{
+    flex:1;
+    padding:0.8rem;
+    overflow:auto;
+    font-size:0.85rem;
+}
+
+/* ──────────────────────────────────────
+   Специфичные стили для окон‑категорий
+   ────────────────────────────────────── */
+
+/* 1. Статистика  */
+.stats .stat-list{
+    list-style:none;
+    padding:0; margin:0;
+}
+.stats .stat-list li{
+    margin:0.3rem 0;
+}
+
+/* 2. Внешний вид (аватар + ник) */
+.avatar .profile{
+    display:flex;
+    align-items:center;
+    gap:0.8rem;
+}
+.avatar .profile img{
+    width:96px; height:96px;
+    object-fit:cover;
+    border:2px solid #777;
+    background:#3c2a1d;
+    border-radius:4px;
+}
+
+/* 3. Скриншоты – «папка» XP   */
+.screens .folder{
+    background:#fff;
+    border:2px solid #000;
+    padding:0.6rem;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+    gap:0.6rem;
+    box-shadow:2px 2px #808080;
+}
+.screens .folder .file{
+    text-align:center;
+    font-size:0.75rem;
+}
+.screens .folder .file img{
+    width:100%; height:auto;
+    border:1px solid #777;
+    background:#fff;
+}
+
+/* 4. Кнопка «Вернуться к дереву» */
+.nav .back{
+    display:flex;
+    justify-content:center;
+    margin-top:0.8rem;
+}
+.nav .back button{
+    padding:0.6rem 1rem;
+    font-size:0.85rem;
+    background:#c0c0c0;
+    border:2px outset #fff;
+    cursor:pointer;
+}
+.nav .back button:hover{
+    background:#ffcc00;
+}
+
+/* ──────────────────────────────────────
+   Минимальный JS‑контроллер закрытия окна
+   ────────────────────────────────────── */
+</style>
+</head>
+<body>
+
+<div class="desktop">
+
+    <!-- ================== 1️⃣ Статистика ================== -->
+    <div class="win stats">
+        <div class="title">
+            <div class="left">
+                <img src="assets/title-icon.png" alt="icon" class="icon">
+                <span class="text">Статистика</span>
+            </div>
+            <div class="controls">
+                <button class="close" title="Закрыть">✖</button>
+            </div>
+        </div>
+        <div class="body">
+            <ul class="stat-list">
+                <li><strong>Время в игре:</strong> 215 дней</li>
+                <li><strong>Среднее время онлайн:</strong> 4 ч 12 мин в сутки</li>
+                <li><strong>Последний вход:</strong> 2026‑02‑10 12:34</li>
+                <li><strong>Рейтинг:</strong> ★★★★☆</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ================== 2️⃣ Внешний вид ================== -->
+    <div class="win avatar">
+        <div class="title">
+            <div class="left">
+                <img src="assets/title-icon.png" alt="icon" class="icon">
+                <span class="text">Внешний вид</span>
+            </div>
+            <div class="controls">
+                <button class="close" title="Закрыть">✖</button>
+            </div>
+        </div>
+        <div class="body">
+            <div class="profile">
+                <img src="assets/players/volkov.png" alt="Volkov">
+                <div>
+                    <h3 style="margin:0;">Volkov</h3>
+                    <p style="margin:0.2rem 0;">Ник: <strong>Volkov</strong></p>
+                    <p style="margin:0.2rem 0;">Класс: <em>Инженер‑строитель</em></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================== 3️⃣ Скриншоты (папка XP) ================== -->
+    <div class="win screens">
+        <div class="title">
+            <div class="left">
+                <img src="assets/title-icon.png" alt="icon" class="icon">
+                <span class="text">Скриншоты баз</span>
+            </div>
+            <div class="controls">
+                <button class="close" title="Закрыть">✖</button>
+            </div>
+        </div>
+        <div class="body">
+            <div class="folder">
+                <!-- Скриншот 1 – ссылка на отдельную страницу -->
+                <div class="file">
+                    <a href="bases/volkov/alpha.html">
+                        <img src="assets/screenshots/volkov-base-1.png" alt="База 1">
+                    </a>
+                    <div>База «Alpha»</div>
+                </div>
+
+                <!-- Скриншот 2 – просто изображение -->
+                <div class="file">
+                    <img src="assets/screenshots/volkov-base-2.png" alt="База 2">
+                    <div>База «Beta»</div>
+                </div>
+
+                <!-- Скриншот 3 – просто изображение -->
+                <div class="file">
+                    <img src="assets/screenshots/volkov-base-3.png" alt="База 3">
+                    <div>База «Gamma»</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================== 4️⃣ Навигация назад ================== -->
+    <div class="win nav">
+        <div class="title">
+            <div class="left">
+                <img src="assets/title-icon.png" alt="icon" class="icon">
+                <span class="text">Навигация</span>
+            </div>
+            <div class="controls">
+                <button class="close" title="Закрыть">✖</button>
+            </div>
+        </div>
+        <div class="body">
+            <div class="back">
+                <button onclick="location.href='players_skilltree.html'">
+                    ← Вернуться к дереву игроков
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>   <!-- /desktop -->
+
+<script>
+/* -------------------------------------------------
+   Минимальный контроллер закрытия (X‑кнопка)
+   ------------------------------------------------- */
+document.querySelectorAll('.win .close').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+        const win = e.target.closest('.win');
+        win.style.display='none';   // просто скрываем, перемещения нет
+    });
+});
+</script>
+
+</body>
+</html>
+
+
+
+
+
+

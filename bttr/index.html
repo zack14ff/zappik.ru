@@ -352,14 +352,16 @@
                 <br>
                 <div class="cmd-text">&gt; <span class="cmd-highlight">BTTR_list.exe</span></div>
                 <div class="cmd-text">Initializing server list...</div>
-                <div class="cmd-text">Found 3-1 servers in database.</div>
+                <div class="cmd-text">Found 3 servers in database.</div>
+                <div class="cmd-text">Launched Only 1 server info</div>
+                <div class="cmd-text">[ZAKAP]: done! </div>
                 <br>
                 <div class="cmd-text">SERVER LIST:</div>
             </div>
 
             <div class="servers-list">
                 <div class="server-header">
-                    SERVER NAME              STATUS       PLAYERS      VERSION
+                    SERVER NAME              STATUS             VERSION
                 </div>
                 
                 <!-- Сервер 1 -->
@@ -369,15 +371,14 @@
                         <span class="server-status status-online">Имеется Страница</span>
                     </div>
                     <div class="server-details">
-                        <div class="server-detail">....</div>
+                        <div class="server-detail">Reindev 2.9</div>
+                        <div class="server-detail">Vanilla/WhiteList</div>
                     </div>
                     <div class="server-description">
                         Ядро самого сервера BTTR
                     </div>
                     <div class="server-actions">
                         <button class="action-btn" onclick="window.location.href='reindev/index.html'; event.stopPropagation();">ПРОСМОТРЕТЬ</button>
-                        <button class="action-btn" onclick="showInfo('classic'); event.stopPropagation();">...........</button>
-                        <button class="action-btn" onclick="showRules('classic'); event.stopPropagation();">........</button>
                     </div>
                 </div>
 
@@ -388,17 +389,17 @@
                         <span class="server-status status-maintenance">НЕ ГОТОВ</span>
                     </div>
                     <div class="server-details">
-                        <div class="server-detail">.....</div>
-                        <div class="server-detail">.....</div>
-                        <div class="server-detail">.....</div>
+                        <div class="server-detail">VIEW DETAILS</div>
+                        <div class="server-detail">Мелкая Карта</div>
+                        <div class="server-detail">Vanilla/WhiteList</div>
                     </div>
                     <div class="server-description">
-                        .....
+                        VIEW DETAILS
                     </div>
                     <div class="server-actions">
-                        <button class="action-btn" onclick="window.location.href='reindev/index.html'; event.stopPropagation();">VIEW DETAILS</button>
-                        <button class="action-btn" onclick="showInfo('skyblock'); event.stopPropagation();">.....</button>
-                        <button class="action-btn" onclick="showRules('skyblock'); event.stopPropagation();">.....</button>
+                        <button class="action-btn" onclick="window.location.href='infdevpls/index.html'; event.stopPropagation();">VIEW DETAILS</button>
+                        <button class="action-btn" onclick="showInfo('skyblock'); event.stopPropagation();">VIEW DETAILS</button>
+                        <button class="action-btn" onclick="showRules('skyblock'); event.stopPropagation();">VIEW DETAILS</button>
                     </div>
                 </div>
 
@@ -409,17 +410,17 @@
         <span class="server-status status-offline">НЕТ СТРАНИЦЫ</span>
     </div>
     <div class="server-details">
-        <div class="server-detail">....</div>
-        <div class="server-detail">.....</div>
-        <div class="server-detail">....</div>
+        <div class="server-detail">BTA 7.3</div>
+        <div class="server-detail">Vanilla/WhiteList</div>
+        <div class="server-detail">В 4 раза больше игроков может играть</div>
     </div>
     <div class="server-description">
-        ...........
+        VIEW DETAILS
     </div>
     <div class="server-actions">
-        <button class="action-btn" onclick="window.location.href='reindev/index.html'; event.stopPropagation();">VIEW DETAILS</button>
-        <button class="action-btn" onclick="window.location.href='reindev/index.html'; event.stopPropagation();">INFO</button>
-        <button class="action-btn" onclick="window.location.href='reindev/index.html'; event.stopPropagation();">RULES</button>
+        <button class="action-btn" onclick="window.location.href='bta/index.html'; event.stopPropagation();">VIEW DETAILS</button>
+        <button class="action-btn" onclick="window.location.href='bta/index.html'; event.stopPropagation();">VIEW DETAILS</button>
+        <button class="action-btn" onclick="window.location.href='bta/index.html'; event.stopPropagation();">VIEW DETAILS</button>
     </div>
 </div>
 
@@ -475,31 +476,12 @@
             let response = '';
             
             if (command === '' || command === 'help') {
-                response = '> Available commands:\n' +
-                          '  connect <server> - Connect to server\n' +
-                          '  info <server> - Show server info\n' +
-                          '  rules <server> - Show server rules\n' +
-                          '  refresh - Refresh server list\n' +
-                          '  help - Show this help\n' +
+                response = '> Доступно:\n' +
+                          '  version - версия этой страницы\n' +
+                          '  info <server> - версия страницы сервера\n' +
+                          '  run - А что это?\n' +
+                          '  help - хелпа\n' +
                           '  exit - Close application';
-            }
-            else if (command.startsWith('connect')) {
-                const server = command.split(' ')[1];
-                const responses = {
-                    'classic': 'Connecting to Classic Survival... SUCCESS!',
-                    'skyblock': 'Connecting to SkyBlock... FAILED (Maintenance)',
-                    'pvp': 'Connecting to PvP Arena... FAILED (Offline)'
-                };
-                response = responses[server] || 'Server not found';
-            }
-            else if (command.startsWith('zakap')) {
-                const server = command.split(' ')[1];
-                const responses = {
-                    'Кто ': 'Я...',
-                    'Что': 'Я',
-                    'Почему': 'я сошёл с рельс'
-                };
-                response = responses[server] || 'Server not found';
             }
             else if (command === 'exit') {
                 response = 'Не приминимо...';
@@ -507,8 +489,31 @@
                     alert('error D.W');
                 }, 1000);
             }
+            else if (command === 'shika') {
+                response = 'КОД СРАБОТАЛ!';
+                setTimeout(() => {
+                    alert('https://github.com/zack14ff/DEER_CODE/tree/main/FILE');
+                }, 1000);
+            }
+            else if (command === 'version') {
+                response = 'анализ...';
+                setTimeout(() => {
+                    alert('11.02.26 | БТ-ЕР');
+                }, 1000);
+            }
+                        else if (command.startsWith('run')) {
+                const server = command.split(' ')[1];
+                const responses = {
+                    'new_page.exe': 'Connecting server... FAILED(too early...)',
+                    'bedrock': 'getting core from JANSICKGD... FAILED ("НЕ ПРИМЕНИМО")',
+                    'farguy': 'locked stucked died... FAILED(Offline)',
+                    'help': 'try close/try response/try enter block'
+                    
+                };
+                response = responses[server] || 'dont runned or not found';
+            }
             else {
-                response = `'${command}' is not recognized as an internal or external command,\noperable program or batch file.`;
+                response = `'${command}' не найден паттерн,\nили не найден код`;
             }
             
             // Разбиваем ответ на строки и добавляем каждую

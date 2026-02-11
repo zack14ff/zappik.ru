@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>INDEV+ – сервер в стиле Minecraft</title>
+
+    <!-- Пиксельный шрифт (можно заменить на Minecraftia) -->
+     <link rel="icon" type="image/png" href="../../asset/logo/bttr.png">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+          rel="stylesheet">
+
+    <style>
+        /* ------------------------------------------------------ *
+         * Общие стили
+         * ------------------------------------------------------ */
+        :root {
+            --bg-color: #2a2a2a;           /* fallback‑цвет */
+            --accent: #ffcc00;              /* золотой акцент */
+            --font: 'Press Start 2P', monospace;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: var(--font);
+            color: #fff;
+            /* Фоновая картинка. Если её нет – будет использован цвет bg‑color */
+            background: var(--bg-color) url('../../asset/maps/infdev.png')
+                        center/cover no-repeat;
+            /* Сохраняем резкость пикселей */
+            image-rendering: pixelated;
+        }
+
+        /* ------------------------------------------------------ *
+         * Центрированный контейнер (имитация меню Minecraft)
+         * ------------------------------------------------------ */
+        .menu {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 380px;          /* ширина как у оригинального меню */
+            transform: translate(-50%, -50%);
+            background: #3d3d3d;
+            border: 8px solid #4d4d4d;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .menu h1 {
+            margin: 0 0 20px;
+            font-size: 24px;
+            letter-spacing: 2px;
+            color: var(--accent);
+            text-shadow: 2px 2px #000;
+        }
+
+        /* ------------------------------------------------------ *
+         * Список кнопок
+         * ------------------------------------------------------ */
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            /* Выравнивание по центру */
+            align-items: center;
+        }
+
+        .pixel-btn {
+            display: block;                     /* ссылка выглядит как блок */
+            width: var(--btn-w, 200px);          /* задаётся в inline‑style */
+            height: var(--btn-h, 40px);
+            background-image: var(--btn-img);    /* тоже задаётся в inline‑style */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            border: 2px solid #908d82;
+            box-sizing: border-box;
+            cursor: pointer;
+            image-rendering: pixelated;
+            transition: transform .1s, box-shadow .1s;
+        }
+
+        .pixel-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 6px 2px rgba(255,255,255,.4);
+        }
+
+        .pixel-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Текст подписи внутри кнопки (при желании) */
+        .pixel-btn span {
+            display: block;
+            line-height: var(--btn-h, 40px);
+            color: #fff;
+            text-shadow: 1px 1px #000;
+            font-size: 14px;
+            pointer-events: none;   /* чтобы клик проходил сквозь span */
+        }
+
+        /* ------------------------------------------------------ *
+         * Футер
+         * ------------------------------------------------------ */
+        footer {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 12px;
+            color: #bbb;
+        }
+    </style>
+</head>
+<body>
+
+<div class="menu">
+    <h1>INDEV+</h1>
+
+    <div class="buttons">
+        <!-- 1‑я кнопка – Постройки -->
+        <a href="builds.html"
+           class="pixel-btn"
+           style="
+                --btn-img:url('../../asset/404mg.png');
+                --btn-w:240px;
+                --btn-h:50px;
+           ">
+            <span>Постройки</span>
+        </a>
+
+        <!-- 2‑я кнопка – Игроки -->
+        <a href="players.html"
+           class="pixel-btn"
+           style="
+                --btn-img:url('../../asset/404mg.png');
+                --btn-w:240px;
+                --btn-h:50px;
+           ">
+            <span>Игроки</span>
+        </a>
+
+        <!-- 3‑я кнопка – О сервере -->
+        <a href="../lockedheart.html"
+           class="pixel-btn"
+           style="
+                --btn-img:url('../../asset/404mg.png');
+                --btn-w:240px;
+                --btn-h:50px;
+           ">
+            <span>[[Blocked]]</span>
+        </a>
+    </div>
+</div>
+
+<footer>
+    INDEV+ • <a href="#FriendLishInsideMe"
+                     style="color:#ffcc00;">СТРАНИЦА НЕ ИМЕЕТ ДАННЫХ ЛИШЬ ШАБЛОН</a>
+</footer>
+
+</body>
+</html>
