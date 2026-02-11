@@ -404,7 +404,7 @@
                 </div>
 
                 <!-- Сервер 3 -->
-                <div class="server-item offline" onclick="window.location.href='servers/pvp.html'">
+                <div class="server-item offline" onclick="window.location.href='#WHENMODSANDSPRINTS'">
     <div class="server-name">
         BTA
         <span class="server-status status-offline">НЕТ СТРАНИЦЫ</span>
@@ -476,7 +476,7 @@
             let response = '';
             
             if (command === '' || command === 'help') {
-                response = '> Доступно:\n' +
+                response = '[Console]> Доступно:\n' +
                           '  version - версия этой страницы\n' +
                           '  info <server> - версия страницы сервера\n' +
                           '  run - А что это?\n' +
@@ -490,7 +490,7 @@
                 }, 1000);
             }
             else if (command === 'shika') {
-                response = 'КОД СРАБОТАЛ!';
+                response = '[SERVER]: КОД СРАБОТАЛ!';
                 setTimeout(() => {
                     alert('https://github.com/zack14ff/DEER_CODE/tree/main/FILE');
                 }, 1000);
@@ -501,17 +501,58 @@
                     alert('11.02.26 | БТ-ЕР');
                 }, 1000);
             }
-                        else if (command.startsWith('run')) {
-                const server = command.split(' ')[1];
-                const responses = {
-                    'new_page.exe': 'Connecting server... FAILED(too early...)',
-                    'bedrock': 'getting core from JANSICKGD... FAILED ("НЕ ПРИМЕНИМО")',
-                    'farguy': 'locked stucked died... FAILED(Offline)',
-                    'help': 'try close/try response/try enter block'
+else if (command.startsWith('run')) {
+    const server = command.split(' ')[1];
+    
+    if (server === 'new_page.exe') {
+        // Отображаем начальное сообщение
+        addToOutputHistory('[RUNmaster]: !!!WARNING!!!');
+        addToOutputHistory('[RUNmaster]: !you MAY DONT KNOW WHAT WIL BE!');
+        addToOutputHistory('[RUNmaster]: [[Hyperlink Blocked]]');
+        addToOutputHistory('[RUNmaster]: SaveMode Enable | IF YOU WANT OFF');
+        addToOutputHistory('[RUNmaster]: USE SETTING.EXE');
+        addToOutputHistory('[RUNmaster]: !!!EXIT!!!');
+        addToOutputHistory('[RUNmaster]: Runnig new_page.exe...');
+        addToOutputHistory('[RUNmaster]: Checking dependencies...');
+        addToOutputHistory('[RUNmaster]: Loading modules...');
+        
+        let progress = 0;
+        const progressBar = setInterval(() => {
+            progress += 10;
+            addToOutputHistory(`[RUNmaster]: Progress ${progress}%`);
+            
+            if (progress >= 100) {
+                clearInterval(progressBar);
+                addToOutputHistory('[RUNmaster]: complete!');
+                addToOutputHistory('[RUNmaster]: Opening secure connection...');
+                
+                // Переход через 10 секунд после завершения прогресса
+                setTimeout(() => {
+                    addToOutputHistory('[RUNmaster]: Connection established!');
+                    addToOutputHistory('[RUNmaster]: [[Hyperlink Blocked]]');
+                    addToOutputHistory('[RUNmaster]: Open SafeMode');
                     
-                };
-                response = responses[server] || 'dont runned or not found';
+                    // Переход на новую страницу
+                    setTimeout(() => {
+                        window.location.href = 'lockedheart.html';
+                    }, 10000);
+                }, 100);
             }
+        }, 100); // Обновление прогресса каждую секунду
+        
+        response = ''; // Пустой ответ, так как все выводится через addToOutputHistory
+    } else {
+        const responses = {
+            'new_page.exe': '[RUNmaster]: Connecting server... FAILED(...)',
+            'setting.exe': 'acces denied auto | REASON: no enter password',
+            'bedrock': '[RUNmaster]: getting core from JANSICKGD... FAILED ("НЕ ПРИМЕНИМО")',
+            'farguy': '[RUNmaster]: locked stucked died... FAILED(Offline)',
+            'help': '[RUNmaster]: try close/try response/try enter block'
+        };
+        response = responses[server] || '[RUNmaster]: Unknown executable';
+    }
+}
+            
             else {
                 response = `'${command}' не найден паттерн,\nили не найден код`;
             }
