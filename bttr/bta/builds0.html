@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../../asset/logo/bttr.png">
+    <title>Базы - BTA 7.3 Server</title>
+    <style>
+        /* ────────────────────── Шрифты ────────────────────── */
+        @font-face {
+            font-family: 'Minecraft';
+            src: url('./fonts/minecraft.ttf') format('truetype');
+        }
+
+        /* ────────────────────── Основные стили ────────────────────── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Minecraft', 'Courier New', monospace;
+            background: #000;
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+            /* Деревянный фон */
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjOGI1YTI4Ii8+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiBmaWxsPSIjN2E0ODI0Ii8+PHJlY3QgeD0iMTYiIHk9IjE2IiB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIGZpbGw9IiM3YTQ4MjQiLz48L3N2Zz4=');
+            background-repeat: repeat;
+        }
+
+        /* ────────────────────── Текстуры ────────────────────── */
+        .stone-texture {
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjNmM2YzZjIi8+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiBmaWxsPSIjNTg1ODU4Ii8+PHJlY3QgeD0iMTYiIHk9IjE2IiB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIGZpbGw9IiM1ODU4NTgiLz48L3N2Zz4=');
+            background-repeat: repeat;
+        }
+
+        .dirt-texture {
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjOGQ2NDAwIi8+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiBmaWxsPSIjN2Q1NDAwIi8+PHJlY3QgeD0iMTYiIHk9IjE2IiB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIGZpbGw9IiM3ZDU0MDAiLz48L3N2Zz4=');
+            background-repeat: repeat;
+        }
+
+        /* ────────────────────── Контейнер ────────────────────── */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ────────────────────── Шапка ────────────────────── */
+        .header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            border: 4px solid #555;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            color: #ffcc00;
+            margin: 0 0 10px 0;
+            text-shadow: 3px 3px 0 #000;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+
+        /* ────────────────────── Список баз ────────────────────── */
+        .bases-list {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .base-card {
+            border: 3px solid #666;
+            transition: all 0.3s ease;
+        }
+
+        .base-card:hover {
+            border-color: #ffcc00;
+            transform: translateY(-3px);
+        }
+
+        .base-header {
+            padding: 15px 20px;
+            border-bottom: 2px solid #555;
+        }
+
+        .base-name {
+            font-size: 1.8rem;
+            color: #ffcc00;
+            margin: 0 0 10px 0;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .base-coordinates {
+            background: rgba(255, 204, 0, 0.2);
+            color: #ffcc00;
+            padding: 5px 10px;
+            border: 1px solid #ffcc00;
+            display: inline-block;
+            font-size: 0.9rem;
+            margin: 5px 0;
+        }
+
+        .base-image-container {
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            position: relative;
+            border-bottom: 2px solid #555;
+        }
+
+        .base-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            color: #666;
+        }
+
+        .base-info {
+            padding: 20px;
+        }
+
+        .base-description {
+            font-size: 1rem;
+            color: #ddd;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+
+        .base-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border: 1px solid #555;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.3rem;
+            color: #ffcc00;
+            font-weight: bold;
+        }
+
+        .base-owner {
+            font-size: 1rem;
+            color: #ffcc00;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #555;
+        }
+
+        /* ────────────────────── Навигация ────────────────────── */
+        .navigation {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .nav-button {
+            background: #ffcc00;
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            font-family: 'Minecraft', 'Courier New', monospace;
+            font-size: 1rem;
+            cursor: pointer;
+            border: 2px solid #000;
+            letter-spacing: 1px;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        .nav-button:hover {
+            background: #ffd700;
+            transform: translateY(-2px);
+        }
+
+        /* ────────────────────── Футер ────────────────────── */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            color: #aaa;
+            font-size: 0.9rem;
+            border: 3px solid #555;
+        }
+
+        /* ────────────────────── Адаптивность ────────────────────── */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .base-image-container {
+                height: 200px;
+            }
+
+            .base-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .base-image-container {
+                height: 150px;
+            }
+
+            .base-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .base-name {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="stone-texture" style="padding: 30px; border: 4px solid #555; margin-bottom: 30px;">
+            <h1 class="page-title">БАЗЫ СЕРВЕРА</h1>
+            <div class="subtitle">BTA 7.3 Minecraft Server</div>
+        </div>
+
+        <div class="bases-list">
+            <!-- База 1 -->
+            <div class="dirt-texture base-card">
+                <div class="base-header">
+                    <h2 class="base-name">ГЛАВНАЯ БАЗА АЛЕКСА</h2>
+                    <div class="base-coordinates">x=1245, y=64, z=-342</div>
+                </div>
+                <div class="base-image-container">
+                    <div class="base-image" style="background: linear-gradient(45deg, #8B4513, #A0522D);">
+                        <img src="../../asset/screns/indev/riend.png" width="1000" alt="ava">
+                    </div>
+                </div>
+                <div class="base-info">
+                    <div class="base-description">
+                        Величественный замок из белого камня с башнями и оборонительными стенами. 
+                        Построен в классическом средневековом стиле с элементами фэнтези. 
+                        Имеет собственный тронный зал и казармы.
+                    </div>
+                    <div class="base-stats">
+                        <div class="stat-card">
+                            <div class="stat-label">КОМНАТ</div>
+                            <div class="stat-value">24</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">ХРАНИЛИЩ</div>
+                            <div class="stat-value">156</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">ЗАЩИТА</div>
+                            <div class="stat-value">ВЫСОКАЯ</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">СЛОЖНОСТЬ</div>
+                            <div class="stat-value">СЛОЖНАЯ</div>
+                        </div>
+                    </div>
+                    <div class="base-owner">
+                        Владелец: AlexMaster
+                    </div>
+                </div>
+            </div>
+
+            <!-- База 2 -->
+            <div class="dirt-texture base-card">
+                <div class="base-header">
+                    <h2 class="base-name">АВТОМАТИЧЕСКАЯ ФЕРМА</h2>
+                    <div class="base-coordinates">x=1320, y=68, z=-280</div>
+                </div>
+                <div class="base-image-container">
+                    <div class="base-image" style="background: linear-gradient(45deg, #32CD32, #228B22);">
+                        <img src="../../asset/screns/indev/riend.png" width="1000" alt="ava">
+                    </div>
+                </div>
+                <div class="base-info">
+                    <div class="base-description">
+                        Комплекс автоматических ферм для получения еды, предметов и опыта. 
+                        Включает фермы мобов, растений и животных. 
+                        Работает на системе редстоун механизмов и водяных потоков.
+                    </div>
+                    <div class="base-stats">
+                        <div class="stat-card">
+                            <div class="stat-label">ФЕРМ</div>
+                            <div class="stat-value">12</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">ПРЕДМЕТОВ/ЧАС</div>
+                            <div class="stat-value">840</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">ЭФФЕКТИВНОСТЬ</div>
+                            <div class="stat-value">95%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">АВТОМАТИЗАЦИЯ</div>
+                            <div class="stat-value">ПОЛНАЯ</div>
+                        </div>
+                    </div>
+                    <div class="base-owner">
+                        Владелец: NatureBuilder
+                    </div>
+                </div>
+            </div>
+
+            <!-- База 3 -->
+            <div class="dirt-texture base-card">
+                <div class="base-header">
+                    <h2 class="base-name">НИЖЕРИЙСКАЯ ШАХТА</h2>
+                    <div class="base-coordinates">x=1180, y=-42, z=-310</div>
+                </div>
+                <div class="base-image-container">
+                    <div class="base-image" style="background: linear-gradient(45deg, #2F4F4F, #708090);">
+                        <img src="../../asset/screns/indev/riend.png" width="1000" alt="ava">
+                    </div>
+                </div>
+                <div class="base-info">
+                    <div class="base-description">
+                        Гигантская шахта для добычи алмазов и других редких ресурсов. 
+                        Освещена красными факелами и оборудована лифтом. 
+                        Защищена от лавы и опасных мобов.
+                    </div>
+                    <div class="base-stats">
+                        <div class="stat-card">
+                            <div class="stat-label">ЯРУСОВ</div>
+                            <div class="stat-value">8</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">РУДЫ</div>
+                            <div class="stat-value">2,450</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">ГЛУБИНА</div>
+                            <div class="stat-value">y=-42</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">БЕЗОПАСНОСТЬ</div>
+                            <div class="stat-value">ВЫСОКАЯ</div>
+                        </div>
+                    </div>
+                    <div class="base-owner">
+                        Владелец: DiamondMiner
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <a href="index.html" class="nav-button">НАЗАД НА ГЛАВНУЮ</a>
+        </div>
+
+        <div class="stone-texture" style="padding: 20px; border: 3px solid #555; text-align: center;">
+            <p>BTA 7.3 Minecraft Server - Beta 1.7.3</p>
+            <p>BTTR COMMMUNITY</p>
+        </div>
+    </div>
+</body>
+</html>
