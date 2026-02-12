@@ -752,6 +752,25 @@ document.querySelectorAll('.win .close').forEach(btn=>{
 
 
 
-
+                <!-- Сервер 3 -->
+                <div class="server-item offline" onclick="window.location.href='#WHENMODSANDSPRINTS'">
+    <div class="server-name">
+        BTA
+        <span class="server-status status-offline">НЕТ СТРАНИЦЫ</span>
+    </div>
+    <div class="server-details">
+        <div class="server-detail">BTA 7.3</div>
+        <div class="server-detail">Vanilla/WhiteList</div>
+        <div class="server-detail">В 4 раза больше игроков может играть</div>
+    </div>
+    <div class="server-description">
+        VIEW DETAILS
+    </div>
+    <div class="server-actions">
+        <button class="action-btn" onclick="window.location.href='bta/index.html'; event.stopPropagation();">VIEW DETAILS</button>
+        <button class="action-btn" onclick="window.location.href='bta/index.html'; event.stopPropagation();">VIEW DETAILS</button>
+        <button class="action-btn" onclick="window.location.href='bta/index.html'; event.stopPropagation();">VIEW DETAILS</button>
+    </div>
+</div>
 
 
