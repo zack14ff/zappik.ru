@@ -3,78 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Каталог построек – BTTR</title>
-    <meta name="description"
-          content="Каталог удивительных построек сервера BTTR: замки, фермы, шахты и другие сооружения с галереей изображений.">
-    <!-- ---------- Шрифты ---------- -->
-    <link rel="preload"
-          href="../../../fonts/minecraft.ttf"
-          as="font"
-          type="font/ttf"
-          crossorigin>
+    <title>Постройки BTTR</title>
+    <link rel="icon" type="image/png" href="../../../asset/logo/pixels.png">
 
+    <!-- Шрифт Minecraft -->
     <style>
-        /* -------------------- Переменные (тёмная тема) -------------------- */
-        :root{
-            --bg-primary   : #0a0a0a;
-            --bg-card      : rgba(30,30,30,.9);
-            --bg-header    : rgba(0,0,0,.7);
-            --bg-overlay   : rgba(0,0,0,.5);
-            --border       : #444;
-            --accent       : #ffcc00;
-            --accent-rgb   : 255,204,0;
-            --text-primary : #fff;
-            --text-secondary: #ddd;
-            --focus        : #ffcc00;
-            --grid-gap     : 1.5rem;
-            --font-main    : 'Arial', sans-serif;
-        }
-
         @font-face{
             font-family:'Minecraft';
-            src:url('./fonts/minecraft.ttf') format('truetype');
-            font-display:swap;
+            src:url('../../../fonts/minecraft.ttf') format('truetype');
         }
-
-        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --accent:#ffcc00;
+            --accent-rgb:255,204,0;
+            --bg-primary:#0a0a0a;
+            --bg-card:rgba(50,50,50,.5);
+            --bg-header:rgba(0,0,0,.6);
+            --bg-overlay:rgba(0,0,0,.7);
+            --border:#666;
+            --text-primary:#fff;
+            --text-secondary:#ddd;
+            --focus:#ffcc00;
+            --grid-gap:1.5rem;
+            --font-main:'Minecraft',sans-serif;
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
         html{scroll-behavior:smooth}
         body{
             font-family:var(--font-main);
             background:var(--bg-primary);
             color:var(--text-primary);
             min-height:100vh;
-            line-height:1.5;
-            background-image:
-                linear-gradient(rgba(0,20,0,.3) 1px,transparent 1px),
-                linear-gradient(90deg,rgba(0,20,0,.3) 1px,transparent 1px);
-            background-size:30px 30px;
         }
-        .visually-hidden{
-            position:absolute !important;
-            width:1px;height:1px;
-            padding:0;margin:-1px;
-            overflow:hidden;clip:rect(0,0,0,0);
-            white-space:nowrap;border:0;
+        .background-overlay{
+            position:fixed;top:0;left:0;width:100%;height:100%;
+            background:rgba(0,0,0,.7);
+            z-index:-1;
         }
 
-        /* -------------------- Шапка -------------------- */
-        header{
+        /* ---------- Шапка ---------- */
+        .container{
+            max-width:1400px;
+            margin:0 auto;
+            padding:20px;
+        }
+        .header{
             text-align:center;
-            padding:2rem 0;
-            margin-bottom:2rem;
+            margin-bottom:30px;
+            padding:20px;
             background:var(--bg-header);
-            border:3px solid var(--border);
             border-radius:15px;
+            border:2px solid #444;
         }
-        header h1{
-            font-size:2.8rem;
+        .header h1{
+            font-size:48px;
             color:var(--accent);
-            text-shadow:3px 3px 0 #000;
-            margin-bottom:.5rem;
+            text-shadow:3px 3px 6px rgba(0,0,0,.8);
         }
-        header p{font-size:1rem;color:var(--text-secondary);}
 
-        /* -------------------- Управление -------------------- */
+        /* ---------- Управление ---------- */
         .controls{
             display:flex;
             flex-wrap:wrap;
@@ -94,10 +80,9 @@
             color:var(--text-primary);
             border:2px solid var(--border);
             padding:.5rem 1rem;
-            font-family:var(--font-main);
-            cursor:pointer;
             border-radius:6px;
-            transition:background .3s,color .3s,border-color .3s;
+            cursor:pointer;
+            transition:.3s;
         }
         .filter-btn:hover,
         .filter-btn:focus-visible,
@@ -114,21 +99,20 @@
         .search input{
             width:100%;
             padding:.9rem 1.2rem;
-            font-family:var(--font-main);
-            font-size:1rem;
             background:#222;
             border:3px solid var(--border);
             border-radius:10px;
             color:var(--text-primary);
+            font-size:1rem;
             outline:none;
-            transition:border-color .3s,box-shadow .3s;
+            transition:.3s;
         }
         .search input:focus{
             border-color:var(--accent);
             box-shadow:0 0 10px rgba(var(--accent-rgb),.5);
         }
 
-        /* -------------------- Сетка построек -------------------- */
+        /* ---------- Сетка построек ---------- */
         .grid{
             display:grid;
             grid-template-columns:repeat(auto-fit,minmax(350px,1fr));
@@ -136,12 +120,12 @@
         }
         .card{
             background:var(--bg-card);
-            border:2px solid var(--border);
+            border:1px solid var(--border);
             border-radius:12px;
             padding:1.25rem;
             position:relative;
             overflow:hidden;
-            transition:transform .3s,border-color .3s,box-shadow .3s;
+            transition:.3s;
             outline:none;
         }
         .card:hover,
@@ -155,7 +139,7 @@
             position:absolute;top:0;left:0;right:0;height:3px;
             background:var(--accent);
             transform:scaleX(0);
-            transition:transform .3s;
+            transition:.3s;
         }
         .card:hover::before,
         .card:focus-within::before{transform:scaleX(1);}
@@ -178,14 +162,13 @@
             justify-content:center;
             font-size:1.75rem;
             margin-right:.75rem;
+            color:var(--accent);
         }
         .title{
             font-size:1.375rem;
             color:var(--accent);
             margin:0;
         }
-
-        /* ---- Координаты + кнопка копирования ---- */
         .coords{
             background:rgba(var(--accent-rgb),.1);
             color:var(--accent);
@@ -196,18 +179,17 @@
             align-items:center;
             gap:.5rem;
             font-size:.875rem;
+            margin-bottom:.75rem;
         }
         .copy-coords{
             background:transparent;
             border:none;
             color:var(--accent);
-            font-size:1rem;
             cursor:pointer;
+            font-size:1rem;
         }
         .copy-coords:hover,
-        .copy-coords:focus-visible{
-            color:#fff;
-        }
+        .copy-coords:focus-visible{color:#fff;}
 
         .image{
             position:relative;
@@ -219,7 +201,7 @@
         }
         .image img{
             width:100%;height:200px;object-fit:cover;
-            transition:transform .3s;
+            transition:.3s;
         }
         .image:hover img,
         .image:focus-within img{transform:scale(1.05);}
@@ -229,18 +211,15 @@
             color:var(--text-primary);
             display:flex;align-items:center;justify-content:center;
             opacity:0;
-            transition:opacity .3s;
+            transition:.3s;
         }
         .image:hover .overlay,
         .image:focus-within .overlay{opacity:1;}
-        .overlay span{font-weight:bold;}
-
         .description{
             font-size:.9375rem;
             color:var(--text-secondary);
             margin:.75rem 0;
         }
-
         .players{
             margin-top:.75rem;
             padding-top:.75rem;
@@ -275,7 +254,7 @@
             text-decoration:none;
             font-size:.8125rem;
             border:1px solid #666;
-            transition:background .3s,color .3s,border-color .3s;
+            transition:.3s;
         }
         .player-link:hover,
         .player-link:focus-visible{
@@ -285,7 +264,7 @@
         }
 
         .no-results{
-            grid-column:1 / -1;
+            grid-column:1/-1;
             background:var(--bg-card);
             border:2px solid var(--border);
             border-radius:12px;
@@ -295,7 +274,7 @@
             color:var(--accent);
         }
 
-        /* -------------------- Lightbox -------------------- */
+        /* ---------- Lightbox ---------- */
         .lightbox{
             display:none;
             position:fixed;
@@ -316,8 +295,7 @@
             width:800px;
         }
         .lb-content img{
-            width:100%;
-            height:auto;
+            width:100%;height:auto;
             border-radius:.75rem;
             box-shadow:0 0 20px rgba(var(--accent-rgb),.3);
         }
@@ -343,7 +321,7 @@
             font-size:1.25rem;
             cursor:pointer;
             border-radius:.3rem;
-            transition:background.3s;
+            transition:.3s;
         }
         .nav:hover,
         .nav:focus-visible{background:rgba(var(--accent-rgb),.8);}
@@ -369,7 +347,7 @@
             border-radius:.3rem;
             overflow:hidden;
             cursor:pointer;
-            transition:transform .3s,border-color .3s;
+            transition:.3s;
             flex-shrink:0;
         }
         .thumb:hover,
@@ -382,18 +360,37 @@
             width:100%;height:100%;object-fit:cover;
         }
 
-        /* -------------------- Адаптивность -------------------- */
+        .back-button{
+            display:block;
+            margin:30px auto;
+            background:var(--accent);
+            color:#000;
+            border:none;
+            padding:15px 30px;
+            font-family:var(--font-main);
+            font-size:18px;
+            border-radius:10px;
+            cursor:pointer;
+            text-align:center;
+            max-width:200px;
+            text-decoration:none;
+            transition:.3s;
+        }
+        .back-button:hover{
+            background:#ffd700;
+            transform:scale(1.05);
+            box-shadow:0 0 15px rgba(255,204,0,.8);
+        }
+
         @media (max-width:768px){
             .grid{grid-template-columns:1fr;}
-            header h1{font-size:2.2rem;}
+            .header h1{font-size:2.2rem;}
             .card-header{flex-direction:column;text-align:center;}
             .icon{margin-right:0;margin-bottom:.5rem;}
             .controls{flex-direction:column;align-items:stretch;}
         }
-
-        /* -------------------- Предпочтения -------------------- */
         @media (prefers-reduced-motion:reduce){
-            *,*::before,*::after{transition:none!important;}
+            *{transition:none!important;}
         }
         :focus-visible{
             outline:3px solid var(--focus);
@@ -402,52 +399,48 @@
     </style>
 </head>
 <body>
-    <!-- ==================== Шапка ==================== -->
-    <header>
-        <h1>ПОСТРОЙКИ СЕРВЕРА</h1>
-        <p>Страница в разработке!</p>
-        <p>Zakap тут работает</p>
-        <p><img src="https://starlightskins.lunareclipse.studio/render/reading/zakap/full" alt="reading guides"></p>
-        <p>Поддержите JansickGD в создания сайта</p>
-    </header>
+    <!-- Тёмный полупрозрачный оверлей (как у остальных страниц) -->
+    <div class="background-overlay"></div>
 
-    <main class="container">
-        <!-- ==================== Управление ==================== -->
+    <div class="container">
+        <!-- Шапка -->
+        <header class="header">
+            <h1>Постройки BTTR</h1>
+        </header>
+
+        <!-- Управление -->
         <section class="controls" aria-label="Управление каталогом">
             <div class="stats">
                 Всего построек: <span id="total-count">0</span>
             </div>
             <nav class="filters" role="group" aria-label="Фильтры построек">
                 <button class="filter-btn active" data-filter="all">Все</button>
-                <button class="filter-btn" data-filter="castle">Замки</button>
-                <button class="filter-btn" data-filter="farm">Фермы</button>
+                <button class="filter-btn" data-filter="main">Архитектура</button>
+                <button class="filter-btn" data-filter="home">Дома</button>
                 <button class="filter-btn" data-filter="other">Другое</button>
             </nav>
             <div class="search">
                 <label for="search-input" class="visually-hidden">Поиск построек</label>
-                <input type="search"
-                       id="search-input"
+                <input type="search" id="search-input"
                        placeholder="Поиск построек..."
                        autocomplete="off"
                        aria-label="Поиск построек">
             </div>
         </section>
 
-        <!-- ==================== Сетка построек ==================== -->
+        <!-- Сетка построек -->
         <section id="buildings" class="grid" aria-live="polite"></section>
 
         <p id="no-results" class="no-results" hidden>Ещё не построено!</p>
-    </main>
 
-    <!-- ==================== Lightbox (галерея) ==================== -->
-    <div id="lightbox"
-         class="lightbox"
-         role="dialog"
-         aria-modal="true"
-         aria-hidden="true"
-         aria-label="Галерея изображений">
+        <!-- Кнопка «Назад к кланам» (как в остальных шаблонах) -->
+        <a href="../index.html" class="back-button">Назад к списку</a>
+    </div>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox" role="dialog"
+         aria-modal="true" aria-hidden="true" aria-label="Галерея изображений">
         <button class="close-btn" aria-label="Закрыть галерею">&times;</button>
-
         <div class="lb-content">
             <img id="lb-img" src="" alt="">
             <button class="nav prev" aria-label="Предыдущее изображение">&#9664;</button>
@@ -457,31 +450,65 @@
         </div>
     </div>
 
-    <!-- ==================== JavaScript ==================== -->
+    <!-- Скрипт -->
     <script>
-        /* ------------ Данные построек ------------ */
+        /* --------- Данные построек (можно добавить свои --------- */
         const buildings = [
             {
-                name: "Замок Алекса",
-                type: "castle",
+                name: "Кирпичная Площадь",
+                type: "main",
                 icon: "🏰",
-                coords: {x:1245, y:64, z:-342},
-                description: "Величественный замок из белого камня с башнями и оборонительными стенами. Построен в классическом средневековом стиле с элементами фэнтези.",
+                coords: {},
+                description: "спавн где все пути скрещаются с домами и с кланом ассирии",
                 players: [
-                    {name:"AlexMaster", link:"players/alex.html"},
-                    {name:"SteveBuilder", link:"players/steve.html"}
+                    {name:"Dachentank", link:"#"},
+                    {name:"FLEKSIY", link:"../admin.html"}
                 ],
                 images: [
-                    "https://placehold.co/800x500/8B4513/FFFFFF?text=Замок+Алекса+1",
-                    "https://placehold.co/800x500/8B4513/FFFFFF?text=Замок+Алекса+2",
-                    "https://placehold.co/800x500/8B4513/FFFFFF?text=Замок+Алекса+3",
-                    "https://placehold.co/800x500/8B4513/FFFFFF?text=Замок+Алекса+4",
-                    "https://placehold.co/800x500/8B4513/FFFFFF?text=Замок+Алекса+5"
+                    "../../../asset/screns/hugedata/2026-02-08_19.05.24.png",
+                    "../../../asset/screns/hugedata/2026-02-08_19.05.31.png",
+                    "../../../asset/screns/hugedata/2026-02-08_19.05.16.png"
+                ]
+            },
+            {
+                name: "Кобл-пирамида",
+                type: "main",
+                icon: "⛏️",
+                coords: {x:666, y:666, z:66},
+                description: "Большая пирамида сделаная двумя игроками. По идеи Той самой версии про кирпичные пирамиды 1024x1024 но поменьше",
+                players: [
+                    {name:"zakap", link:"#"},
+                    {name:"astolfo", link:"#"}
+                ],
+                images: [
+                    "../../../asset/screns/hugedata/2026-02-16_20.27.20.png",
+                    "../../../asset/screns/hugedata/2026-02-16_20.26.38.png",
+                    "../../../asset/screns/hugedata/2026-02-16_20.27.41.png",
+                    "../../../asset/screns/hugedata/2026-02-16_20.27.53.png",
+                    "../../../asset/screns/hugedata/2026-02-16_20.28.04.png"
+                ]
+            },
+            {
+                name: "Подземный городок",
+                type: "home",
+                icon: "🗺️",
+                coords: {},
+                description: "Городок Сделаный komithepotion где у него есть большой склад",
+                players: [
+                    {name:"komithepotion", link:"#"}
+                ],
+                images: [
+                    "../../../asset/screns/hugedata/2026-02-16_20.30.40.png",
+                    "../../../asset/screns/hugedata/2026-02-16_20.30.56.png",
+                    "../../../asset/screns/hugedata/2026-02-16_20.31.05.png",
+                    "../../../asset/screns/hugedata/2026-02-16_20.31.36.png",
+                    "../../../asset/screns/hugedata/2026-02-16_20.31.41.png",
+                    "../../../asset/screns/hugedata/2026-02-16_20.31.56.png"
                 ]
             }
         ];
 
-        /* ------------------- UI-элементы ------------------- */
+        /* ---------- UI элементы ---------- */
         const grid           = document.getElementById('buildings');
         const totalCount     = document.getElementById('total-count');
         const searchInput    = document.getElementById('search-input');
@@ -496,16 +523,16 @@
         const lbCounter      = document.getElementById('lb-counter');
         const lbThumbs       = document.getElementById('lb-thumbs');
 
-        let currentBuilding = null;   // объект в массиве buildings
+        let currentBuilding = null;
         let currentImgIdx   = 0;
         let activeFilter    = 'all';
         let debounceTimer   = null;
 
-        /* ------------------- Рендер карточек ------------------- */
-        function renderCards() {
+        /* ---------- Рендер карточек ---------- */
+        function renderCards(){
             const frag = document.createDocumentFragment();
 
-            buildings.forEach((b, i) => {
+            buildings.forEach((b,i)=>{
                 const card = document.createElement('article');
                 card.className = 'card';
                 card.dataset.type  = b.type;
@@ -513,96 +540,78 @@
                 card.dataset.index = i;
                 card.tabIndex = 0;
 
-                /* Header (иконка + название) */
+                // Header (иконка + название)
                 const header = document.createElement('header');
                 header.className = 'card-header';
-
                 const icon = document.createElement('div');
                 icon.className = 'icon';
                 icon.setAttribute('aria-hidden','true');
                 icon.textContent = b.icon;
-
                 const title = document.createElement('h2');
                 title.className = 'title';
                 title.textContent = b.name;
-
-                header.append(icon, title);
+                header.append(icon,title);
                 card.appendChild(header);
 
-                /* Координаты + кнопка копировать */
+                // Координаты + копировать
                 const coords = document.createElement('div');
                 coords.className = 'coords';
-
                 const code = document.createElement('code');
                 code.textContent = `x=${b.coords.x}, y=${b.coords.y}, z=${b.coords.z}`;
-                coords.appendChild(code);
-
                 const copyBtn = document.createElement('button');
                 copyBtn.className = 'copy-coords';
                 copyBtn.type = 'button';
                 copyBtn.setAttribute('aria-label','Копировать координаты');
                 copyBtn.textContent = '©';
-                coords.appendChild(copyBtn);
-
+                coords.append(code,copyBtn);
                 card.appendChild(coords);
 
-                /* Основное изображение (открывает Lightbox) */
+                // Главная картинка (открывает галерею)
                 const figure = document.createElement('figure');
                 figure.className = 'image';
                 figure.tabIndex = 0;
                 figure.setAttribute('role','button');
                 figure.setAttribute('aria-label',`Открыть галерею ${b.name}`);
                 figure.dataset.index = i;
-
                 const img = document.createElement('img');
                 img.src = b.images[0];
                 img.alt = `${b.name} – превью`;
                 img.loading = 'lazy';
-
                 const overlay = document.createElement('div');
                 overlay.className = 'overlay';
-                overlay.innerHTML = `<span> º ${b.images.length} фото</span>`;
-
-                figure.append(img, overlay);
+                overlay.innerHTML = `<span>º ${b.images.length} фото</span>`;
+                figure.append(img,overlay);
                 card.appendChild(figure);
 
-                /* Описание */
+                // Описание
                 const desc = document.createElement('p');
                 desc.className = 'description';
                 desc.textContent = b.description;
                 card.appendChild(desc);
 
-                /* Список игроков (аватарка + ник) */
+                // Игроки‑строители
                 const playersSec = document.createElement('section');
                 playersSec.className = 'players';
-
                 const playersTitle = document.createElement('h4');
                 playersTitle.className = 'players-title';
                 playersTitle.textContent = 'СТРОИТЕЛИ:';
-                playersSec.appendChild(playersTitle);
-
                 const playersList = document.createElement('ul');
                 playersList.className = 'players-list';
-
-                b.players.forEach(p => {
+                b.players.forEach(p=>{
                     const li = document.createElement('li');
                     li.className = 'player-item';
-
                     const avatar = document.createElement('img');
                     avatar.className = 'player-avatar';
                     avatar.src = `https://mineskin.eu/helm/${p.name.toLowerCase()}`;
                     avatar.alt = `${p.name} avatar`;
-
                     const link = document.createElement('a');
                     link.className = 'player-link';
                     link.href = p.link;
                     link.textContent = p.name;
-
-                    li.append(avatar, link);
+                    li.append(avatar,link);
                     playersList.appendChild(li);
                 });
-
-                playersSec.appendChild(playersList);
+                playersSec.append(playersTitle,playersList);
                 card.appendChild(playersSec);
 
                 frag.appendChild(card);
@@ -612,33 +621,33 @@
             totalCount.textContent = buildings.length;
         }
 
-        /* ------------------- Фильтрация и поиск ------------------- */
-        function applyFilters() {
+        /* ---------- Фильтрация и поиск ---------- */
+        function applyFilters(){
             const term = searchInput.value.trim().toLowerCase();
             let visible = 0;
 
-            document.querySelectorAll('.card').forEach(card => {
-                const typeMatch = activeFilter === 'all' || card.dataset.type === activeFilter;
+            document.querySelectorAll('.card').forEach(card=>{
+                const typeMatch = activeFilter === 'all' || card.dataset.type===activeFilter;
                 const name = card.dataset.name.toLowerCase();
                 const desc = card.querySelector('.description').textContent.toLowerCase();
                 const playerNames = Array.from(card.querySelectorAll('.player-link')).map(a=>a.textContent.toLowerCase());
 
-                const textMatch = term === '' ||
+                const textMatch = term==='' ||
                                   name.includes(term) ||
                                   desc.includes(term) ||
                                   playerNames.some(p=>p.includes(term));
 
                 const show = typeMatch && textMatch;
                 card.style.display = show ? '' : 'none';
-                if (show) visible++;
+                if(show) visible++;
             });
 
             totalCount.textContent = visible;
-            noResults.hidden = visible !== 0;
+            noResults.hidden = visible!==0;
         }
 
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
+        filterBtns.forEach(btn=>{
+            btn.addEventListener('click',()=>{
                 filterBtns.forEach(b=>b.classList.remove('active'));
                 btn.classList.add('active');
                 activeFilter = btn.dataset.filter;
@@ -646,116 +655,121 @@
             });
         });
 
-        searchInput.addEventListener('input', () => {
+        searchInput.addEventListener('input',()=>{
             clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(applyFilters, 250);
+            debounceTimer = setTimeout(applyFilters,250);
         });
 
-        /* ------------------- Lightbox ------------------- */
-        function openLightbox(buildingIdx) {
+        /* ---------- Lightbox ---------- */
+        function openLightbox(buildingIdx){
             currentBuilding = buildings[buildingIdx];
-            currentImgIdx   = 0;
+            currentImgIdx = 0;
             updateLightbox();
             lightbox.setAttribute('aria-hidden','false');
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow='hidden';
         }
-
-        function closeLightbox() {
+        function closeLightbox(){
             lightbox.setAttribute('aria-hidden','true');
-            document.body.style.overflow = '';
+            document.body.style.overflow='';
         }
-
-        function updateLightbox() {
+        function updateLightbox(){
             const src = currentBuilding.images[currentImgIdx];
             lbImg.src = src;
             lbImg.alt = `${currentBuilding.name} ${currentImgIdx+1}`;
             lbCounter.textContent = `${currentImgIdx+1} / ${currentBuilding.images.length}`;
             renderThumbs();
         }
-
-        function renderThumbs() {
+        function renderThumbs(){
             lbThumbs.innerHTML = '';
-            currentBuilding.images.forEach((src,i) => {
+            currentBuilding.images.forEach((src,i)=>{
                 const btn = document.createElement('button');
                 btn.className = 'thumb' + (i===currentImgIdx ? ' active' : '');
                 btn.type = 'button';
                 btn.setAttribute('aria-label',`Миниатюра ${i+1}`);
                 btn.innerHTML = `<img src="${src.replace('800x500','100x100')}" alt="Миниатюра ${i+1}">`;
-                btn.addEventListener('click', () => {
-                    currentImgIdx = i;
-                    updateLightbox();
-                });
+                btn.addEventListener('click',()=>{ currentImgIdx=i; updateLightbox(); });
                 lbThumbs.appendChild(btn);
             });
         }
-
-        function changeImg(step) {
+        function changeImg(step){
             const total = currentBuilding.images.length;
             currentImgIdx = (currentImgIdx + step + total) % total;
             updateLightbox();
         }
 
-        /* Клики по изображениям в карточках */
-        grid.addEventListener('click', e => {
+        // Клик по превью
+        grid.addEventListener('click',e=>{
             const fig = e.target.closest('.image');
-            if (fig) {
+            if(fig){
                 openLightbox(Number(fig.dataset.index));
                 return;
             }
-
-            // Кнопка копировать координаты
-            if (e.target.classList.contains('copy-coords')) {
+            // Копировать координаты
+            if(e.target.classList.contains('copy-coords')){
                 const code = e.target.closest('.coords').querySelector('code');
                 const txt = code.textContent;
-                navigator.clipboard.writeText(txt).then(() => {
-                    const original = e.target.textContent;
+                navigator.clipboard.writeText(txt).then(()=>{
+                    const orig = e.target.textContent;
                     e.target.textContent = '✅';
-                    setTimeout(() => e.target.textContent = original, 1500);
-                }).catch(() => alert('Не удалось скопировать координаты'));
+                    setTimeout(()=>e.target.textContent=orig,1500);
+                }).catch(()=>alert('Не удалось скопировать'));
                 e.stopPropagation();
             }
         });
 
-        /* Открытие Lightbox клавишами Enter/Space */
-        grid.addEventListener('keydown', e => {
-            if (e.key === 'Enter' || e.key === ' ') {
+        // Открытие Lightbox клавишами Enter/Space
+        grid.addEventListener('keydown',e=>{
+            if(e.key==='Enter' || e.key===' '){
                 const fig = e.target.closest('.image');
-                if (fig) {
+                if(fig){
                     openLightbox(Number(fig.dataset.index));
                     e.preventDefault();
                 }
             }
         });
 
-        /* Управление Lightbox */
-        lbCloseBtn.addEventListener('click', closeLightbox);
-        lbPrevBtn.addEventListener('click', () => changeImg(-1));
-        lbNextBtn.addEventListener('click', () => changeImg(1));
+        lbCloseBtn.addEventListener('click',closeLightbox);
+        lbPrevBtn.addEventListener('click',()=>changeImg(-1));
+        lbNextBtn.addEventListener('click',()=>changeImg(1));
 
-        document.addEventListener('keydown', e => {
-            if (lightbox.getAttribute('aria-hidden') === 'false') {
-                if (e.key === 'Escape') closeLightbox();
-                if (e.key === 'ArrowLeft')  changeImg(-1);
-                if (e.key === 'ArrowRight') changeImg(1);
+        // Управление Lightbox клавиатурой
+        document.addEventListener('keydown',e=>{
+            if(lightbox.getAttribute('aria-hidden')==='false'){
+                if(e.key==='Escape') closeLightbox();
+                if(e.key==='ArrowLeft') changeImg(-1);
+                if(e.key==='ArrowRight') changeImg(1);
             }
         });
-
-        lightbox.addEventListener('click', e => {
-            if (e.target === lightbox) closeLightbox();
+        // Закрыть щелчком по затемнённой области
+        lightbox.addEventListener('click',e=>{
+            if(e.target===lightbox) closeLightbox();
         });
 
-        /* ------------------- Инициализация ------------------- */
-        document.addEventListener('DOMContentLoaded', () => {
+        /* ---------- Фоновая картинка (как в остальных страницах) ---------- */
+        const backgrounds = [
+            '../../../asset/bg.png',
+            '../../../asset/bg1.png',
+            '../../../asset/screns/baza.png',
+            '../../../asset/alone.png',
+            '../../../asset/where.png'
+        ];
+        function getRandomBackground(){
+            return backgrounds[Math.floor(Math.random()*backgrounds.length)];
+        }
+        document.addEventListener('DOMContentLoaded',()=>{
+            // фон
+            document.body.style.backgroundImage = `url('${getRandomBackground()}')`;
+            // рендерим карточки
             renderCards();
-            // небольшая анимация появления карточек
-            document.querySelectorAll('.card').forEach((c,i) => {
+            // небольшая анимация появления
+            document.querySelectorAll('.card').forEach((c,i)=>{
                 c.style.opacity = 0;
                 c.style.transform = 'translateY(20px)';
-                setTimeout(() => {
+                setTimeout(()=>{
                     c.style.transition = 'all .5s ease';
                     c.style.opacity = 1;
                     c.style.transform = 'translateY(0)';
-                }, i * 100);
+                }, i*100);
             });
         });
     </script>
