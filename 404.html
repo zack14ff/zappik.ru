@@ -1,20 +1,11 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GAME OVER</title>
+    <title>404 - System Error</title>
     <style>
-        @font-face {
-            font-family: 'Undertale';
-            src: url('fonts/fnt_comicsans.ttf') format('truetype');
-        }
-
-        @font-face {
-            font-family: 'ComicSans';
-            src: url('fonts/fnt_comicsans.ttf') format('truetype');
-        }
-
+        /* Сброс стилей и базовые настройки */
         * {
             margin: 0;
             padding: 0;
@@ -22,343 +13,266 @@
         }
 
         body {
-            background: #000;
-            color: #fff;
-            font-family: 'Undertale', 'ComicSans', cursive;
+            background-color: #000;
+            color: #0F0;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
             position: relative;
         }
 
-        #gameOverScreen {
+        /* Холст для матричного дождя */
+        #matrix-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* Контейнер с контентом */
+        .content {
+            position: relative;
+            z-index: 1;
             text-align: center;
             padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #0F0;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3), inset 0 0 20px rgba(0, 255, 0, 0.1);
+            backdrop-filter: blur(2px);
+            max-width: 600px;
+            width: 90%;
         }
 
-        #gameOverText {
-            font-size: 48px;
-            color: #ffffff;
-            text-shadow: 0 0 10px #ffffff;
-            margin-bottom: 30px;
-            letter-spacing: 3px;
-            animation: pulse 1.5s infinite;
-        }
-
-        #message {
-            font-size: 24px;
-            color: #fff;
-            margin-bottom: 40px;
-            line-height: 1.6;
-        }
-
-        #choices {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .choice-btn {
-            background: none;
-            border: none;
-            color: #fff;
-            font-family: 'Undertale', 'ComicSans', cursive;
-            font-size: 20px;
-            padding: 10px 20px;
-            cursor: pointer;
+        /* Глитч-эффект для 404 */
+        .glitch {
+            font-size: 120px;
+            font-weight: bold;
             position: relative;
-            text-align: left;
-            width: 300px;
-            transition: all 0.3s ease;
+            color: #0F0;
+            text-shadow: 0 0 10px #0F0, 0 0 20px #0F0, 0 0 40px #0F0;
+            animation: flicker 3s infinite;
         }
 
-        .choice-btn:hover {
-            color: #fbff00;
-            text-shadow: 0 0 5px #fbff00;
-        }
-
-        .choice-btn::before {
-            content: "*";
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
             position: absolute;
-            left: -30px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #fffb00;
-            font-size: 24px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        /* Анимация мерцания */
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.5;
-            }
-        }
-
-        /* Эффекты крови */
-        .blood-drop {
-            position: absolute;
-            background: #2c2c2c;
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0.7;
-        }
-
-        /* Стиль для активного выбора */
-        .selected {
-            color: #fffb00;
-            text-shadow: 0 0 10px #fbff00;
-        }
-
-        /* Секретная страница */
-        #secretScreen {
-            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: #000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            flex-direction: column;
-            text-align: center;
         }
 
-        #secretContent {
-            max-width: 600px;
-            padding: 30px;
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 #f00;
+            clip-path: inset(0 0 0 0);
+            animation: glitch-anim-1 2s infinite linear alternate-reverse;
         }
 
-        #secretContent h1 {
-            color: #ff0000;
-            font-size: 36px;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px #ff0000;
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 #00f;
+            clip-path: inset(0 0 0 0);
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
         }
 
-        #secretContent p {
-            font-size: 18px;
-            line-height: 1.6;
-            margin: 15px 0;
+        .message {
+            font-size: 24px;
+            margin: 20px 0 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
-        #continueBtn {
-            background: #ff0000;
-            color: #000;
-            border: none;
-            padding: 12px 25px;
-            font-family: 'Undertale', 'ComicSans', cursive;
-            font-size: 18px;
-            cursor: pointer;
-            margin-top: 30px;
-            border: 2px solid #000;
-            transition: all 0.3s ease;
+        .sub-message {
+            font-size: 14px;
+            color: #0a0;
+            margin-bottom: 30px;
+            line-height: 1.5;
         }
 
-        #continueBtn:hover {
-            background: #ff6666;
-            box-shadow: 0 0 15px #ff0000;
-        }
-
-        /* Счетчик попыток */
-        #attempts {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
+        /* Стильная кнопка */
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
             font-size: 16px;
-            color: #666;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            color: #0F0;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: 2px solid #0F0;
+            background: transparent;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
         }
 
-        /* Музыкальный эффект (визуальный) */
-        .music-note {
+        .btn::before {
+            content: '';
             position: absolute;
-            font-size: 20px;
-            opacity: 0;
-            animation: floatUp 2s forwards;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: #0F0;
+            transition: left 0.3s ease;
+            z-index: -1;
         }
 
-        @keyframes floatUp {
-            0% {
-                transform: translateY(0);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100px);
-                opacity: 0;
-            }
+        .btn:hover {
+            color: #000;
+            box-shadow: 0 0 20px #0F0;
+        }
+
+        .btn:hover::before {
+            left: 0;
+        }
+
+        /* Эффект сканлайнов (полосы как на старом мониторе) */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0,0,0,0.2) 50%,
+                rgba(0,0,0,0.2)
+            );
+            background-size: 100% 4px;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* Анимации */
+        @keyframes flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+            20%, 24%, 55% { opacity: 0.4; }
+        }
+
+        @keyframes glitch-anim-1 {
+            0% { clip-path: inset(20% 0 80% 0); }
+            20% { clip-path: inset(60% 0 10% 0); }
+            40% { clip-path: inset(40% 0 50% 0); }
+            60% { clip-path: inset(80% 0 5% 0); }
+            80% { clip-path: inset(10% 0 70% 0); }
+            100% { clip-path: inset(30% 0 20% 0); }
+        }
+
+        @keyframes glitch-anim-2 {
+            0% { clip-path: inset(10% 0 60% 0); }
+            20% { clip-path: inset(80% 0 5% 0); }
+            40% { clip-path: inset(30% 0 20% 0); }
+            60% { clip-path: inset(10% 0 80% 0); }
+            80% { clip-path: inset(50% 0 30% 0); }
+            100% { clip-path: inset(70% 0 10% 0); }
+        }
+
+        /* Адаптивность */
+        @media (max-width: 600px) {
+            .glitch { font-size: 80px; }
+            .message { font-size: 18px; }
+            .sub-message { font-size: 12px; }
+            .btn { padding: 10px 20px; font-size: 14px; }
         }
     </style>
 </head>
 <body>
-    <div id="gameOverScreen">
-        <div id="gameOverText"><img src="https://github.com/zack14ff/zappik.ru/blob/main/asset/logo/gameover.png?raw=true" alt="GameOver"></div>
-        <div id="message">
-            Не удалось найти запрашиваемую страницу.<br>
-           
-        </div>
-        <div id="choices">
-            <button class="choice-btn" onclick="loadGame()">Продолжить</button>
-            
-            <button class="choice-btn" onclick="tobySecret()">РЕШИМОСТЬ</button>
-        </div>
-    </div>
 
-    <div id="secretScreen">
-        <div id="secretContent">
-            <h1>Ты Решим</h1>
-            <p>Ты походу пересверкал своей душой</p>
-            <p>Ты обязан быть отвергнутым из-за</p>
-            <p>....</p>
-            <button id="continueBtn" onclick="goHome()">Продолжить</button>
-        </div>
-    </div>
+    <!-- Эффект старого монитора -->
+    <div class="scanlines"></div>
 
-    <div id="attempts">Попыток: <span id="attemptCount">1</span></div>
+    <!-- Холст для матрицы -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- Основной контент -->
+    <div class="content">
+        <h1 class="glitch" data-text="404">404</h1>
+        <p class="message">System Error: Page Not Found</p>
+        <p class="sub-message">
+            > TRACE ROUTE FAILED<br>
+            > The resource you are looking for has been removed, had its name changed, or is temporarily unavailable.<br>
+            > Initiate return sequence?
+        </p>
+        <a href="index.html" class="btn">Return to Mainframe</a>
+    </div>
 
     <script>
-        // Счетчик попыток
-        let attempts = localStorage.getItem('gameOverAttempts') || 0;
-        attempts++;
-        localStorage.setItem('gameOverAttempts', attempts);
-        document.getElementById('attemptCount').textContent = attempts;
+        // Настройка матричного дождя
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
 
-        // Создание эффектов крови
-        function createBloodEffect() {
-            setInterval(() => {
-                const drop = document.createElement('div');
-                drop.className = 'blood-drop';
-                drop.style.width = Math.random() * 15 + 5 + 'px';
-                drop.style.height = drop.style.width;
-                drop.style.left = Math.random() * 100 + 'vw';
-                drop.style.top = '-20px';
-                drop.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
-                
-                document.body.appendChild(drop);
-                
-                // Удалить каплю после анимации
-                setTimeout(() => {
-                    if (drop.parentNode) {
-                        drop.parentNode.removeChild(drop);
-                    }
-                }, 3000);
-            }, 500);
+        // Установка размеров холста
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Символы: катакана + латиница + цифры (как в оригинальном фильме)
+        const katakana = 'ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ';
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nums = '0123456789';
+        const alphabet = katakana + latin + nums;
+
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+
+        // Массив для отслеживания Y-координаты каждой колонки
+        const drops = [];
+        for (let x = 0; x < columns; x++) {
+            drops[x] = 1;
         }
 
-        // Добавить CSS для падения капель
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes fall {
-                0% { transform: translateY(0); opacity: 0.7; }
-                100% { transform: translateY(100vh); opacity: 0; }
+        // Функция отрисовки
+        const draw = () => {
+            // Полупрозрачный черный прямоугольник для эффекта затухания следа
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#0F0'; // Зеленый цвет текста
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                // Случайный символ
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                
+                // Отрисовка символа
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                // Сброс капли наверх случайным образом после того, как она пересекла экран
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+
+                // Увеличение Y-координаты
+                drops[i]++;
             }
-        `;
-        document.head.appendChild(style);
-
-        // Создание музыкальных нот
-        function createMusicNotes() {
-            const notes = ['♪', '♫', '♬', '♩'];
-            setInterval(() => {
-                const note = document.createElement('div');
-                note.className = 'music-note';
-                note.textContent = notes[Math.floor(Math.random() * notes.length)];
-                note.style.left = Math.random() * 100 + 'vw';
-                note.style.top = Math.random() * 100 + 'vh';
-                note.style.color = '#' + Math.floor(Math.random()*16777215).toString(16);
-                
-                document.body.appendChild(note);
-                
-                // Удалить ноту после анимации
-                setTimeout(() => {
-                    if (note.parentNode) {
-                        note.parentNode.removeChild(note);
-                    }
-                }, 2000);
-            }, 1000);
-        }
-
-        // Функции выбора
-        function loadGame() {
-            // Анимация выбора
-            const btn = event.target;
-            btn.classList.add('selected');
-            
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 1000);
-        }
-
-        function returnToMenu() {
-            // Анимация выбора
-            const btn = event.target;
-            btn.classList.add('selected');
-            
-            setTimeout(() => {
-                window.location.href = '../index.html';
-            }, 1000);
-        }
-
-        function tobySecret() {
-            // Анимация выбора
-            const btn = event.target;
-            btn.classList.add('selected');
-            
-            setTimeout(() => {
-                document.getElementById('secretScreen').style.display = 'flex';
-                // Создать эффект свечения
-                document.getElementById('secretScreen').style.boxShadow = '0 0 50px #ff00ff';
-            }, 1000);
-        }
-
-        function goHome() {
-            window.location.href = '../index.html';
-        }
-
-        // Инициализация эффектов
-        window.onload = function() {
-            createBloodEffect();
-            createMusicNotes();
-            
-            // Добавить эффект мерцания тексту
-            setInterval(() => {
-                const text = document.getElementById('gameOverText');
-                text.style.textShadow = `0 0 ${Math.random() * 20 + 5}px #ff0000`;
-            }, 300);
         };
 
-        // Эффект при наведении на кнопки
-        document.addEventListener('DOMContentLoaded', function() {
-            const buttons = document.querySelectorAll('.choice-btn');
-            buttons.forEach(button => {
-                button.addEventListener('mouseenter', function() {
-                    // Создать маленькую кровавую каплю при наведении
-                    const smallDrop = document.createElement('div');
-                    smallDrop.className = 'blood-drop';
-                    smallDrop.style.width = '3px';
-                    smallDrop.style.height = '3px';
-                    smallDrop.style.left = (this.offsetLeft + Math.random() * this.offsetWidth) + 'px';
-                    smallDrop.style.top = (this.offsetTop + this.offsetHeight) + 'px';
-                    smallDrop.style.animation = 'fall 1s linear forwards';
-                    
-                    document.body.appendChild(smallDrop);
-                    
-                    setTimeout(() => {
-                        if (smallDrop.parentNode) {
-                            smallDrop.parentNode.removeChild(smallDrop);
-                        }
-                    }, 1000);
-                });
-            });
+        // Запуск анимации (30-40 мс дает оптимальную скорость)
+        setInterval(draw, 35);
+
+        // Адаптация при изменении размера окна
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            // Пересчет колонок при ресайзе
+            const newColumns = canvas.width / fontSize;
+            // Заполняем новые колонки, если экран стал шире
+            for (let x = drops.length; x < newColumns; x++) {
+                drops[x] = 1;
+            }
         });
     </script>
 </body>

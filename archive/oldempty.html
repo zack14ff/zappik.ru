@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пустая Страничка</title>
+    <link rel="icon" type="image/x-icon" href="asset/logo/idkguy.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Загрузка пользовательского шрифта - ОБНОВЛЕННЫЙ ПУТЬ */
+        @font-face {
+            font-family: 'Rufont';
+            src: url('./rufont.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap; /* Для лучшего отображения при загрузке */
+        }
+        
+        /* Альтернативный вариант загрузки шрифта */
+        @font-face {
+            font-family: 'Rufont';
+            src: url('rufont.ttf') format('truetype');
+            src: local('Rufont'),
+                 url('./fonts/rufont.ttf') format('truetype'),
+                 url('../rufont.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Rufont', 'Arial', 'Helvetica', sans-serif;
+            color: white;
+            overflow-x: hidden;
+            /* Применяем кастомный шрифт ко всему документу */
+        }
+        
+        /* Резервный шрифт, если Rufont не загрузится */
+        .fallback-font {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+        }
+        
+        /* Видеофон */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .video-background video {
+            min-width: 100%;
+            min-height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Затемнение для лучшей читаемости текста */
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: -1;
+        }
+        
+        /* Основной контент */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            text-align: center;
+            padding: 60px 0 40px;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+            color: #FFD700;
+            font-family: 'Rufont', 'Arial', sans-serif;
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
+            font-family: 'Rufont', 'Arial', sans-serif;
+        }
+        
+        /* Стили для ссылок */
+        .content {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto 50px;
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            font-family: 'Rufont', 'Arial', sans-serif;
+        }
+        
+        p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            font-family: 'Rufont', 'Arial', sans-serif;
+        }
+        
+        /* Желтые ссылки */
+        a {
+            color: #FFD700;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 2px;
+            font-family: 'Rufont', 'Arial', sans-serif;
+        }
+        
+        a:hover {
+            color: #FFED4E;
+            border-bottom: 2px solid #FFED4E;
+            text-shadow: 0 0 10px rgba(255, 237, 78, 0.5);
+        }
+        
+        /* Контроль видео */
+        .media-controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .video-control {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.7);
+            border: 2px solid #FFD700;
+        }
+        
+        .control-toggle {
+            width: 70px;
+            height: 70px;
+            background: rgba(30, 30, 30, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+            border: 2px solid #FFD700;
+        }
+        
+        .control-toggle:hover {
+            transform: scale(1.05);
+            background: rgba(50, 50, 50, 0.95);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+        
+        .control-toggle i {
+            font-size: 28px;
+            color: #FFD700;
+        }
+        
+        .control-status {
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            min-width: 150px;
+            margin-bottom: 10px;
+            font-family: 'Rufont', 'Arial', sans-serif;
+        }
+        
+        /* Ползунок громкости */
+        .volume-slider {
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .volume-slider input {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #333;
+            outline: none;
+        }
+        
+        .volume-slider input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #FFD700;
+            cursor: pointer;
+            border: 1px solid #000;
+        }
+        
+        .volume-slider input::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: #FFD700;
+            cursor: pointer;
+            border: 1px solid #000;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .content {
+                padding: 25px;
+            }
+            
+            .media-controls {
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .control-toggle {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .control-toggle i {
+                font-size: 24px;
+            }
+            
+            .control-status {
+                font-size: 0.9rem;
+                min-width: 130px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .media-controls {
+                bottom: 15px;
+                right: 15px;
+            }
+            
+            .control-toggle {
+                width: 55px;
+                height: 55px;
+            }
+            
+            .control-toggle i {
+                font-size: 22px;
+            }
+            
+            .control-status {
+                font-size: 0.85rem;
+                min-width: 120px;
+            }
+        }
+        
+        /* Стиль для кнопок навигации */
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-button {
+            display: inline-block;
+            padding: 12px 25px;
+            background: rgba(255, 215, 0, 0.2);
+            border: 2px solid #FFD700;
+            color: #FFD700;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-family: 'Rufont', 'Arial', sans-serif;
+        }
+        
+        .nav-button:hover {
+            background: rgba(255, 215, 0, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+        
+        /* Список в контенте */
+        ul {
+            margin-left: 20px;
+            margin-bottom: 25px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+            font-family: 'Rufont', 'Arial', sans-serif;
+        }
+        
+        /* Сообщение о загрузке шрифта */
+        .font-load-message {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border: 1px solid #FFD700;
+            font-size: 12px;
+            z-index: 1000;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Сообщение о статусе шрифта -->
+    <div id="font-status" class="font-load-message"></div>
+    
+    <!-- Видеофон -->
+    <div class="video-background">
+        <video autoplay muted loop id="bg-video">
+            <source src="vessel.mp4" type="video/mp4">
+            Ошибочка браузера.
+        </video>
+    </div>
+    <div class="video-overlay"></div>
+    
+    <!-- Основной контент -->
+    <div class="container">
+        <header>
+            <h1>Ты походу заблудился</h1>
+            <div class="subtitle">
+                эта страница пуста лишь путник до того как всё тут снесёться и переделается
+            </div>
+        </header>
+        
+        <div class="content">
+            <p>Что Могу Посоветовать</p>
+            
+            
+            
+            <p>Стыбженый 404 <a href="404">"страничка"</a></p>
+            
+            <p>Все ссылки на странице выделены <a href="#links">ярким желтым цветом</a>, что делает их хорошо заметными на фоне видео. При наведении на ссылку вы увидите анимационные эффекты.</p>
+            
+            <p>Планы:</p>
+            <ul>
+                <li>Сделать тут игру</li>
+                <li>Что-то ещё</li>
+            </ul>
+            
+            <p>Буду РАД чему-то</p>
+            
+            <div class="nav-buttons">
+                <a href="#ARCHIVECHECK" class="nav-button">BTTR Раздел[БРОШЕН]</a>
+                <a href="#project" class="nav-button">РЕТРЕЦО[В ПЛАНАХ]</a>
+                <a href="archive/readme.md" class="nav-button">archive</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Элемент управления видео -->
+    <div class="media-controls">
+        <div class="video-control">
+            <div class="control-toggle" id="video-toggle">
+                <i class="fas fa-volume-mute" id="video-icon"></i>
+            </div>
+            <div class="control-status" id="video-status">Видео без звука</div>
+            <div class="volume-slider" id="video-volume-container" style="display: none;">
+                <input type="range" min="0" max="1" step="0.01" value="0.5" id="video-volume">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Функция для проверки загрузки шрифта
+        function checkFontLoaded(fontName) {
+            return new Promise((resolve) => {
+                // Создаем тестовый элемент
+                const testElement = document.createElement('span');
+                testElement.style.fontFamily = fontName;
+                testElement.style.fontSize = '40px';
+                testElement.style.position = 'absolute';
+                testElement.style.left = '-9999px';
+                testElement.textContent = 'mmmmmmmmmmlli';
+                document.body.appendChild(testElement);
+                
+                const originalWidth = testElement.offsetWidth;
+                
+                // Меняем на стандартный шрифт
+                testElement.style.fontFamily = 'serif';
+                const fallbackWidth = testElement.offsetWidth;
+                
+                document.body.removeChild(testElement);
+                
+                // Если ширина отличается, шрифт загрузился
+                const isLoaded = Math.abs(originalWidth - fallbackWidth) > 5;
+                resolve(isLoaded);
+            });
+        }
+        
+        // Проверяем загрузку шрифта при загрузке страницы
+        document.addEventListener('DOMContentLoaded', async function() {
+            const fontStatus = document.getElementById('font-status');
+            
+            // Даем время на загрузку шрифта
+            setTimeout(async () => {
+                const isFontLoaded = await checkFontLoaded('Rufont');
+                
+                if (isFontLoaded) {
+                    fontStatus.textContent = 'Шрифт Rufont успешно загружен';
+                    fontStatus.style.color = '#4CAF50';
+                    fontStatus.style.borderColor = '#4CAF50';
+                    fontStatus.style.display = 'block';
+                    
+                    // Скрываем сообщение через 3 секунды
+                    setTimeout(() => {
+                        fontStatus.style.display = 'none';
+                    }, 3000);
+                } else {
+                    fontStatus.textContent = 'Шрифт Rufont не найден. Используется запасной шрифт. Убедитесь, что файл rufont.ttf находится в той же папке, что и HTML-файл.';
+                    fontStatus.style.color = '#FF5252';
+                    fontStatus.style.borderColor = '#FF5252';
+                    fontStatus.style.display = 'block';
+                    
+                    // Добавляем класс fallback-font для резервного шрифта
+                    document.body.classList.add('fallback-font');
+                }
+            }, 1000);
+            
+            // Если шрифт не загрузится за 5 секунд, показываем сообщение
+            setTimeout(async () => {
+                if (!document.querySelector('#font-status').textContent.includes('успешно')) {
+                    const isFontLoaded = await checkFontLoaded('Rufont');
+                    if (!isFontLoaded) {
+                        fontStatus.textContent = 'Шрифт Rufont не найден. Используется запасной шрифт. Убедитесь, что файл rufont.ttf находится в той же папке, что и HTML-файл.';
+                        fontStatus.style.color = '#FF5252';
+                        fontStatus.style.borderColor = '#FF5252';
+                        fontStatus.style.display = 'block';
+                        document.body.classList.add('fallback-font');
+                    }
+                }
+            }, 5000);
+        });
+        
+        // Элементы управления видео
+        const videoToggle = document.getElementById('video-toggle');
+        const videoIcon = document.getElementById('video-icon');
+        const videoStatus = document.getElementById('video-status');
+        const videoVolume = document.getElementById('video-volume');
+        const videoVolumeContainer = document.getElementById('video-volume-container');
+        const bgVideo = document.getElementById('bg-video');
+        
+        // Переменные состояния
+        let isVideoMuted = true; // Видео начинается без звука
+        let videoVolumeLevel = 0.5; // Начальная громкость видео
+        
+        // Инициализация громкости видео
+        bgVideo.volume = 0;
+        
+        // Функция переключения звука видео
+        function toggleVideoSound() {
+            if (isVideoMuted) {
+                // Включаем звук видео
+                bgVideo.muted = false;
+                bgVideo.volume = videoVolumeLevel;
+                videoIcon.classList.remove('fa-volume-mute');
+                
+                // Определяем иконку в зависимости от уровня громкости
+                if (videoVolumeLevel === 0) {
+                    videoIcon.classList.add('fa-volume-mute');
+                } else if (videoVolumeLevel < 0.5) {
+                    videoIcon.classList.add('fa-volume-down');
+                } else {
+                    videoIcon.classList.add('fa-volume-up');
+                }
+                
+                videoStatus.textContent = 'Звук видео: ВКЛ';
+                videoVolumeContainer.style.display = 'block';
+                videoVolume.value = videoVolumeLevel;
+            } else {
+                // Выключаем звук видео
+                bgVideo.muted = true;
+                videoIcon.classList.remove('fa-volume-up', 'fa-volume-down');
+                videoIcon.classList.add('fa-volume-mute');
+                videoStatus.textContent = 'Видео без звука';
+                videoVolumeContainer.style.display = 'none';
+            }
+            isVideoMuted = !isVideoMuted;
+        }
+        
+        // Обработчик изменения громкости видео
+        videoVolume.addEventListener('input', function() {
+            videoVolumeLevel = parseFloat(this.value);
+            if (!isVideoMuted) {
+                bgVideo.volume = videoVolumeLevel;
+                
+                // Обновляем иконку в зависимости от уровня громкости
+                videoIcon.classList.remove('fa-volume-mute', 'fa-volume-down', 'fa-volume-up');
+                
+                if (videoVolumeLevel === 0) {
+                    videoIcon.classList.add('fa-volume-mute');
+                } else if (videoVolumeLevel < 0.5) {
+                    videoIcon.classList.add('fa-volume-down');
+                } else {
+                    videoIcon.classList.add('fa-volume-up');
+                }
+            }
+        });
+        
+        // Обработчик клика по переключателю видео
+        videoToggle.addEventListener('click', toggleVideoSound);
+        
+        // Обработка ошибок при загрузке видео
+        bgVideo.addEventListener('error', function() {
+            videoStatus.textContent = 'Ошибка загрузки видео';
+            videoToggle.style.opacity = '0.5';
+            videoToggle.style.cursor = 'not-allowed';
+            
+            // Если видео не загрузилось, устанавливаем фоновое изображение
+            document.querySelector('.video-background').innerHTML = `
+                <div style="
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+                    background-size: 400% 400%;
+                    animation: gradient 15s ease infinite;
+                ">
+                </div>
+                <style>
+                    @keyframes gradient {
+                        0% { background-position: 0% 50%; }
+                        50% { background-position: 100% 50%; }
+                        100% { background-position: 0% 50%; }
+                    }
+                </style>
+            `;
+        });
+        
+        // Убедимся, что видео зациклено правильно
+        bgVideo.addEventListener('ended', function() {
+            this.currentTime = 0;
+            this.play();
+        });
+        
+        // Автовоспроизведение видео при взаимодействии с документом
+        document.addEventListener('click', function initVideo() {
+            // Попытка воспроизвести видео, если оно было остановлено
+            if (bgVideo.paused) {
+                bgVideo.play().catch(e => {
+                    console.log("Автовоспроизведение видео заблокировано");
+                });
+            }
+        });
+    </script>
+</body>
+</html>
