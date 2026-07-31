@@ -1,0 +1,19 @@
+        <!-- Карточка 2: КАРТИНКА (.jpg или .png) -->
+        <!-- Розовое свечение -->
+        <a href="#page2" class="nav-card" style="--card-color: #ff0055;">
+            <img class="media-content" src="template/Silly2.jpg" alt="Описание картинки">
+            <div class="overlay">
+                <h2>Docs</h2>
+                <p>[INF DEV]</p>
+            </div>
+        </a>
+
+        <!-- Карточка 5: ВИДЕО (.mp4) -->
+        <!-- Зеленое свечение -->
+        <a href="#page5" class="nav-card" style="--card-color: #00ff88;">
+            <video class="media-content" src="template/dancing-cat-cat.mp4" muted loop playsinline></video>
+            <div class="overlay">
+                <h2>Lore</h2>
+                <p>[INF DEV]</p>
+            </div>
+        </a>

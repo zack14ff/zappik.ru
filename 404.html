@@ -1,279 +1,221 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - System Error</title>
+    <title>404 — Страница не найдена</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        /* Сброс стилей и базовые настройки */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html {
+            background-color: #050505;
         }
 
         body {
-            background-color: #000;
-            color: #0F0;
-            font-family: 'Courier New', Courier, monospace;
-            overflow: hidden;
-            height: 100vh;
+            position: relative;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            position: relative;
+            min-height: 100vh;
+            background-color: #050505;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            overflow: hidden;
+            isolation: isolate;
         }
 
-        /* Холст для матричного дождя */
-        #matrix-canvas {
+        /* === ФОН: чёрно-серый градиент, медленно дышащий === */
+        .bg-glow {
+            position: fixed;
+            inset: 0;
+            z-index: -3;
+            background-color: #050505;
+            background-image:
+                radial-gradient(900px 700px at 20% 15%, rgba(255, 255, 255, 0.05), transparent 60%),
+                radial-gradient(900px 800px at 80% 85%, rgba(255, 255, 255, 0.04), transparent 60%),
+                linear-gradient(160deg, #030303 0%, #1a1a1a 45%, #0a0a0a 100%);
+            background-size: 100% 100%, 100% 100%, 220% 220%;
+            animation: breathe 18s ease-in-out infinite alternate;
+        }
+
+        @keyframes breathe {
+            0%   { background-position: 0% 0%, 0% 0%, 0% 0%; }
+            100% { background-position: 4% 6%, -4% -3%, 30% 30%; }
+        }
+
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 42px 42px;
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 40%, transparent 90%);
+        }
+
+        .bg-stars {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .star {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: 'Space Grotesk', sans-serif;
+            line-height: 1;
+            opacity: 0;
+            animation-name: twinkle;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
         }
 
-        /* Контейнер с контентом */
+        @keyframes twinkle {
+            0%   { opacity: 0; transform: scale(0.6) rotate(0deg); }
+            50%  { opacity: 1; transform: scale(1) rotate(15deg); }
+            100% { opacity: 0; transform: scale(0.6) rotate(0deg); }
+        }
+
+        /* === Контент === */
         .content {
             position: relative;
             z-index: 1;
-            text-align: center;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid #0F0;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3), inset 0 0 20px rgba(0, 255, 0, 0.1);
-            backdrop-filter: blur(2px);
-            max-width: 600px;
-            width: 90%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            max-width: 560px;
         }
 
-        /* Глитч-эффект для 404 */
-        .glitch {
-            font-size: 120px;
-            font-weight: bold;
+        .code {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(5rem, 18vw, 9rem);
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: 4px;
+            background: linear-gradient(90deg, #fff, #7a7a7a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             position: relative;
-            color: #0F0;
-            text-shadow: 0 0 10px #0F0, 0 0 20px #0F0, 0 0 40px #0F0;
-            animation: flicker 3s infinite;
         }
 
-        .glitch::before,
-        .glitch::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-        }
-
-        .glitch::before {
-            left: 2px;
-            text-shadow: -2px 0 #f00;
-            clip-path: inset(0 0 0 0);
-            animation: glitch-anim-1 2s infinite linear alternate-reverse;
-        }
-
-        .glitch::after {
-            left: -2px;
-            text-shadow: -2px 0 #00f;
-            clip-path: inset(0 0 0 0);
-            animation: glitch-anim-2 3s infinite linear alternate-reverse;
-        }
-
-        .message {
-            font-size: 24px;
-            margin: 20px 0 10px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        .sub-message {
-            font-size: 14px;
-            color: #0a0;
-            margin-bottom: 30px;
-            line-height: 1.5;
-        }
-
-        /* Стильная кнопка */
-        .btn {
+        /* Средний "0" в "404" заменён мерцающей звёздочкой */
+        .code .star-zero {
             display: inline-block;
-            padding: 12px 30px;
-            font-size: 16px;
-            font-family: 'Courier New', Courier, monospace;
-            font-weight: bold;
-            color: #0F0;
-            text-decoration: none;
+            -webkit-text-fill-color: rgba(255, 255, 255, 0.85);
+            animation: twinkle 3.2s ease-in-out infinite;
+        }
+
+        .title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            letter-spacing: 1px;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            border: 2px solid #0F0;
-            background: transparent;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
+            color: #f2f2f2;
         }
 
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: #0F0;
-            transition: left 0.3s ease;
-            z-index: -1;
+        .subtitle {
+            font-size: 1rem;
+            color: #9a9a9a;
+            line-height: 1.6;
+            max-width: 420px;
         }
 
-        .btn:hover {
-            color: #000;
-            box-shadow: 0 0 20px #0F0;
+        .home-link {
+            margin-top: 18px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.03);
+            color: #ffffff;
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .btn:hover::before {
-            left: 0;
+        .home-link:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.07);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
         }
 
-        /* Эффект сканлайнов (полосы как на старом мониторе) */
-        .scanlines {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                to bottom,
-                rgba(255,255,255,0),
-                rgba(255,255,255,0) 50%,
-                rgba(0,0,0,0.2) 50%,
-                rgba(0,0,0,0.2)
-            );
-            background-size: 100% 4px;
-            z-index: 2;
-            pointer-events: none;
-            opacity: 0.6;
+        .home-link .arrow {
+            transition: transform 0.3s ease;
         }
 
-        /* Анимации */
-        @keyframes flicker {
-            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-            20%, 24%, 55% { opacity: 0.4; }
+        .home-link:hover .arrow {
+            transform: translateX(4px);
         }
 
-        @keyframes glitch-anim-1 {
-            0% { clip-path: inset(20% 0 80% 0); }
-            20% { clip-path: inset(60% 0 10% 0); }
-            40% { clip-path: inset(40% 0 50% 0); }
-            60% { clip-path: inset(80% 0 5% 0); }
-            80% { clip-path: inset(10% 0 70% 0); }
-            100% { clip-path: inset(30% 0 20% 0); }
-        }
-
-        @keyframes glitch-anim-2 {
-            0% { clip-path: inset(10% 0 60% 0); }
-            20% { clip-path: inset(80% 0 5% 0); }
-            40% { clip-path: inset(30% 0 20% 0); }
-            60% { clip-path: inset(10% 0 80% 0); }
-            80% { clip-path: inset(50% 0 30% 0); }
-            100% { clip-path: inset(70% 0 10% 0); }
-        }
-
-        /* Адаптивность */
-        @media (max-width: 600px) {
-            .glitch { font-size: 80px; }
-            .message { font-size: 18px; }
-            .sub-message { font-size: 12px; }
-            .btn { padding: 10px 20px; font-size: 14px; }
+        @media (max-width: 480px) {
+            .title { font-size: 1.15rem; }
+            .subtitle { font-size: 0.9rem; }
+            .home-link { padding: 12px 22px; font-size: 0.9rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Эффект старого монитора -->
-    <div class="scanlines"></div>
+    <div class="bg-glow"></div>
+    <div class="bg-grid"></div>
+    <div class="bg-stars" id="bgStars"></div>
 
-    <!-- Холст для матрицы -->
-    <canvas id="matrix-canvas"></canvas>
-
-    <!-- Основной контент -->
     <div class="content">
-        <h1 class="glitch" data-text="404">404</h1>
-        <p class="message">System Error: Page Not Found</p>
-        <p class="sub-message">
-            > TRACE ROUTE FAILED<br>
-            > The resource you are looking for has been removed, had its name changed, or is temporarily unavailable.<br>
-            > Initiate return sequence?
-        </p>
-        <a href="index.html" class="btn">Return to Mainframe</a>
+        <div class="code">4<span class="star-zero">*</span>4</div>
+        <div class="title">Страница потерялась</div>
+        <p class="subtitle">Такой страницы здесь нет — возможно, она была удалена, переименована, или адрес введён с ошибкой.</p>
+        <a href="index.html" class="home-link">
+            <span>На главную</span>
+            <span class="arrow">→</span>
+        </a>
     </div>
 
     <script>
-        // Настройка матричного дождя
-        const canvas = document.getElementById('matrix-canvas');
-        const ctx = canvas.getContext('2d');
+        (function generateStars() {
+            const container = document.getElementById('bgStars');
+            const count = window.innerWidth < 768 ? 35 : 70;
 
-        // Установка размеров холста
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('span');
+                star.className = 'star';
+                star.textContent = '*';
 
-        // Символы: катакана + латиница + цифры (как в оригинальном фильме)
-        const katakana = 'ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ';
-        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const nums = '0123456789';
-        const alphabet = katakana + latin + nums;
+                const size = 10 + Math.random() * 22;
+                const duration = 3 + Math.random() * 5;
+                const delay = Math.random() * 8;
 
-        const fontSize = 16;
-        const columns = canvas.width / fontSize;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.fontSize = size + 'px';
+                star.style.animationDuration = duration + 's';
+                star.style.animationDelay = delay + 's';
+                star.style.opacity = '0';
 
-        // Массив для отслеживания Y-координаты каждой колонки
-        const drops = [];
-        for (let x = 0; x < columns; x++) {
-            drops[x] = 1;
-        }
-
-        // Функция отрисовки
-        const draw = () => {
-            // Полупрозрачный черный прямоугольник для эффекта затухания следа
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = '#0F0'; // Зеленый цвет текста
-            ctx.font = fontSize + 'px monospace';
-
-            for (let i = 0; i < drops.length; i++) {
-                // Случайный символ
-                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-                
-                // Отрисовка символа
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-                // Сброс капли наверх случайным образом после того, как она пересекла экран
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                }
-
-                // Увеличение Y-координаты
-                drops[i]++;
+                container.appendChild(star);
             }
-        };
-
-        // Запуск анимации (30-40 мс дает оптимальную скорость)
-        setInterval(draw, 35);
-
-        // Адаптация при изменении размера окна
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            // Пересчет колонок при ресайзе
-            const newColumns = canvas.width / fontSize;
-            // Заполняем новые колонки, если экран стал шире
-            for (let x = drops.length; x < newColumns; x++) {
-                drops[x] = 1;
-            }
-        });
+        })();
     </script>
+
 </body>
 </html>

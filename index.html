@@ -4,29 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Универсальные карточки</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <style>
         /* Базовые настройки */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html {
+            background-color: #0a0d12;
         }
 
         body {
+            position: relative;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-color: #121212;
+            background-color: #0a0d12;
             color: #ffffff;
-            padding: 20px;
+            padding: 60px 20px 80px;
+            overflow-x: hidden;
+            isolation: isolate;
+        }
+
+        /* === ФОН: чёрно-серый градиент, медленно дышащий === */
+        .bg-glow {
+            position: fixed;
+            inset: 0;
+            z-index: -3;
+            background-color: #050505;
+            background-image:
+                radial-gradient(900px 700px at 20% 15%, rgba(255, 255, 255, 0.05), transparent 60%),
+                radial-gradient(900px 800px at 80% 85%, rgba(255, 255, 255, 0.04), transparent 60%),
+                linear-gradient(160deg, #030303 0%, #1a1a1a 45%, #0a0a0a 100%);
+            background-size: 100% 100%, 100% 100%, 220% 220%;
+            animation: breathe 18s ease-in-out infinite alternate;
+        }
+
+        @keyframes breathe {
+            0%   { background-position: 0% 0%, 0% 0%, 0% 0%; }
+            100% { background-position: 4% 6%, -4% -3%, 30% 30%; }
+        }
+
+        /* Тонкая сетка поверх, придаёт "интерфейсную" глубину */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 42px 42px;
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 40%, transparent 90%);
+        }
+
+        /* Звёздочки "*", появляющиеся и мерцающие на фоне */
+        .bg-stars {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: 'Space Grotesk', sans-serif;
+            line-height: 1;
+            opacity: 0;
+            animation-name: twinkle;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+        }
+
+        @keyframes twinkle {
+            0%   { opacity: 0; transform: scale(0.6) rotate(0deg); }
+            50%  { opacity: 1; transform: scale(1) rotate(15deg); }
+            100% { opacity: 0; transform: scale(0.6) rotate(0deg); }
         }
 
         h1 {
-            margin-bottom: 40px;
-            font-size: 2.5rem;
+            margin-bottom: 50px;
+            font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+            font-size: 2.4rem;
+            font-weight: 700;
             text-align: center;
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -35,20 +103,56 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Контейнер для кнопок-карточек */
-        .cards-container {
+        /* Заголовок-разделитель между секциями карточек */
+        .section-divider {
             display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
+            align-items: center;
             justify-content: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 900px;
+            margin: 70px auto 40px;
+        }
+
+        .section-divider:first-of-type {
+            margin-top: 0;
+        }
+
+        .section-divider::before,
+        .section-divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+        }
+
+        .section-divider span {
+            font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #f2f2f2;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        /* Контейнер для кнопок-карточек: grid делит карточки ровно и предсказуемо */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 300px));
+            gap: 30px;
+            justify-content: center;
+            width: 100%;
             max-width: 1200px;
+            margin: 0 auto;
         }
 
         /* Стиль каждой карточки-кнопки */
         .nav-card {
             position: relative;
-            width: 300px;
-            height: 400px;
+            width: 100%;
+            aspect-ratio: 3 / 4;
             border-radius: 16px;
             overflow: hidden;
             text-decoration: none;
@@ -56,17 +160,15 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             transition: transform 0.4s ease, box-shadow 0.4s ease;
             cursor: pointer;
-            /* Цвет по умолчанию, переопределяется в HTML */
-            --card-color: #00ff88; 
+            --card-color: #00ff88;
         }
 
         /* Универсальный контейнер для медиа (видео или картинка) */
         .media-content {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Заполняет всю карточку, обрезая лишнее */
+            object-fit: cover;
             display: block;
-            /* По умолчанию: серое и немного затемненное */
             filter: grayscale(100%) brightness(0.6);
             transition: filter 0.5s ease, transform 0.5s ease;
         }
@@ -85,12 +187,13 @@
             padding: 25px;
             transition: background 0.4s ease;
             z-index: 2;
-            pointer-events: none; /* Чтобы клик проходил сквозь текст на ссылку */
+            pointer-events: none;
         }
 
-        /* Текст внутри карточки */
         .nav-card h2 {
-            font-size: 1.5rem;
+            font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 600;
             margin-bottom: 8px;
             transform: translateY(10px);
             transition: transform 0.4s ease, color 0.4s ease;
@@ -104,118 +207,204 @@
             transition: all 0.4s ease;
         }
 
-        /* === ЭФФЕКТЫ ПРИ НАВЕДЕНИИ (HOVER) === */
-        
-        /* Увеличение карточки и свечение ЦВЕТОМ конкретной карточки */
-        .nav-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px var(--card-color);
+        /* === ЭФФЕКТЫ ПРИ НАВЕДЕНИИ (только для устройств с мышью) === */
+        @media (hover: hover) and (pointer: fine) {
+            .nav-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px var(--card-color);
+            }
+
+            .nav-card:hover .media-content {
+                filter: grayscale(0%) brightness(1.1);
+                transform: scale(1.08);
+            }
+
+            .nav-card:hover h2 {
+                transform: translateY(0);
+                color: var(--card-color);
+            }
+
+            .nav-card:hover p {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        /* Медиа становится цветным и ярким, слегка увеличивается */
-        .nav-card:hover .media-content {
-            filter: grayscale(0%) brightness(1.1);
-            transform: scale(1.08);
-        }
+        /* === МОБИЛЬНЫЕ / СЕНСОРНЫЕ УСТРОЙСТВА === */
+        /* На тач-экранах ховера нет, поэтому текст и цвет видны сразу — карточку не нужно "открывать" */
+        @media (hover: none), (pointer: coarse) {
+            .nav-card .media-content {
+                filter: grayscale(20%) brightness(0.85);
+            }
 
-        /* Текст поднимается, становится видимым и окрашивается в цвет карточки */
-        .nav-card:hover h2 {
-            transform: translateY(0);
-            color: var(--card-color);
-        }
+            .nav-card h2 {
+                transform: translateY(0);
+                color: var(--card-color);
+            }
 
-        .nav-card:hover p {
-            opacity: 1;
-            transform: translateY(0);
+            .nav-card p {
+                opacity: 1;
+                transform: translateY(0);
+                color: #e2e2e2;
+            }
+
+            .nav-card:active {
+                transform: scale(0.97);
+            }
         }
 
         /* Адаптивность для мобильных устройств */
         @media (max-width: 768px) {
-            .nav-card {
-                width: 100%;
-                max-width: 350px;
-                height: 250px;
+            body {
+                padding: 40px 16px 60px;
             }
-            h1 {
-                font-size: 1.8rem;
+
+            .cards-container {
+                grid-template-columns: 1fr;
+                max-width: 420px;
+                gap: 22px;
+            }
+
+            .nav-card {
+                aspect-ratio: 16 / 10;
+            }
+
+            h1, .section-divider span {
+                font-size: 1.5rem;
+            }
+
+            .section-divider {
+                margin: 50px auto 30px;
+                gap: 14px;
             }
         }
     </style>
 </head>
 <body>
 
-    <h1>Выберите раздел</h1>
+    <div class="bg-glow"></div>
+    <div class="bg-grid"></div>
+    <div class="bg-stars" id="bgStars"></div>
+
+    <h1>Навигация</h1>
+
+    <div class="section-divider"><span>1 раздел</span></div>
 
     <div class="cards-container">
-        
-        <!-- Карточка 1: ВИДЕО (.mp4) -->
-        <!-- Синее свечение -->
+
         <a href="#1" class="nav-card" style="--card-color: #0f5e70;">
-            <!-- muted loop playsinline обязательны для автоплея/паузы без звука -->
             <img class="media-content" src="template/Silly1.jpg" alt="PNG Картинка">
             <div class="overlay">
-                <h2>Portfolio</h2>
+                <h2>###</h2>
                 <p>[IN DEV]</p>
             </div>
         </a>
 
-        <!-- Карточка 2: КАРТИНКА (.jpg или .png) -->
-        <!-- Розовое свечение -->
-        <a href="#page2" class="nav-card" style="--card-color: #ff0055;">
-            <img class="media-content" src="template/Silly2.jpg" alt="Описание картинки">
+        <a href="#1" class="nav-card" style="--card-color: #0f5e70;">
+            <img class="media-content" src="template/Silly2.jpg" alt="PNG Картинка">
             <div class="overlay">
-                <h2>Docs</h2>
-                <p>[INF DEV]</p>
+                <h2>###</h2>
+                <p>[IN DEV]</p>
             </div>
         </a>
 
-        <!-- Карточка 5: ВИДЕО (.mp4) -->
-        <!-- Зеленое свечение -->
-        <a href="#page5" class="nav-card" style="--card-color: #00ff88;">
-            <video class="media-content" src="template/dancing-cat-cat.mp4" muted loop playsinline></video>
+        <a href="#1" class="nav-card" style="--card-color: #0f5e70;">
+            <img class="media-content" src="template/Silly3.jpg" alt="PNG Картинка">
             <div class="overlay">
-                <h2>Lore</h2>
-                <p>[INF DEV]</p>
+                <h2>###</h2>
+                <p>[IN DEV]</p>
             </div>
         </a>
 
-        <!-- Карточка 4: КАРТИНКА (.png с прозрачностью тоже подойдет) -->
-        <!-- Оранжевое свечение -->
-        <a href="archive/assets/bttr/reindev/index.html" class="nav-card" style="--card-color: #f97316;">
-            <img class="media-content" src="template/Silly4.jpg" alt="PNG Картинка">
+    </div>
+
+    <div class="section-divider"><span>Archived раздел</span></div>
+
+    <div class="cards-container">
+
+        <a href="archive/assets/bttr/reindev/index.html" class="nav-card" style="--card-color: #1b00b1;">
+            <video class="media-content" src="vessel.mp4" muted loop playsinline></video>
             <div class="overlay">
-                <h2>Other</h2>
-                <p>[INF DEV]</p>
+                <h2>Archived #1</h2>
+                <p>BTTR server | ReinDev minecraft</p>
             </div>
         </a>
 
+        <a href="archive/oldempty.html" class="nav-card" style="--card-color: #1b00b1;">
+            <video class="media-content" src="vessel.mp4" muted loop playsinline></video>
+            <div class="overlay">
+                <h2>Archived #2</h2>
+                <p>Old index.html</p>
+            </div>
+        </a>
+
+        <a href="archive/assets/bta/index.html" class="nav-card" style="--card-color: #1b00b1;">
+            <video class="media-content" src="vessel.mp4" muted loop playsinline></video>
+            <div class="overlay">
+                <h2>Archived #3</h2>
+                <p>BTA page</p>
+            </div>
+        </a>
 
     </div>
 
     <script>
-        // Универсальный скрипт для обработки наведения
-        document.querySelectorAll('.nav-card').forEach(card => {
-            // Ищем любой медиа-элемент внутри карточки (видео или картинку)
-            const media = card.querySelector('.media-content');
-            
-            if (media) {
-                // При наведении курсора
-                card.addEventListener('mouseenter', () => {
-                    // Проверяем, является ли элемент видео
-                    if (media.tagName.toLowerCase() === 'video') {
-                        media.play().catch(error => {
-                            console.log("Автоплей заблокирован браузером (нужен interaction):", error);
-                        });
-                    }
-                });
+        // Генерируем звёздочки "*" в случайных местах фона, с разным размером/скоростью мерцания
+        (function generateStars() {
+            const container = document.getElementById('bgStars');
+            const count = window.innerWidth < 768 ? 35 : 70;
 
-                // При убирании курсора
-                card.addEventListener('mouseleave', () => {
-                    if (media.tagName.toLowerCase() === 'video') {
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('span');
+                star.className = 'star';
+                star.textContent = '*';
+
+                const size = 10 + Math.random() * 22; // px
+                const duration = 3 + Math.random() * 5; // сек
+                const delay = Math.random() * 8; // сек
+
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.fontSize = size + 'px';
+                star.style.animationDuration = duration + 's';
+                star.style.animationDelay = delay + 's';
+                star.style.opacity = '0';
+
+                container.appendChild(star);
+            }
+        })();
+
+        // На тач-устройствах видео проигрывается один раз при появлении во вьюпорте,
+        // на десктопе — по наведению мыши, как и раньше
+        const isTouch = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+
+        document.querySelectorAll('.nav-card').forEach(card => {
+            const media = card.querySelector('.media-content');
+            if (!media) return;
+
+            if (media.tagName.toLowerCase() === 'video') {
+                if (isTouch) {
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                media.play().catch(() => {});
+                            } else {
+                                media.pause();
+                            }
+                        });
+                    }, { threshold: 0.5 });
+                    observer.observe(media);
+                } else {
+                    card.addEventListener('mouseenter', () => {
+                        media.play().catch(error => {
+                            console.log('Автоплей заблокирован браузером (нужен interaction):', error);
+                        });
+                    });
+                    card.addEventListener('mouseleave', () => {
                         media.pause();
-                        media.currentTime = 0; // Сброс видео на начало
-                    }
-                });
+                        media.currentTime = 0;
+                    });
+                }
             }
         });
     </script>
