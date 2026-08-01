@@ -3,11 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 — Страница не найдена</title>
+    <title>ZA404</title>
+    <link rel="icon" type="image/png" href="template/whites.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <style>
+        /* === КАСТОМНЫЙ ШРИФТ ИЗ ПАПКИ (TTF / OTF) === */
+        @font-face {
+            font-family: 'MyCustomFont';
+            /* Укажите точное имя вашего файла шрифта */
+            src: url('fonts/your-font-name.ttf') format('truetype'),
+                 url('fonts/your-font-name.otf') format('opentype');
+            font-weight: 400 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -96,8 +108,25 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 18px;
+            gap: 20px; /* Отступы между всеми элементами (лого, 404, текст, кнопка) */
             max-width: 560px;
+        }
+
+        /* === СТИЛИ ЛОГОТИПА === */
+        .page-logo {
+            /* 🎯 ГЛАВНАЯ НАСТРОЙКА: меняйте это число, чтобы изменить размер лого на ПК */
+            width: var(--logo-size, 80px);
+            height: var(--logo-size, 80px);
+            object-fit: contain;
+            display: block;
+            /* Лёгкое свечение, чтобы лого вписывалось в атмосферу сайта */
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.15)); 
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        .page-logo:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.3));
         }
 
         .code {
@@ -120,7 +149,7 @@
         }
 
         .title {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: 'MyCustomFont', 'Space Grotesk', sans-serif; /* Добавлен ваш кастомный шрифт */
             font-size: 1.4rem;
             font-weight: 600;
             letter-spacing: 1px;
@@ -136,7 +165,7 @@
         }
 
         .home-link {
-            margin-top: 18px;
+            margin-top: 10px;
             display: inline-flex;
             align-items: center;
             gap: 10px;
@@ -168,7 +197,14 @@
             transform: translateX(4px);
         }
 
+        /* === АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ === */
         @media (max-width: 480px) {
+            .page-logo {
+                /* 🎯 РАЗМЕР ЛОГО НА ТЕЛЕФОНЕ (чуть меньше, чтобы гармонично смотреться) */
+                width: var(--logo-size-mobile, 60px);
+                height: var(--logo-size-mobile, 60px);
+            }
+
             .title { font-size: 1.15rem; }
             .subtitle { font-size: 0.9rem; }
             .home-link { padding: 12px 22px; font-size: 0.9rem; }
@@ -182,6 +218,10 @@
     <div class="bg-stars" id="bgStars"></div>
 
     <div class="content">
+        <!-- ЛОГОТИП СВЕРХУ -->
+        <!-- Замените src на путь к вашему логотипу -->
+        <img src="template/whites.png" alt="Логотип" class="page-logo">
+        
         <div class="code">4<span class="star-zero">*</span>4</div>
         <div class="title">Страница потерялась</div>
         <p class="subtitle">Такой страницы здесь нет — возможно, она была удалена, переименована, или адрес введён с ошибкой.</p>

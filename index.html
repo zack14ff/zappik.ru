@@ -2,12 +2,24 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Универсальные карточки</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ZAпереходник</title>
+    <link rel="icon" type="image/png" href="template/whites.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <style>
+        /* === КАСТОМНЫЙ ШРИФТ ИЗ ПАПКИ (TTF / OTF) === */
+        @font-face {
+            font-family: 'MyCustomFont';
+            /* Сначала указываем .ttf (он стабильнее работает в вебе), затем .otf */
+            src: url('minecraft-ten-font-cyrillic.ttf') format('truetype'),
+                 url('minecraft-five-bold.otf') format('opentype');
+            font-weight: 400 700;
+            font-style: normal;
+            font-display: swap; /* Показывает запасной шрифт, пока грузится ваш */
+        }
+
         /* Базовые настройки */
         * {
             margin: 0;
@@ -28,9 +40,53 @@
             min-height: 100vh;
             background-color: #0a0d12;
             color: #ffffff;
-            padding: 60px 20px 80px;
+            padding: 110px 20px 80px; /* Увеличен отступ сверху, чтобы большое лого не перекрывало заголовок */
             overflow-x: hidden;
             isolation: isolate;
+        }
+
+        /* === ХЕДЕР С ЛОГО И ТЕКСТОМ === */
+        .site-header {
+            position: fixed;
+            top: 20px;
+            left: 20px; /* ЗАМЕНИТЕ на right: 20px, если нужен ПРАВЫЙ верхний край */
+            display: flex;
+            align-items: center;
+            gap: 14px; /* Отступ между лого и текстом */
+            z-index: 1000;
+            padding: 10px 20px;
+            background: rgba(10, 13, 18, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 100px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease, background 0.3s ease;
+            
+            /* 🎯 ГЛАВНАЯ НАСТРОЙКА: меняйте это число, чтобы изменить размер лого на ПК */
+            --logo-size: 58px; 
+        }
+
+        .site-header:active {
+            transform: scale(0.96);
+        }
+
+        .header-logo {
+            width: var(--logo-size);
+            height: var(--logo-size);
+            object-fit: contain;
+            flex-shrink: 0;
+            display: block;
+        }
+
+        .header-text {
+            font-family: 'MyCustomFont', 'Space Grotesk', sans-serif;
+            font-size: 1.15rem; /* Чуть крупнее текст под большое лого */
+            font-weight: 600;
+            color: #ffffff;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+            line-height: 1;
         }
 
         /* === ФОН: чёрно-серый градиент, медленно дышащий === */
@@ -52,7 +108,6 @@
             100% { background-position: 4% 6%, -4% -3%, 30% 30%; }
         }
 
-        /* Тонкая сетка поверх, придаёт "интерфейсную" глубину */
         .bg-grid {
             position: fixed;
             inset: 0;
@@ -64,7 +119,6 @@
             mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 40%, transparent 90%);
         }
 
-        /* Звёздочки "*", появляющиеся и мерцающие на фоне */
         .bg-stars {
             position: fixed;
             inset: 0;
@@ -103,7 +157,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Заголовок-разделитель между секциями карточек */
         .section-divider {
             display: flex;
             align-items: center;
@@ -137,7 +190,6 @@
             text-align: center;
         }
 
-        /* Контейнер для кнопок-карточек: grid делит карточки ровно и предсказуемо */
         .cards-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 300px));
@@ -148,7 +200,6 @@
             margin: 0 auto;
         }
 
-        /* Стиль каждой карточки-кнопки */
         .nav-card {
             position: relative;
             width: 100%;
@@ -163,7 +214,6 @@
             --card-color: #00ff88;
         }
 
-        /* Универсальный контейнер для медиа (видео или картинка) */
         .media-content {
             width: 100%;
             height: 100%;
@@ -173,7 +223,6 @@
             transition: filter 0.5s ease, transform 0.5s ease;
         }
 
-        /* Затемняющий градиент поверх для читаемости текста */
         .nav-card .overlay {
             position: absolute;
             bottom: 0;
@@ -207,7 +256,6 @@
             transition: all 0.4s ease;
         }
 
-        /* === ЭФФЕКТЫ ПРИ НАВЕДЕНИИ (только для устройств с мышью) === */
         @media (hover: hover) and (pointer: fine) {
             .nav-card:hover {
                 transform: translateY(-10px);
@@ -230,8 +278,6 @@
             }
         }
 
-        /* === МОБИЛЬНЫЕ / СЕНСОРНЫЕ УСТРОЙСТВА === */
-        /* На тач-экранах ховера нет, поэтому текст и цвет видны сразу — карточку не нужно "открывать" */
         @media (hover: none), (pointer: coarse) {
             .nav-card .media-content {
                 filter: grayscale(20%) brightness(0.85);
@@ -253,10 +299,24 @@
             }
         }
 
-        /* Адаптивность для мобильных устройств */
+        /* === АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ === */
         @media (max-width: 768px) {
             body {
-                padding: 40px 16px 60px;
+                padding: 90px 16px 60px;
+            }
+
+            .site-header {
+                top: 16px;
+                left: 16px; /* ЗАМЕНИТЕ на right: 16px, если нужен правый край */
+                padding: 8px 14px;
+                gap: 10px;
+                
+                /* 🎯 РАЗМЕР ЛОГО НА ТЕЛЕФОНЕ (чуть меньше, чтобы влезало в экран) */
+                --logo-size: 36px; 
+            }
+
+            .header-text {
+                font-size: 1rem;
             }
 
             .cards-container {
@@ -282,6 +342,13 @@
 </head>
 <body>
 
+    <!-- ХЕДЕР С ЛОГО И ТЕКСТОМ -->
+    <header class="site-header">
+        <!-- Замените src на путь к вашему логотипу -->
+        <img src="template/white.png" alt="Logo" class="header-logo">
+        <span class="header-text">ZAKODKA</span>
+    </header>
+
     <div class="bg-glow"></div>
     <div class="bg-grid"></div>
     <div class="bg-stars" id="bgStars"></div>
@@ -291,11 +358,10 @@
     <div class="section-divider"><span>1 раздел</span></div>
 
     <div class="cards-container">
-
         <a href="#1" class="nav-card" style="--card-color: #0f5e70;">
             <img class="media-content" src="template/Silly1.jpg" alt="PNG Картинка">
             <div class="overlay">
-                <h2>###</h2>
+                <h2>[CLOSED]</h2>
                 <p>[IN DEV]</p>
             </div>
         </a>
@@ -303,7 +369,7 @@
         <a href="#1" class="nav-card" style="--card-color: #0f5e70;">
             <img class="media-content" src="template/Silly2.jpg" alt="PNG Картинка">
             <div class="overlay">
-                <h2>###</h2>
+                <h2>[CLOSED]</h2>
                 <p>[IN DEV]</p>
             </div>
         </a>
@@ -311,17 +377,15 @@
         <a href="#1" class="nav-card" style="--card-color: #0f5e70;">
             <img class="media-content" src="template/Silly3.jpg" alt="PNG Картинка">
             <div class="overlay">
-                <h2>###</h2>
+                <h2>[CLOSED]</h2>
                 <p>[IN DEV]</p>
             </div>
         </a>
-
     </div>
 
     <div class="section-divider"><span>Archived раздел</span></div>
 
     <div class="cards-container">
-
         <a href="archive/assets/bttr/reindev/index.html" class="nav-card" style="--card-color: #1b00b1;">
             <video class="media-content" src="vessel.mp4" muted loop playsinline></video>
             <div class="overlay">
@@ -345,11 +409,9 @@
                 <p>BTA page</p>
             </div>
         </a>
-
     </div>
 
     <script>
-        // Генерируем звёздочки "*" в случайных местах фона, с разным размером/скоростью мерцания
         (function generateStars() {
             const container = document.getElementById('bgStars');
             const count = window.innerWidth < 768 ? 35 : 70;
@@ -359,9 +421,9 @@
                 star.className = 'star';
                 star.textContent = '*';
 
-                const size = 10 + Math.random() * 22; // px
-                const duration = 3 + Math.random() * 5; // сек
-                const delay = Math.random() * 8; // сек
+                const size = 10 + Math.random() * 22;
+                const duration = 3 + Math.random() * 5;
+                const delay = Math.random() * 8;
 
                 star.style.left = Math.random() * 100 + '%';
                 star.style.top = Math.random() * 100 + '%';
@@ -374,8 +436,6 @@
             }
         })();
 
-        // На тач-устройствах видео проигрывается один раз при появлении во вьюпорте,
-        // на десктопе — по наведению мыши, как и раньше
         const isTouch = window.matchMedia('(hover: none), (pointer: coarse)').matches;
 
         document.querySelectorAll('.nav-card').forEach(card => {
@@ -397,7 +457,7 @@
                 } else {
                     card.addEventListener('mouseenter', () => {
                         media.play().catch(error => {
-                            console.log('Автоплей заблокирован браузером (нужен interaction):', error);
+                            console.log('Автоплей заблокирован браузером:', error);
                         });
                     });
                     card.addEventListener('mouseleave', () => {
