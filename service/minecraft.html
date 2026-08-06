@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="../Bread.png">
+<title>Вести No More Return</title>
+<style>
+  @font-face{
+    font-family:'FontMain';
+    src:url('../minecraft-ten-font-cyrillic.ttf') format('truetype');
+    font-weight:400 800;
+    font-display:swap;
+  }
+
+  @font-face{
+    font-family:'FontMono';
+    src:url('../minecraft.ttf') format('truetype');
+    font-weight:400 700;
+    font-display:swap;
+  }
+
+  :root{
+    --paper:#e8e6e0;
+    --paper-dark:#d4d2cc;
+    --ink:#1a1a1a;
+    --ink-light:#4a4a4a;
+    --accent:#8b0000;
+    --accent-light:#a52a2a;
+    --border:#2a2a2a;
+    --shadow:rgba(0,0,0,0.15);
+  }
+
+  *{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+  }
+
+  html{
+    scroll-behavior:smooth;
+  }
+
+  body{
+    background:linear-gradient(135deg, #bbb 0%, #999 100%);
+    color:var(--ink);
+    font-family:'FontMain', serif;
+    min-height:100vh;
+    padding:40px 20px;
+    position:relative;
+  }
+
+  /* Виньетка в стиле старых фотоаппаратов */
+  body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:radial-gradient(ellipse at center, transparent 0%, transparent 40%, rgba(0,0,0,0.15) 70%, rgba(0,0,0,0.5) 100%);
+    pointer-events:none;
+    z-index:9999;
+    mix-blend-mode:multiply;
+  }
+
+  /* Текстура бумаги */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px),
+      repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px);
+    pointer-events:none;
+    opacity:0.3;
+    z-index:1;
+  }
+
+  /* Основной контейнер газеты */
+  .newspaper{
+    max-width:1000px;
+    margin:0 auto;
+    background:var(--paper);
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.1),
+      0 10px 40px var(--shadow),
+      inset 0 0 100px rgba(0,0,0,0.03);
+    position:relative;
+    z-index:2;
+  }
+
+  /* Декоративная рамка по краям */
+  .newspaper::before{
+    content:"";
+    position:absolute;
+    inset:15px;
+    border:3px double var(--border);
+    pointer-events:none;
+    z-index:1;
+  }
+
+  .newspaper-content{
+    padding:50px 40px;
+    position:relative;
+    z-index:2;
+  }
+
+  /* Шапка газеты */
+  .masthead{
+    text-align:center;
+    border-bottom:4px double var(--border);
+    padding-bottom:30px;
+    margin-bottom:40px;
+    position:relative;
+  }
+
+  .masthead::after{
+    content:"";
+    position:absolute;
+    bottom:-8px;
+    left:50%;
+    transform:translateX(-50%);
+    width:200px;
+    height:1px;
+    background:var(--border);
+  }
+
+  .issue-info{
+    font-size:0.7rem;
+    letter-spacing:0.15em;
+    color:var(--ink-light);
+    margin-bottom:12px;
+    text-transform:uppercase;
+  }
+
+  .newspaper-title{
+    font-size:3.5rem;
+    font-weight:900;
+    letter-spacing:0.05em;
+    margin:16px 0;
+    text-transform:uppercase;
+    color:var(--ink);
+    line-height:0.95;
+    text-shadow:2px 2px 0 rgba(0,0,0,0.1);
+  }
+
+  .newspaper-subtitle{
+    font-size:0.85rem;
+    color:var(--ink-light);
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    margin-top:12px;
+    font-weight:400;
+  }
+
+  .date-line{
+    margin-top:16px;
+    font-size:0.75rem;
+    color:var(--ink-light);
+    font-style:italic;
+  }
+
+  /* Колонки */
+  .columns{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:30px;
+    margin-bottom:40px;
+  }
+
+  .column{
+    position:relative;
+  }
+
+  .column:first-child::after{
+    content:"";
+    position:absolute;
+    right:-15px;
+    top:0;
+    bottom:0;
+    width:1px;
+    background:var(--ink-light);
+    opacity:0.3;
+  }
+
+  /* Заголовки статей */
+  .article-title{
+    font-size:1.6rem;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:0.02em;
+    margin-bottom:16px;
+    line-height:1.2;
+    color:var(--accent);
+    border-bottom:2px solid var(--border);
+    padding-bottom:8px;
+  }
+
+  .article-subtitle{
+    font-size:1rem;
+    font-style:italic;
+    color:var(--ink-light);
+    margin-bottom:20px;
+    line-height:1.4;
+  }
+
+  .article-text{
+    font-size:0.95rem;
+    line-height:1.7;
+    text-align:justify;
+    color:var(--ink);
+    margin-bottom:20px;
+  }
+
+  /* Информационные блоки */
+  .info-box{
+    background:var(--paper-dark);
+    border:2px solid var(--border);
+    padding:20px;
+    margin:20px 0;
+    position:relative;
+  }
+
+  .info-box::before{
+    content:"";
+    position:absolute;
+    inset:6px;
+    border:1px solid var(--border);
+    opacity:0.3;
+  }
+
+  .info-box-title{
+    font-size:1.1rem;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    margin-bottom:12px;
+    text-align:center;
+    color:var(--accent);
+  }
+
+  .info-row{
+    display:flex;
+    justify-content:space-between;
+    padding:10px 0;
+    border-bottom:1px dotted var(--ink-light);
+  }
+
+  .info-row:last-child{
+    border-bottom:none;
+  }
+
+  .info-label{
+    font-weight:700;
+    text-transform:uppercase;
+    font-size:0.8rem;
+    letter-spacing:0.05em;
+  }
+
+  .info-value{
+    font-weight:400;
+    font-family:'FontMono', monospace;
+  }
+
+  /* Большая статья на всю ширину */
+  .full-width-article{
+    margin:40px 0;
+    padding:30px 0;
+    border-top:3px double var(--border);
+    border-bottom:3px double var(--border);
+  }
+
+  /* Список серверов */
+  .server-list{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
+    gap:20px;
+    margin:30px 0;
+  }
+
+  .server-card{
+    background:var(--paper-dark);
+    border:2px solid var(--border);
+    padding:24px;
+    position:relative;
+    transition:all 0.3s ease;
+  }
+
+  .server-card:hover{
+    background:#dad8d2;
+    box-shadow:4px 4px 0 var(--shadow);
+    transform:translate(-2px, -2px);
+  }
+
+  .server-card::before{
+    content:"⬛";
+    position:absolute;
+    top:10px;
+    left:10px;
+    font-size:1.5rem;
+    opacity:0.1;
+  }
+
+  .server-name{
+    font-size:1.3rem;
+    font-weight:800;
+    text-transform:uppercase;
+    margin-bottom:12px;
+    color:var(--accent);
+    letter-spacing:0.05em;
+  }
+
+  .server-desc{
+    font-size:0.85rem;
+    line-height:1.6;
+    margin-bottom:16px;
+    color:var(--ink);
+  }
+
+  .server-status{
+    display:flex;
+    justify-content:space-between;
+    font-size:0.75rem;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    margin-top:12px;
+    padding-top:12px;
+    border-top:1px solid var(--border);
+  }
+
+  .status-online{
+    color:#2d6b2d;
+    font-weight:700;
+  }
+
+  .status-offline{
+    color:#8b0000;
+    font-weight:700;
+  }
+
+  /* Футер-подвал газеты */
+  .newspaper-footer{
+    margin-top:50px;
+    padding-top:30px;
+    border-top:3px double var(--border);
+    text-align:center;
+  }
+
+  .footer-announcement{
+    font-size:1.4rem;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    margin-bottom:20px;
+    color:var(--accent);
+  }
+
+  .footer-text{
+    font-size:0.9rem;
+    line-height:1.8;
+    color:var(--ink-light);
+    margin-bottom:25px;
+    max-width:700px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  /* Кнопка Discord */
+  .discord-button{
+    display:inline-block;
+    font-family:'FontMain', sans-serif;
+    font-size:1.1rem;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    color:var(--paper);
+    background:var(--accent);
+    padding:18px 48px;
+    border:3px solid var(--border);
+    text-decoration:none;
+    font-weight:800;
+    transition:all 0.2s ease;
+    box-shadow:4px 4px 0 var(--border);
+    position:relative;
+  }
+
+  .discord-button::before{
+    content:"";
+    position:absolute;
+    inset:6px;
+    border:1px solid rgba(255,255,255,0.2);
+  }
+
+  .discord-button:hover{
+    background:var(--accent-light);
+    transform:translate(-2px, -2px);
+    box-shadow:6px 6px 0 var(--border);
+  }
+
+  .discord-button:active{
+    transform:translate(2px, 2px);
+    box-shadow:2px 2px 0 var(--border);
+  }
+
+  /* Копирайт */
+  .copyright{
+    margin-top:30px;
+    font-size:0.7rem;
+    color:var(--ink-light);
+    text-transform:uppercase;
+    letter-spacing:0.15em;
+    opacity:0.6;
+  }
+
+  /* Декоративные элементы */
+  .ornament{
+    text-align:center;
+    font-size:1.2rem;
+    color:var(--ink-light);
+    margin:30px 0;
+    opacity:0.4;
+  }
+
+  /* Адаптивность */
+  @media (max-width:768px){
+    .newspaper-content{
+      padding:30px 24px;
+    }
+
+    .newspaper-title{
+      font-size:2.2rem;
+    }
+
+    .columns{
+      grid-template-columns:1fr;
+      gap:20px;
+    }
+
+    .column:first-child::after{
+      display:none;
+    }
+
+    .server-list{
+      grid-template-columns:1fr;
+    }
+
+    .discord-button{
+      font-size:1rem;
+      padding:16px 36px;
+    }
+  }
+
+  /* Пиксельные блоки для декора */
+  .pixel-icon{
+    display:inline-block;
+    width:16px;
+    height:16px;
+    background:var(--ink);
+    margin:0 6px;
+    vertical-align:middle;
+    opacity:0.7;
+  }
+</style>
+</head>
+<body>
+
+<div class="newspaper">
+  <div class="newspaper-content">
+
+    <!-- Шапка газеты -->
+    <header class="masthead">
+      <div class="issue-info">№ 001 • Выпуск специальный</div>
+      <h1 class="newspaper-title">Ведётся Набор В</h1>
+      <h1>No More Return!</h1>
+      <div class="newspaper-subtitle">Игровые серверы • Сообщество • Новости</div>
+      <div class="date-line" id="current-date">Загрузка даты...</div>
+    </header>
+
+    <!-- Главные колонки -->
+    <div class="columns">
+      <div class="column">
+        <h2 class="article-title">Нужны игроки</h2>
+        <p class="article-subtitle">Новая эра игрового сообщества начинается</p>
+        <p class="article-text">
+          Дорогие игроки! Хочу Сказать что скоро будет открытие сервера.
+          Но нам не хватает участников!.
+          Просим Просьбу присоединиться на сервер и делать конктент
+        </p>
+        <p class="article-text">
+          Каждый сервер имеет свою уникальную атмосферу и правила, созданные для максимального
+          удовольствия от игрового процесса. Присоединяйтесь к нашему сообществу!
+        </p>
+      </div>
+
+      <div class="column">
+        <h2 class="article-title">Статистика проекта</h2>
+        <div class="info-box">
+          <div class="info-box-title">⬛ Показатели ⬛</div>
+          <div class="info-row">
+            <span class="info-label">Серверов активно:</span>
+            <span class="info-value">1</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Игроков онлайн:</span>
+            <span class="info-value" id="player-count">0</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Открытие:</span>
+            <span class="info-value">Этим Месяцем</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Версия:</span>
+            <span class="info-value">1.21.11</span>
+          </div>
+        </div>
+
+        <p class="article-text" style="margin-top:20px;">
+          Наша инфраструктура обеспечивает бесперебойную работу серверов.
+          Мы используем современное оборудование и постоянно мониторим производительность.
+        </p>
+      </div>
+    </div>
+
+    <div class="ornament">⬛ ⬛ ⬛</div>
+
+    <!-- Полноширинная статья -->
+    <section class="full-width-article">
+      <h2 class="article-title">Доступные серверы</h2>
+      <p class="article-subtitle">Выбирайте сервер по душе и начинайте своё приключение</p>
+
+      <div class="server-list">
+        <div class="server-card">
+          <h3 class="server-name">No More Return</h3>
+          <p class="server-desc">
+            Основной сервер для выживания. Ванильна+ игровой процесс с минимальными модификациями
+            для комфорта.ЛОР сюжет что может быть как на других. Присоединяйтесь к нашему сообществу
+            и начните своё приключение в мире бесконечных возможностей!
+          </p>
+          <div class="server-status">
+            <span>Версия: 1.21.11</span>
+            <span class="status-online">● SOON</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="ornament">⬛ ⬛ ⬛</div>
+
+    <!-- Футер -->
+    <footer class="newspaper-footer">
+      <div class="footer-announcement">
+        ⬛ Присоединяйтесь к сообществу! ⬛
+      </div>
+      <p class="footer-text">
+        Вступайте в наш Discord-сервер, чтобы быть в курсе всех новостей,
+        обновлений и событий. Общайтесь с другими игроками, участвуйте в ивентах
+        и получайте поддержку от администрации.
+      </p>
+
+      <a href="https://dsc.gg/no-more-return" class="discord-button" target="_blank" rel="noopener">
+        DISCORD СЕРВЕР
+      </a>
+
+      <div class="copyright">
+        © zakodka 2026 • ВСЕ ПРАВА ЗАЩИЩЕНЫ
+      </div>
+    </footer>
+
+  </div>
+</div>
+
+<script>
+// Обновление даты
+function updateDate(){
+  const now = new Date();
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  const dateStr = now.toLocaleDateString('ru-RU', options);
+  document.getElementById('current-date').textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+}
+updateDate();
+
+// Рандомное изменение количества игроков
+setInterval(() => {
+  const counter = document.getElementById('player-count');
+  const current = parseInt(counter.textContent);
+  const newValue = Math.max(0, Math.min(1, current + Math.floor(Math.random() * 2) - 3));
+  counter.textContent = newValue;
+}, 4000);
+</script>
+
+</body>
+</html>
