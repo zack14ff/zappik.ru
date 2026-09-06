@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="Bread.png">
+<title>Проекты — Zakodka</title>
+<meta name="description" content="Проекты Zakodka: SCAG mod loader, моды для Minecraft и архив того, что уже улетело в чёрную дыру.">
+<meta name="theme-color" content="#0a0806">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Проекты — Zakodka">
+<meta property="og:description" content="SCAG mod loader, моды для Minecraft и архив проектов.">
+<style>
+  /* ============================================
+     ЛОКАЛЬНЫЕ ШРИФТЫ (те же, что на port.html)
+     ============================================ */
+
+  @font-face{
+    font-family:'FontMain';
+    src:url('minecraft-ten-font-cyrillic.ttf') format('truetype');
+    font-weight:400 800;
+    font-display:swap;
+  }
+  @font-face{
+    font-family:'FontSmall';
+    src:url('minecraft-five-bold.otf') format('opentype');
+    font-weight:400 700;
+    font-display:swap;
+  }
+  @font-face{
+    font-family:'FontLink';
+    src:url('minecraft.ttf') format('truetype');
+    font-weight:400 700;
+    font-display:swap;
+  }
+
+  :root{
+    --bg-0:#0a0806;
+    --bg-1:#14100a;
+    --crust-dark:#5a3a1f;
+    --crust-mid:#8a5a2b;
+    --crumb:#d9a441;
+    --crumb-light:#f0c66b;
+    --gold:#e8b04b;
+    --gold-soft:rgba(232,176,75,0.15);
+    --cream:#f5ecdc;
+    --muted:#a89478;
+    --card:rgba(255,255,255,0.035);
+    --card-border:rgba(232,176,75,0.16);
+    --hot:#fff3d0;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:
+      radial-gradient(ellipse 900px 600px at 50% 0%, rgba(232,176,75,0.10), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 85% 60%, rgba(138,90,43,0.10), transparent 60%),
+      var(--bg-0);
+    color:var(--cream);
+    font-family:'FontMain', sans-serif;
+    min-height:100vh;
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  /* зерно плёнки — как на port.html */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    opacity:0.035;
+    background-image:repeating-linear-gradient(0deg, #fff 0px, transparent 1px, transparent 2px, #fff 3px);
+    mix-blend-mode:overlay;
+    z-index:1;
+  }
+
+  ::selection{background:var(--gold); color:var(--bg-0);}
+  a{color:inherit;}
+  img{display:block; max-width:100%;}
+  button{font:inherit; cursor:pointer;}
+  [hidden]{display:none !important;}
+  :focus-visible{outline:2px solid var(--gold); outline-offset:3px;}
+
+  .pixel{font-family:'FontSmall', monospace;}
+
+  .wrap{
+    max-width:920px;
+    margin:0 auto;
+    padding:0 24px;
+    position:relative;
+    z-index:2;
+  }
+
+  /* ---------- ШАПКА ---------- */
+
+  .topbar{
+    position:relative; z-index:3;
+    max-width:920px; margin:0 auto;
+    padding:26px 24px 0;
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+  }
+  .back-link{
+    font-family:'FontSmall', monospace;
+    font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase;
+    color:var(--muted); text-decoration:none;
+    transition:color .2s ease;
+  }
+  .back-link:hover{color:var(--gold);}
+
+  /* ---------- HERO ---------- */
+
+  .hero{
+    text-align:center;
+    padding:56px 24px 70px;
+    position:relative;
+    z-index:2;
+  }
+  .logo-mark{
+    width:74px; height:auto; margin:0 auto 24px;
+    image-rendering:pixelated;
+    filter:drop-shadow(0 10px 30px rgba(232,176,75,0.25));
+    animation:float-loaf 5s ease-in-out infinite;
+  }
+  @keyframes float-loaf{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-12px);}
+  }
+  .eyebrow{
+    font-size:10px; letter-spacing:0.12em;
+    color:var(--gold); background:var(--gold-soft);
+    border:1px solid var(--card-border);
+    padding:9px 16px; border-radius:100px;
+    display:inline-block; margin-bottom:24px;
+  }
+  h1{
+    font-size:clamp(2rem, 5.6vw, 3.4rem);
+    font-weight:700; line-height:1.14; letter-spacing:-0.02em;
+    max-width:760px; margin:0 auto;
+  }
+  h1 .accent{color:var(--gold);}
+  .sub{
+    margin:22px auto 0; color:var(--muted);
+    font-family:'FontLink', monospace;
+    font-size:0.98rem; max-width:540px; line-height:1.7;
+  }
+
+  /* ---------- ОБЩЕЕ ДЛЯ СЕКЦИЙ ---------- */
+
+  section{position:relative; z-index:2;}
+
+  .section-label{
+    font-size:10px; letter-spacing:0.14em;
+    color:var(--muted); margin-bottom:28px;
+    text-transform:uppercase;
+  }
+  .section-label span{color:var(--gold);}
+
+  /* ---------- ПИКСЕЛЬНАЯ ПАНЕЛЬ (общий приём port.html) ---------- */
+
+  .slab{
+    background:var(--card);
+    border:3px solid var(--crust-dark);
+    padding:28px;
+    position:relative;
+    image-rendering:pixelated;
+    box-shadow:
+      inset -2px -2px 0 rgba(0,0,0,0.4),
+      inset 2px 2px 0 rgba(255,255,255,0.1),
+      0 4px 0 var(--crust-dark),
+      0 4px 8px rgba(0,0,0,0.3);
+  }
+
+  /* ---------- SCAG ---------- */
+
+  .scag{padding:20px 24px 90px;}
+  .scag-inner{display:grid; grid-template-columns:minmax(0,1fr) 250px; gap:28px; align-items:center;}
+
+  .tag-row{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px;}
+  .tag{
+    font-family:'FontSmall', monospace;
+    font-size:0.64rem; letter-spacing:0.12em; text-transform:uppercase;
+    color:var(--gold); background:var(--gold-soft);
+    border:1px solid var(--card-border);
+    padding:6px 11px;
+  }
+  .tag.wip{color:var(--crumb-light);}
+
+  .scag h2{
+    font-size:clamp(1.9rem, 5vw, 3rem);
+    line-height:1.05; text-transform:uppercase; letter-spacing:0.04em;
+    text-shadow:0 4px 20px rgba(0,0,0,0.6);
+  }
+  .scag h2 .accent{color:var(--gold);}
+  .scag .kind{
+    font-family:'FontSmall', monospace;
+    font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--muted); margin-top:10px;
+  }
+  .scag p.desc{
+    margin-top:18px; color:var(--muted);
+    font-family:'FontLink', monospace;
+    font-size:0.95rem; line-height:1.75; max-width:480px;
+  }
+
+  .specs{margin-top:22px; max-width:420px;}
+  .spec{
+    display:flex; align-items:baseline; justify-content:space-between; gap:14px;
+    padding:9px 0; border-bottom:1px dotted rgba(168,148,120,0.28);
+  }
+  .spec:last-child{border-bottom:none;}
+  .spec dt{
+    font-family:'FontSmall', monospace;
+    font-size:0.66rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted);
+  }
+  .spec dd{font-family:'FontLink', monospace; font-size:0.9rem; color:var(--cream);}
+
+  .btn-row{display:flex; flex-wrap:wrap; gap:12px; margin-top:26px;}
+  .mc-btn{
+    display:inline-block;
+    font-family:'FontSmall', monospace;
+    font-size:0.78rem; text-transform:uppercase; letter-spacing:0.12em;
+    color:var(--bg-0); background:var(--gold);
+    padding:15px 30px; border:2px solid var(--gold);
+    border-radius:6px; text-decoration:none; font-weight:700;
+    transition:transform .2s ease, box-shadow .2s ease, background .2s ease;
+  }
+  .mc-btn:hover{
+    transform:translateY(-3px);
+    box-shadow:0 10px 30px rgba(232,176,75,0.35);
+    background:var(--crumb-light); border-color:var(--crumb-light);
+  }
+  .mc-btn.ghost{
+    background:transparent; color:var(--gold); border-color:var(--card-border);
+  }
+  .mc-btn.ghost:hover{background:var(--gold-soft); border-color:var(--gold); color:var(--crumb-light);}
+
+  /* «загрузчик» — пиксельная полоса, которая вечно грузится */
+  .loader-box{
+    border:3px solid var(--crust-dark);
+    background:rgba(0,0,0,0.35);
+    padding:16px;
+    box-shadow:inset -2px -2px 0 rgba(0,0,0,0.5), inset 2px 2px 0 rgba(255,255,255,0.07);
+  }
+  .loader-title{
+    font-family:'FontSmall', monospace;
+    font-size:0.62rem; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--muted); margin-bottom:12px;
+  }
+  .loader-track{
+    display:grid; grid-template-columns:repeat(12, 1fr); gap:3px;
+    height:18px; margin-bottom:12px;
+  }
+  .loader-track i{background:rgba(255,255,255,0.06); display:block;}
+  .loader-track i.on{background:var(--gold); box-shadow:0 0 8px rgba(232,176,75,0.6);}
+  .loader-log{
+    font-family:'FontLink', monospace;
+    font-size:0.72rem; color:var(--crumb); min-height:1.4em;
+  }
+
+  /* ---------- МОДЫ ---------- */
+
+  .mods{padding:0 24px 58px;}
+  .mods-head{text-align:center; margin-bottom:34px;}
+  .mods-head h2{
+    font-size:clamp(1.7rem, 4.6vw, 2.6rem);
+    text-transform:uppercase; letter-spacing:0.05em; line-height:1.1;
+  }
+  .mods-head p{
+    font-family:'FontSmall', monospace;
+    font-size:0.76rem; text-transform:uppercase; letter-spacing:0.1em;
+    color:var(--muted); line-height:1.9; margin-top:14px;
+  }
+
+  .mod-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; margin-bottom:30px;}
+
+  /* --k — цвет типа мода, приходит из шаблона в скрипте */
+  .mod-card{
+    --k:var(--gold);
+    background:var(--card);
+    border:3px solid var(--crust-dark);
+    text-decoration:none; color:var(--cream);
+    display:flex; flex-direction:column;
+    overflow:hidden;
+    transition:transform .25s ease, border-color .25s ease, background .25s ease, box-shadow .25s ease;
+    box-shadow:
+      inset -2px -2px 0 rgba(0,0,0,0.4),
+      inset 2px 2px 0 rgba(255,255,255,0.1),
+      0 4px 0 var(--crust-dark),
+      0 4px 8px rgba(0,0,0,0.3);
+  }
+  a.mod-card:hover{
+    transform:translateY(-2px);
+    border-color:var(--k);
+    background:rgba(232,176,75,0.10);
+    box-shadow:
+      inset -2px -2px 0 rgba(0,0,0,0.5),
+      inset 2px 2px 0 rgba(255,255,255,0.2),
+      0 6px 0 var(--k),
+      0 6px 12px rgba(0,0,0,0.45);
+  }
+
+  /* ---- превью мода ---- */
+  .mod-shot{
+    position:relative;
+    aspect-ratio:16/9;
+    border-bottom:3px solid var(--crust-dark);
+    background:#0d0a07;
+    overflow:hidden;
+  }
+  .mod-shot img{
+    width:100%; height:100%; object-fit:cover;
+    image-rendering:pixelated;
+    display:none;                 /* показываем, только когда файл реально загрузился */
+    position:relative; z-index:1;
+  }
+  /* заглушка: пиксельная шахматка в цвет типа мода */
+  .mod-shot .ph{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    background-color:#0d0a07;
+    background-image:
+      linear-gradient(45deg, rgba(255,255,255,0.035) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.035) 75%),
+      linear-gradient(45deg, rgba(255,255,255,0.035) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.035) 75%);
+    background-size:16px 16px;
+    background-position:0 0, 8px 8px;
+  }
+  /* плашка типа мода поверх превью */
+  .mod-kind{
+    position:absolute; left:8px; bottom:8px; z-index:2;
+    display:flex; align-items:center; gap:7px;
+    font-family:'FontSmall', monospace;
+    font-size:0.56rem; letter-spacing:0.12em; text-transform:uppercase;
+    color:var(--cream);
+    background:rgba(10,8,6,0.85);
+    border:1px solid rgba(90,58,31,0.9);
+    padding:5px 9px;
+  }
+  .mod-kind i{width:8px; height:8px; background:var(--k); display:block; flex-shrink:0;}
+
+  .mod-body{padding:16px 16px 18px; display:flex; flex-direction:column; gap:8px; flex:1;}
+  .mod-card .name{font-size:1.02rem; font-weight:700; font-family:'FontLink', sans-serif;}
+  .mod-card .note{font-family:'FontLink', monospace; font-size:0.82rem; color:var(--muted); line-height:1.55;}
+  .mod-card .go{
+    margin-top:auto; padding-top:8px;
+    font-family:'FontSmall', monospace; font-size:0.62rem;
+    letter-spacing:0.12em; text-transform:uppercase; color:var(--k);
+  }
+
+  /* ---- карточка-шаблон: видно, что это рыба, а не настоящий мод ---- */
+  .mod-card.is-draft{
+    border-style:dashed;
+    border-color:rgba(90,58,31,0.8);
+    background:rgba(0,0,0,0.22);
+    box-shadow:inset -2px -2px 0 rgba(0,0,0,0.45), inset 2px 2px 0 rgba(255,255,255,0.05);
+  }
+  .mod-card.is-draft .name{color:rgba(245,236,220,0.6);}
+  .mod-card.is-draft .note{color:rgba(168,148,120,0.6);}
+  .mod-card.is-draft .go{color:rgba(168,148,120,0.5);}
+  .draft-badge{
+    position:absolute; right:8px; top:8px; z-index:2;
+    font-family:'FontSmall', monospace;
+    font-size:0.52rem; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--bg-0); background:var(--muted);
+    padding:4px 8px;
+  }
+
+  /* пустой слот инвентаря — честная заглушка, пока модов нет в списке */
+  .slot{
+    border:3px solid rgba(90,58,31,0.55);
+    background:rgba(0,0,0,0.25);
+    min-height:132px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:9px;
+    color:rgba(168,148,120,0.55);
+    box-shadow:inset -2px -2px 0 rgba(0,0,0,0.45), inset 2px 2px 0 rgba(255,255,255,0.05);
+  }
+  .slot .plus{
+    width:26px; height:26px; border:2px dashed rgba(168,148,120,0.4);
+    display:flex; align-items:center; justify-content:center; font-size:0.9rem;
+  }
+  .slot span{font-family:'FontSmall', monospace; font-size:0.6rem; letter-spacing:0.12em; text-transform:uppercase;}
+
+  /* ---------- ЧЁРНАЯ ДЫРА ---------- */
+
+  .void{
+    position:relative;
+    padding:70px 24px 84px;
+    text-align:center;
+    /* к дыре фон гаснет до абсолютно чёрного */
+    background:linear-gradient(to bottom, transparent 0%, #050403 45%, #000 100%);
+  }
+
+  .void-title{
+    font-size:clamp(1.3rem, 3.6vw, 2rem);
+    line-height:1.3; max-width:620px; margin:0 auto 8px;
+    text-wrap:balance;
+    text-shadow:0 0 30px rgba(232,176,75,0.25);
+  }
+  .void-sub{
+    font-family:'FontSmall', monospace;
+    font-size:0.68rem; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--muted); margin-bottom:26px;
+  }
+
+  .hole-stage{
+    position:relative;
+    width:min(460px, 84vw);
+    aspect-ratio:1;
+    margin:0 auto;
+  }
+
+  /* линзирование: свет, изогнутый вокруг горизонта */
+  .lens{
+    position:absolute; inset:-14%;
+    border-radius:50%;
+    background:radial-gradient(circle,
+      transparent 44%,
+      rgba(232,176,75,0.13) 50%,
+      rgba(232,176,75,0.05) 58%,
+      transparent 72%);
+    filter:blur(8px);
+  }
+
+  /* аккреционный диск: два кольца, крутятся навстречу друг другу */
+  .disk{
+    position:absolute; inset:8%;
+    border-radius:50%;
+    background:conic-gradient(from 0deg,
+      transparent 0deg,
+      var(--crust-mid) 30deg,
+      var(--gold) 70deg,
+      var(--hot) 105deg,
+      var(--gold) 145deg,
+      transparent 205deg,
+      transparent 300deg,
+      var(--crust-mid) 335deg,
+      transparent 360deg);
+    filter:blur(11px);
+    animation:spin 16s linear infinite;
+  }
+  .disk.inner{
+    inset:17%;
+    filter:blur(4px);
+    opacity:0.95;
+    animation:spin-back 9s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  @keyframes spin-back{to{transform:rotate(-360deg);}}
+
+  /* горизонт событий + фотонное кольцо */
+  .horizon{
+    position:absolute; inset:27%;
+    border-radius:50%;
+    background:#000;
+    box-shadow:
+      0 0 0 2px #000,
+      0 0 0 5px rgba(255,243,208,0.95),
+      0 0 18px 5px rgba(255,243,208,0.55),
+      0 0 60px 16px rgba(232,176,75,0.28),
+      inset 0 0 50px 14px #000;
+  }
+
+  /* обломки проектов, уходящие по спирали внутрь */
+  .debris{position:absolute; inset:0; pointer-events:none;}
+  .bit{
+    position:absolute; left:50%; top:50%;
+    width:9px; height:9px; margin:-4px 0 0 -4px;
+    background:var(--crumb);
+    image-rendering:pixelated;
+    opacity:0;
+    animation:swirl var(--dur,9s) cubic-bezier(.4,0,.85,.4) var(--delay,0s) infinite backwards;
+  }
+  .bit.pale{background:var(--cream);}
+  .bit.dark{background:var(--crust-mid);}
+  .bit.big{width:13px; height:13px; margin:-6px 0 0 -6px;}
+  @keyframes swirl{
+    0%{transform:rotate(0deg) translateX(var(--r,190px)) rotate(0deg) scale(1); opacity:0;}
+    12%{opacity:0.95;}
+    72%{opacity:0.8;}
+    /* гаснут у фотонного кольца, внутрь горизонта не залетают */
+    90%{opacity:0;}
+    100%{transform:rotate(520deg) translateX(92px) rotate(-520deg) scale(0.25); opacity:0;}
+  }
+
+  /* список того, что уже внутри */
+  .lost{
+    margin:44px auto 0;
+    max-width:560px;
+    display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px;
+    text-align:left;
+  }
+  .lost a{
+    display:flex; align-items:center; gap:11px;
+    padding:13px 15px;
+    border:2px solid rgba(90,58,31,0.7);
+    background:rgba(10,8,6,0.75);
+    text-decoration:none; color:var(--muted);
+    font-family:'FontLink', monospace; font-size:0.86rem;
+    transition:border-color .2s ease, color .2s ease, background .2s ease, transform .2s ease;
+  }
+  .lost a:hover{
+    border-color:var(--gold); color:var(--cream);
+    background:rgba(232,176,75,0.08);
+    transform:translateY(-2px);
+  }
+  .lost a .dot{
+    width:8px; height:8px; flex-shrink:0;
+    background:var(--crust-mid);
+  }
+  .lost a:hover .dot{background:var(--gold);}
+  .lost a small{
+    margin-left:auto;
+    font-family:'FontSmall', monospace; font-size:0.56rem;
+    letter-spacing:0.1em; text-transform:uppercase;
+    color:rgba(168,148,120,0.55);
+  }
+
+  .void-note{
+    margin-top:26px;
+    font-family:'FontSmall', monospace;
+    font-size:0.62rem; letter-spacing:0.12em; text-transform:uppercase;
+    color:rgba(168,148,120,0.5);
+  }
+
+  /* ---------- FOOTER ---------- */
+
+  footer{
+    position:relative; z-index:2;
+    padding:50px 24px 70px;
+    text-align:center;
+    background:#000;
+  }
+  .divider{
+    width:1px; height:44px; margin:0 auto 32px;
+    background:linear-gradient(to bottom, transparent, var(--card-border));
+  }
+  .float-text{
+    font-size:0.82rem; color:var(--muted);
+    display:inline-block; min-height:1.4em;
+    animation:levitate 4s ease-in-out infinite;
+    transition:opacity .5s ease;
+  }
+  @keyframes levitate{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-8px);}
+  }
+  .copyright{
+    margin-top:20px; font-size:0.72rem;
+    color:rgba(168,148,120,0.5); letter-spacing:0.04em;
+  }
+  .copyright a{color:inherit; text-decoration:none;}
+  .copyright a:hover{color:var(--gold);}
+
+  /* ---------- АДАПТИВ ---------- */
+
+  @media (max-width:900px){
+    .scag-inner{grid-template-columns:1fr;}
+    .loader-box{order:-1;}
+  }
+  @media (max-width:640px){
+    .mod-grid{grid-template-columns:repeat(2, 1fr);}
+    .lost{grid-template-columns:1fr;}
+    .slab{padding:22px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important; scroll-behavior:auto !important;}
+    /* дыра остаётся, просто перестаёт вращаться;
+       обломки без движения слиплись бы в центре — убираем их */
+    .debris{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back-link" href="index.html">← Навигация</a>
+  <a class="back-link" href="port.html">Обо мне →</a>
+</div>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <img class="logo-mark" src="template/white.png" alt="Zakodka logo">
+  <div class="eyebrow pixel">ПРОЕКТЫ · ZAKODKA</div>
+  <h1>То, что я <span class="accent">собираю</span> руками</h1>
+  <p class="sub">Загрузчик модов, сами моды и всё остальное. Что-то живёт и обновляется, что-то уже утянуло в дыру внизу страницы.</p>
+</section>
+
+<!-- ================= SCAG ================= -->
+<section class="scag">
+  <div class="wrap">
+    <div class="section-label pixel">ГЛАВНЫЙ <span>ПРОЕКТ</span></div>
+
+    <div class="slab">
+      <div class="scag-inner">
+        <div>
+          <div class="tag-row">
+            <span class="tag wip">В разработке</span>
+            <span class="tag">Minecraft</span>
+            <span class="tag">Загрузчик</span>
+          </div>
+
+          <h2><span class="accent">SCAG</span><br>mod loader</h2>
+          <div class="kind pixel">Загрузчик модов</div>
+
+          <!-- ▼ ТУТ ОПИСАНИЕ: замени на своё, когда будет что рассказать -->
+          <p class="desc">
+            Свой загрузчик модов для Minecraft: ставит сборку и следит за тем,
+            чтобы моды не дрались друг с другом. Пока собирается — следить за
+            прогрессом можно в Discord.
+          </p>
+
+          <!-- ▼ ТУТ ХАРАКТЕРИСТИКИ: поставь реальные значения вместо «—» -->
+          <dl class="specs">
+            <div class="spec"><dt>Версии</dt><dd>—</dd></div>
+            <div class="spec"><dt>Платформа</dt><dd>—</dd></div>
+            <div class="spec"><dt>Статус</dt><dd>В разработке</dd></div>
+          </dl>
+
+          <div class="btn-row">
+            <!-- ▼ ССЫЛКИ: подставь свои, когда появятся. Пока ведут в Discord -->
+            <a class="mc-btn" href="https://dsc.gg/zakap" target="_blank" rel="noopener">Следить за релизом</a>
+            <a class="mc-btn ghost" href="https://modrinth.com/user/GreenZack" target="_blank" rel="noopener">Мои страницы</a>
+          </div>
+        </div>
+
+        <div class="loader-box">
+          <div class="loader-title">SCAG · загрузка</div>
+          <div class="loader-track" id="loaderTrack" aria-hidden="true"></div>
+          <div class="loader-log" id="loaderLog">…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= МОДЫ ================= -->
+<section class="mods">
+  <div class="wrap">
+    <div class="section-label pixel">МОДЫ ДЛЯ <span>MINECRAFT</span></div>
+
+    <div class="mods-head">
+      <h2>Небольшие моды</h2>
+      <p class="pixel">
+        Мелочи, которых мне не хватало в игре.<br>
+        Всё, что доведено до релиза, лежит на Modrinth.
+      </p>
+    </div>
+
+    <!-- Карточки собираются из списка MODS в скрипте ниже.
+         Пока список пуст — тут стоят пустые слоты, как в инвентаре. -->
+    <div class="mod-grid" id="modGrid"></div>
+
+    <div style="text-align:center;">
+      <a class="mc-btn" href="https://modrinth.com/user/GreenZack" target="_blank" rel="noopener">Все моды на Modrinth</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ЧЁРНАЯ ДЫРА ================= -->
+<section class="void">
+  <h2 class="void-title">Похоже некоторые проекты в дыре</h2>
+  <div class="void-sub pixel">архив · точка невозврата</div>
+
+  <div class="hole-stage">
+    <div class="lens" aria-hidden="true"></div>
+    <div class="disk" aria-hidden="true"></div>
+    <div class="disk inner" aria-hidden="true"></div>
+    <div class="horizon" aria-hidden="true"></div>
+    <div class="debris" id="debris" aria-hidden="true"></div>
+  </div>
+
+  <!-- реальные ссылки на архив: кликается спокойно, ничего не улетает -->
+  <nav class="lost">
+    <a href="archive/assets/bttr/index.html"><span class="dot"></span> BTTR <small>сервер</small></a>
+    <a href="archive/assets/bttr/reindev/index.html"><span class="dot"></span> ReinDev <small>сервер</small></a>
+    <a href="archive/assets/bta/index.html"><span class="dot"></span> BTA <small>страница</small></a>
+    <a href="archive/assets/bttr/infdevpls/index.html"><span class="dot"></span> InfDev <small>страница</small></a>
+    <a href="archive/oldempty.html"><span class="dot"></span> Старый сайт <small>index</small></a>
+    <a href="archive/assets/bttr/clan/index.html"><span class="dot"></span> Клан <small>страница</small></a>
+  </nav>
+
+  <div class="void-note pixel">их ещё можно вытащить — но осторожно</div>
+</section>
+
+<footer>
+  <div class="divider"></div>
+  <div class="float-text pixel" id="float-text">???</div>
+  <div class="copyright">© zakap · <a href="index.html">Zakodka</a> 2026</div>
+</footer>
+
+<script>
+/* ======================================================================
+   ТИПЫ МОДОВ — шаблоны оформления.
+   Каждый тип красит рамку, плашку и стрелку «Открыть» в свой цвет.
+   Хочешь свой тип — просто допиши строку сюда.
+   ====================================================================== */
+const KINDS = {
+  qol:   { label:"Удобство",  color:"#e8b04b" },
+  tech:  { label:"Механика",  color:"#7fb3d5" },
+  decor: { label:"Декор",     color:"#c98bd0" },
+  world: { label:"Мир",       color:"#7bbf5a" },
+  mob:   { label:"Мобы",      color:"#e07a5f" },
+  util:  { label:"Утилита",   color:"#a89478" }
+};
+
+/* ======================================================================
+   СПИСОК МОДОВ — правится только он.
+
+   Поля:
+     kind   — тип из KINDS выше: qol | tech | decor | world | mob | util
+     name   — название мода
+     note   — одна строка о том, что он делает
+     url    — ссылка на страницу мода (без неё карточка не кликается)
+     img    — превью, картинка 16:9. Клади файлы в images/mods/
+              Если файла нет — вместо него сама покажется пиксельная заглушка,
+              ничего не сломается.
+     draft  — true = карточка-шаблон: серая, с плашкой «ШАБЛОН», не кликается.
+              Убери draft, впиши свои данные — и карточка станет обычной.
+
+   Готовый пример настоящего мода:
+     { kind:"qol", name:"Мой мод", note:"Что он делает.",
+       url:"https://modrinth.com/mod/...", img:"images/mods/moimod.jpg" },
+   ====================================================================== */
+const MODS = [
+  { kind:"qol",   name:"Название мода", note:"Что делает мод — одной строкой.", img:"images/mods/1.jpg", draft:true },
+  { kind:"tech",  name:"Название мода", note:"Механики, блоки, рецепты.",       img:"images/mods/2.jpg", draft:true },
+  { kind:"decor", name:"Название мода", note:"Мебель, декор, мелочи для базы.", img:"images/mods/3.jpg", draft:true },
+];
+
+/* ---------- сборка сетки модов ---------- */
+(() => {
+  const grid = document.getElementById('modGrid');
+  if (!grid) return;
+  const SLOTS = 3; // сколько ячеек держать в ряду, пока модов мало
+
+  MODS.forEach(m => {
+    const kind = KINDS[m.kind] || KINDS.util;
+    const isDraft = !!m.draft;
+    const link = !isDraft && m.url;
+
+    // с ссылкой — <a>, без неё — обычный блок, чтобы не было пустых кликов
+    const card = document.createElement(link ? 'a' : 'article');
+    card.className = 'mod-card' + (isDraft ? ' is-draft' : '');
+    card.style.setProperty('--k', kind.color);
+    if (link){
+      card.href = m.url;
+      if (/^https?:/.test(m.url)) { card.target = '_blank'; card.rel = 'noopener'; }
+    }
+
+    /* --- превью --- */
+    const shot = document.createElement('div');
+    shot.className = 'mod-shot';
+
+    const ph = document.createElement('div');
+    ph.className = 'ph';   // пиксельная шахматка вместо картинки
+    shot.appendChild(ph);
+
+    if (m.img){
+      const img = document.createElement('img');
+      img.alt = m.name ? ('Превью: ' + m.name) : 'Превью мода';
+      img.loading = 'lazy';
+      // картинка появляется только если файл действительно загрузился
+      img.addEventListener('load', () => { img.style.display = 'block'; ph.remove(); });
+      img.src = m.img;
+      shot.appendChild(img);
+    }
+
+    const chip = document.createElement('span');
+    chip.className = 'mod-kind';
+    chip.innerHTML = '<i></i>';
+    chip.append(kind.label);
+    shot.appendChild(chip);
+
+    if (isDraft){
+      const badge = document.createElement('span');
+      badge.className = 'draft-badge';
+      badge.textContent = 'шаблон';
+      shot.appendChild(badge);
+    }
+
+    /* --- текст --- */
+    const body = document.createElement('div');
+    body.className = 'mod-body';
+
+    const name = document.createElement('div');
+    name.className = 'name';
+    name.textContent = m.name || 'Без названия';
+
+    const note = document.createElement('div');
+    note.className = 'note';
+    note.textContent = m.note || '';
+
+    const go = document.createElement('div');
+    go.className = 'go';
+    go.textContent = isDraft ? 'заполни меня' : (link ? 'Открыть →' : 'скоро');
+
+    body.append(name, note, go);
+    card.append(shot, body);
+    grid.appendChild(card);
+  });
+
+  // добиваем ряд пустыми слотами
+  for (let i = MODS.length; i < SLOTS; i++){
+    const s = document.createElement('div');
+    s.className = 'slot';
+    s.innerHTML = '<div class="plus">+</div><span>слот свободен</span>';
+    grid.appendChild(s);
+  }
+})();
+
+/* ---------- «загрузчик»: полоса и лог ---------- */
+(() => {
+  const track = document.getElementById('loaderTrack');
+  const log   = document.getElementById('loaderLog');
+  if (!track || !log) return;
+  const CELLS = 12;
+  const lines = [
+    'scanning mods…',
+    'resolving deps…',
+    'patching bytecode…',
+    'ещё чуть-чуть…',
+    'почти готово…',
+    'ладно, не готово.'
+  ];
+
+  for (let i = 0; i < CELLS; i++) track.appendChild(document.createElement('i'));
+  const cells = Array.from(track.children);
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    cells.forEach(c => c.classList.add('on'));
+    log.textContent = lines[0];
+    return;
+  }
+
+  let n = 0, li = 0;
+  setInterval(() => {
+    n = (n + 1) % (CELLS + 1);
+    cells.forEach((c, i) => c.classList.toggle('on', i < n));
+    if (n === 0){
+      li = (li + 1) % lines.length;
+      log.textContent = lines[li];
+    }
+  }, 260);
+  log.textContent = lines[0];
+})();
+
+/* ---------- обломки, падающие в дыру ---------- */
+(() => {
+  const box = document.getElementById('debris');
+  if (!box) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const N = window.innerWidth < 700 ? 10 : 16;
+  const kinds = ['', 'pale', 'dark', 'big'];
+
+  for (let i = 0; i < N; i++){
+    const b = document.createElement('span');
+    b.className = 'bit ' + kinds[Math.floor(Math.random() * kinds.length)];
+    b.style.setProperty('--r', (140 + Math.random() * 100).toFixed(0) + 'px');
+    b.style.setProperty('--dur', (7 + Math.random() * 7).toFixed(1) + 's');
+    b.style.setProperty('--delay', (Math.random() * 9).toFixed(1) + 's');
+    box.appendChild(b);
+  }
+})();
+
+/* ---------- подпись в подвале ---------- */
+(() => {
+  const phrases = [
+    "он опять что-то собирает.",
+    "коммит был в 4 утра.",
+    "работает. не трогай.",
+    "это фича.",
+    "TODO: доделать TODO.",
+    "версия 0.0.1-alpha-final-FINAL",
+    "оно скомпилировалось!",
+    "грустно.",
+    "меня засосало в дыру.",
+    "?????"
+  ];
+  const el = document.getElementById('float-text');
+  if (!el) return;
+  setInterval(() => {
+    el.style.opacity = 0;
+    setTimeout(() => {
+      el.textContent = phrases[Math.floor(Math.random() * phrases.length)];
+      el.style.opacity = 1;
+    }, 500);
+  }, 3200);
+})();
+</script>
+
+</body>
+</html>

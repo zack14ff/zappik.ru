@@ -7,24 +7,13 @@
     <link rel="icon" type="image/png" href="template/whites.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Onest:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        /* === КАСТОМНЫЙ ШРИФТ ИЗ ПАПКИ (TTF / OTF) === */
-        @font-face {
-            font-family: 'MyCustomFont';
-            /* Укажите точное имя вашего файла шрифта */
-            src: url('fonts/your-font-name.ttf') format('truetype'),
-                 url('fonts/your-font-name.otf') format('opentype');
-            font-weight: 400 700;
-            font-style: normal;
-            font-display: swap;
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Onest', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         html {
@@ -87,7 +76,7 @@
         .star {
             position: absolute;
             color: rgba(255, 255, 255, 0.7);
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: 'Onest', sans-serif;
             line-height: 1;
             opacity: 0;
             animation-name: twinkle;
@@ -108,15 +97,15 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px; /* Отступы между всеми элементами (лого, 404, текст, кнопка) */
-            max-width: 560px;
+            gap: 26px; /* Отступы между всеми элементами (лого, 404, текст, кнопка) */
+            max-width: 640px;
         }
 
         /* === СТИЛИ ЛОГОТИПА === */
         .page-logo {
             /* 🎯 ГЛАВНАЯ НАСТРОЙКА: меняйте это число, чтобы изменить размер лого на ПК */
-            width: var(--logo-size, 80px);
-            height: var(--logo-size, 80px);
+            width: var(--logo-size, 96px);
+            height: var(--logo-size, 96px);
             object-fit: contain;
             display: block;
             /* Лёгкое свечение, чтобы лого вписывалось в атмосферу сайта */
@@ -130,11 +119,11 @@
         }
 
         .code {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(5rem, 18vw, 9rem);
-            font-weight: 700;
+            font-family: 'Unbounded', sans-serif;
+            font-size: clamp(6rem, 20vw, 11rem);
+            font-weight: 800;
             line-height: 1;
-            letter-spacing: 4px;
+            letter-spacing: 2px;
             background: linear-gradient(90deg, #fff, #7a7a7a);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -149,19 +138,19 @@
         }
 
         .title {
-            font-family: 'MyCustomFont', 'Space Grotesk', sans-serif; /* Добавлен ваш кастомный шрифт */
-            font-size: 1.4rem;
+            font-family: 'Unbounded', sans-serif;
+            font-size: clamp(1.5rem, 3.6vw, 2.2rem);
             font-weight: 600;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             text-transform: uppercase;
             color: #f2f2f2;
         }
 
         .subtitle {
-            font-size: 1rem;
+            font-size: 1.12rem;
             color: #9a9a9a;
-            line-height: 1.6;
-            max-width: 420px;
+            line-height: 1.65;
+            max-width: 490px;
         }
 
         .home-link {
@@ -169,16 +158,16 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            padding: 14px 28px;
+            padding: 17px 34px;
             border-radius: 999px;
             border: 1px solid rgba(255, 255, 255, 0.18);
             background: rgba(255, 255, 255, 0.03);
             color: #ffffff;
             text-decoration: none;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.95rem;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 1.02rem;
             font-weight: 500;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
             transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
         }
 
@@ -201,13 +190,13 @@
         @media (max-width: 480px) {
             .page-logo {
                 /* 🎯 РАЗМЕР ЛОГО НА ТЕЛЕФОНЕ (чуть меньше, чтобы гармонично смотреться) */
-                width: var(--logo-size-mobile, 60px);
-                height: var(--logo-size-mobile, 60px);
+                width: var(--logo-size-mobile, 72px);
+                height: var(--logo-size-mobile, 72px);
             }
 
-            .title { font-size: 1.15rem; }
-            .subtitle { font-size: 0.9rem; }
-            .home-link { padding: 12px 22px; font-size: 0.9rem; }
+            .title { font-size: 1.35rem; }
+            .subtitle { font-size: 1rem; }
+            .home-link { padding: 15px 28px; font-size: 0.95rem; }
         }
     </style>
 </head>

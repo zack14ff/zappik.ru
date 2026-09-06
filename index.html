@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="template/whites.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Onest:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         /* === КАСТОМНЫЙ ШРИФТ ИЗ ПАПКИ (TTF / OTF) === */
         @font-face {
@@ -25,7 +25,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Onest', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         html {
@@ -40,7 +40,7 @@
             min-height: 100vh;
             background-color: #0a0d12;
             color: #ffffff;
-            padding: 110px 20px 80px; /* Увеличен отступ сверху, чтобы большое лого не перекрывало заголовок */
+            padding: 132px 20px 90px; /* Увеличен отступ сверху, чтобы большое лого не перекрывало заголовок */
             overflow-x: hidden;
             isolation: isolate;
         }
@@ -52,7 +52,7 @@
             left: 20px; /* ЗАМЕНИТЕ на right: 20px, если нужен ПРАВЫЙ верхний край */
             display: flex;
             align-items: center;
-            gap: 14px; /* Отступ между лого и текстом */
+            gap: 16px; /* Отступ между лого и текстом */
             z-index: 1000;
             padding: 10px 20px;
             background: rgba(10, 13, 18, 0.85);
@@ -64,7 +64,7 @@
             transition: transform 0.3s ease, background 0.3s ease;
             
             /* 🎯 ГЛАВНАЯ НАСТРОЙКА: меняйте это число, чтобы изменить размер лого на ПК */
-            --logo-size: 58px; 
+            --logo-size: 66px; 
         }
 
         .site-header:active {
@@ -80,8 +80,8 @@
         }
 
         .header-text {
-            font-family: 'MyCustomFont', 'Space Grotesk', sans-serif;
-            font-size: 1.15rem; /* Чуть крупнее текст под большое лого */
+            font-family: 'MyCustomFont', 'Unbounded', sans-serif;
+            font-size: 1.35rem; /* Чуть крупнее текст под большое лого */
             font-weight: 600;
             color: #ffffff;
             white-space: nowrap;
@@ -130,7 +130,7 @@
         .star {
             position: absolute;
             color: rgba(255, 255, 255, 0.7);
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: 'Onest', sans-serif;
             line-height: 1;
             opacity: 0;
             animation-name: twinkle;
@@ -145,10 +145,10 @@
         }
 
         h1 {
-            margin-bottom: 50px;
-            font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
-            font-size: 2.4rem;
-            font-weight: 700;
+            margin-bottom: 64px;
+            font-family: 'Unbounded', 'Segoe UI', sans-serif;
+            font-size: clamp(2.6rem, 6.4vw, 4.4rem);
+            font-weight: 800;
             text-align: center;
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -164,7 +164,7 @@
             gap: 20px;
             width: 100%;
             max-width: 900px;
-            margin: 70px auto 40px;
+            margin: 88px auto 48px;
         }
 
         .section-divider:first-of-type {
@@ -180,10 +180,10 @@
         }
 
         .section-divider span {
-            font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
-            font-size: 1.4rem;
+            font-family: 'Unbounded', 'Segoe UI', sans-serif;
+            font-size: clamp(1.5rem, 3.4vw, 2.1rem);
             font-weight: 600;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             text-transform: uppercase;
             color: #f2f2f2;
             white-space: nowrap;
@@ -192,8 +192,8 @@
 
         .cards-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 300px));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 344px));
+            gap: 34px;
             justify-content: center;
             width: 100%;
             max-width: 1200px;
@@ -233,23 +233,23 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            padding: 25px;
+            padding: 28px;
             transition: background 0.4s ease;
             z-index: 2;
             pointer-events: none;
         }
 
         .nav-card h2 {
-            font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
-            font-size: 1.4rem;
+            font-family: 'Unbounded', 'Segoe UI', sans-serif;
+            font-size: 1.7rem;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             transform: translateY(10px);
             transition: transform 0.4s ease, color 0.4s ease;
         }
 
         .nav-card p {
-            font-size: 0.9rem;
+            font-size: 1.02rem;
             color: #ccc;
             opacity: 0;
             transform: translateY(20px);
@@ -302,7 +302,7 @@
         /* === АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ === */
         @media (max-width: 768px) {
             body {
-                padding: 90px 16px 60px;
+                padding: 104px 16px 66px;
             }
 
             .site-header {
@@ -312,17 +312,17 @@
                 gap: 10px;
                 
                 /* 🎯 РАЗМЕР ЛОГО НА ТЕЛЕФОНЕ (чуть меньше, чтобы влезало в экран) */
-                --logo-size: 36px; 
+                --logo-size: 44px; 
             }
 
             .header-text {
-                font-size: 1rem;
+                font-size: 1.15rem;
             }
 
             .cards-container {
                 grid-template-columns: 1fr;
-                max-width: 420px;
-                gap: 22px;
+                max-width: 460px;
+                gap: 24px;
             }
 
             .nav-card {
@@ -330,7 +330,7 @@
             }
 
             h1, .section-divider span {
-                font-size: 1.5rem;
+                font-size: 1.95rem;
             }
 
             .section-divider {
@@ -366,11 +366,11 @@
             </div>
         </a>
 
-        <a href="#1" class="nav-card" style="--card-color: #0f5e70;">
+        <a href="projects.html" class="nav-card" style="--card-color: #e8b04b;">
             <img class="media-content" src="template/Silly2.jpg" alt="PNG Картинка">
             <div class="overlay">
-                <h2>[CLOSED]</h2>
-                <p>[IN DEV]</p>
+                <h2>Projects</h2>
+                <p>SCAG mod loader &amp; моды</p>
             </div>
         </a>
 
