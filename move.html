@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Переход — Zakodka</title>
+    <meta name="description" content="Переход на внешнюю страницу проекта Zakodka.">
+    <meta name="theme-color" content="#050505">
+    <meta name="robots" content="noindex">
+    <link rel="icon" type="image/png" href="template/whites.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Onest:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Onest', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html {
+            background-color: #050505;
+        }
+
+        body {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #050505;
+            color: #ffffff;
+            padding: 40px 20px;
+            text-align: center;
+            overflow: hidden;
+            isolation: isolate;
+
+            /* акцент перехода — задаётся из списка адресов в скрипте */
+            --accent: #ffffff;
+        }
+
+        /* === ФОН: тот же, что на index и 404 === */
+        .bg-glow {
+            position: fixed;
+            inset: 0;
+            z-index: -3;
+            background-color: #050505;
+            background-image:
+                radial-gradient(900px 700px at 20% 15%, rgba(255, 255, 255, 0.05), transparent 60%),
+                radial-gradient(900px 800px at 80% 85%, rgba(255, 255, 255, 0.04), transparent 60%),
+                linear-gradient(160deg, #030303 0%, #1a1a1a 45%, #0a0a0a 100%);
+            background-size: 100% 100%, 100% 100%, 220% 220%;
+            animation: breathe 18s ease-in-out infinite alternate;
+        }
+
+        @keyframes breathe {
+            0%   { background-position: 0% 0%, 0% 0%, 0% 0%; }
+            100% { background-position: 4% 6%, -4% -3%, 30% 30%; }
+        }
+
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 42px 42px;
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 40%, transparent 90%);
+        }
+
+        .bg-stars {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: 'Onest', sans-serif;
+            line-height: 1;
+            opacity: 0;
+            animation-name: twinkle;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+        }
+
+        @keyframes twinkle {
+            0%   { opacity: 0; transform: scale(0.6) rotate(0deg); }
+            50%  { opacity: 1; transform: scale(1) rotate(15deg); }
+            100% { opacity: 0; transform: scale(0.6) rotate(0deg); }
+        }
+
+        /* === КОНТЕНТ === */
+        .content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 22px;
+            max-width: 640px;
+            width: 100%;
+        }
+
+        .page-logo {
+            width: 72px;
+            height: 72px;
+            object-fit: contain;
+            display: block;
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.15));
+        }
+
+        .eyebrow {
+            font-size: 0.78rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #8f8f8f;
+            padding: 9px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: clamp(1.7rem, 4.6vw, 2.8rem);
+            font-weight: 800;
+            line-height: 1.16;
+            letter-spacing: -0.01em;
+            background: linear-gradient(90deg, #fff, #9a9a9a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.05rem;
+            color: #9a9a9a;
+            line-height: 1.65;
+            max-width: 470px;
+        }
+
+        /* === ЦИФЕРБЛАТ ОБРАТНОГО ОТСЧЁТА === */
+        .dial {
+            position: relative;
+            width: 132px;
+            height: 132px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 4px 0;
+        }
+
+        .dial svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .dial .track {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.10);
+            stroke-width: 4;
+        }
+
+        .dial .bar {
+            fill: none;
+            stroke: var(--accent);
+            stroke-width: 4;
+            stroke-linecap: round;
+            /* длина окружности при r=60 */
+            stroke-dasharray: 377;
+            stroke-dashoffset: 0;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.25));
+            animation: drain var(--delay, 5s) linear forwards;
+        }
+
+        @keyframes drain {
+            from { stroke-dashoffset: 0; }
+            to   { stroke-dashoffset: 377; }
+        }
+
+        .dial .num {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 2.9rem;
+            font-weight: 800;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+            color: #ffffff;
+        }
+
+        /* === АДРЕС НАЗНАЧЕНИЯ === */
+        .dest {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: #7d7d7d;
+            padding: 10px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            word-break: break-all;
+        }
+
+        .dest .pin {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            flex-shrink: 0;
+            box-shadow: 0 0 10px 1px var(--accent);
+        }
+
+        /* === КНОПКИ === */
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 6px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 30px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.03);
+            color: #ffffff;
+            text-decoration: none;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 0.98rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.07);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-go {
+            border-color: rgba(255, 255, 255, 0.85);
+            background: #ffffff;
+            color: #050505;
+        }
+
+        .btn-go:hover {
+            background: #eaeaea;
+            border-color: #ffffff;
+            box-shadow: 0 12px 34px rgba(255, 255, 255, 0.14);
+        }
+
+        .btn .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover .arrow {
+            transform: translateX(4px);
+        }
+
+        .hint {
+            font-size: 0.82rem;
+            color: #5e5e5e;
+            margin-top: 2px;
+        }
+
+        [hidden] { display: none !important; }
+
+        /* === АДАПТИВ === */
+        @media (max-width: 480px) {
+            .page-logo { width: 58px; height: 58px; }
+            .subtitle { font-size: 0.95rem; }
+            .dial { width: 112px; height: 112px; }
+            .dial .num { font-size: 2.4rem; }
+            .btn { padding: 14px 24px; font-size: 0.92rem; }
+            .actions { width: 100%; flex-direction: column; }
+            .actions .btn { justify-content: center; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, .bg-glow, .dial .bar { animation: none !important; transition: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+    <div class="bg-grid"></div>
+    <div class="bg-stars" id="bgStars"></div>
+
+    <main class="content">
+        <img src="template/white.png" alt="Zakodka" class="page-logo">
+
+        <div class="eyebrow" id="eyebrow">Переход</div>
+
+        <h1 class="title" id="title">Секунду…</h1>
+        <p class="subtitle" id="note">Готовим ссылку.</p>
+
+        <!-- обратный отсчёт -->
+        <div class="dial" id="dial">
+            <svg viewBox="0 0 132 132" aria-hidden="true">
+                <circle class="track" cx="66" cy="66" r="60"></circle>
+                <circle class="bar" id="bar" cx="66" cy="66" r="60"></circle>
+            </svg>
+            <span class="num" id="num" role="timer" aria-live="assertive">5</span>
+        </div>
+
+        <div class="dest" id="dest" hidden>
+            <span class="pin"></span>
+            <span id="destText">—</span>
+        </div>
+
+        <div class="actions">
+            <!-- href проставляется скриптом; без JS ссылка тоже работает -->
+            <a class="btn btn-go" id="goNow" href="index.html">
+                <span id="goLabel">Перейти сейчас</span>
+                <span class="arrow">→</span>
+            </a>
+            <button class="btn" id="cancelBtn" type="button">Отменить</button>
+            <a class="btn" id="homeBtn" href="index.html" hidden>На главную</a>
+        </div>
+
+        <p class="hint" id="hint">Не хочешь — нажми «Отменить», переход остановится.</p>
+
+        <noscript>
+            <p class="hint">Автопереход не работает без JavaScript — нажми кнопку выше.</p>
+        </noscript>
+    </main>
+
+    <script>
+    /* ======================================================================
+       АДРЕСА ПЕРЕХОДА — правится только этот блок.
+
+       Ссылку собирай так:  move.html?to=КЛЮЧ
+       Например:            https://zakodka.ru/move.html?to=opros
+
+       Ключ берётся ТОЛЬКО из этого списка. Полный адрес через параметр
+       (move.html?url=...) намеренно не поддерживается: иначе любой смог бы
+       сделать ссылку на твоём домене, ведущую куда угодно, — и это
+       выглядело бы как ссылка от тебя.
+
+       Чтобы добавить эвент — допиши строку:
+         ключ: { title, note, url, label, accent, delay }
+           title  — крупный заголовок
+           note   — строка пояснения
+           url    — куда вести
+           label  — что написать на кнопке после «Перейти в»
+           accent — цвет кольца и точки
+           delay  — сколько секунд ждать (по желанию, по умолчанию 5)
+       ====================================================================== */
+    const TARGETS = {
+        // ▼ КУДА ВЕДЁТ ССЫЛКА БЕЗ ПАРАМЕТРА (move.html)
+        default: {
+            title:  'Опрос в Telegram',
+            note:   'Сейчас откроем канал с опросом. Голосовать можно прямо там.',
+            url:    'https://t.me/zack14ff/49',
+            label:  'Telegram',
+            accent: '#4aa8e0'
+        },
+
+        // ▼ ОПРОС
+        opros: {
+            title:  'Опрос в Telegram',
+            note:   'Сейчас откроем канал с опросом. Голосовать можно прямо там.',
+            url:    'https://t.me/zack14ff',
+            label:  'Telegram',
+            accent: '#4aa8e0'
+        },
+
+        // ▼ ЗАГОТОВКА ПОД БУДУЩИЙ ЭВЕНТ — поменяй url и тексты
+        event: {
+            title:  'Эвент на сервере',
+            note:   'Сбор и правила — в Discord. Там же скажут, когда заходить.',
+            url:    'https://dsc.gg/no-more-return',
+            label:  'Discord',
+            accent: '#8b9cf7',
+            delay:  6
+        },
+
+        // ▼ ЕЩЁ ОДНА ЗАГОТОВКА
+        discord: {
+            title:  'Discord проекта',
+            note:   'Заявки, новости и всё общение живут там.',
+            url:    'https://dsc.gg/zakap',
+            label:  'Discord',
+            accent: '#8b9cf7'
+        }
+    };
+
+    const DEFAULT_DELAY = 5; // секунд по умолчанию
+
+    /* ---------- выбор адреса по ключу из ссылки ---------- */
+    const key = (new URLSearchParams(location.search).get('to') || 'default').toLowerCase();
+    const target = TARGETS[key] || TARGETS.default;
+    const delay = Math.max(1, Number(target.delay) || DEFAULT_DELAY);
+
+    const $ = id => document.getElementById(id);
+    const titleEl = $('title'), noteEl = $('note'), destBox = $('dest'), destText = $('destText');
+    const numEl = $('num'), dial = $('dial'), bar = $('bar');
+    const goNow = $('goNow'), goLabel = $('goLabel');
+    const cancelBtn = $('cancelBtn'), homeBtn = $('homeBtn'), hint = $('hint'), eyebrow = $('eyebrow');
+
+    /* ---------- если ключ есть, но адрес не прописан ---------- */
+    if (!target || !target.url) {
+        titleEl.textContent = 'Ссылка не настроена';
+        noteEl.textContent = 'Этот переход ещё не заполнен. Загляни позже или иди на главную.';
+        dial.hidden = true;
+        goNow.hidden = true;
+        cancelBtn.hidden = true;
+        homeBtn.hidden = false;
+        hint.hidden = true;
+    } else {
+        document.body.style.setProperty('--accent', target.accent || '#ffffff');
+        document.documentElement.style.setProperty('--delay', delay + 's');
+        bar.style.setProperty('--delay', delay + 's');
+
+        titleEl.textContent = target.title;
+        noteEl.textContent  = target.note || '';
+        goLabel.textContent = 'Перейти в ' + (target.label || 'ссылку');
+        goNow.href = target.url;
+        goNow.rel  = 'noopener';
+
+        // показываем, куда именно ведём — человек должен видеть адрес заранее
+        try {
+            destText.textContent = new URL(target.url).host;
+        } catch (e) {
+            destText.textContent = target.url;
+        }
+        destBox.hidden = false;
+
+        /* ---------- обратный отсчёт ---------- */
+        let left = delay;
+        numEl.textContent = left;
+
+        const tick = setInterval(() => {
+            left -= 1;
+            if (left <= 0) {
+                clearInterval(tick);
+                numEl.textContent = '0';
+                // replace, а не href: кнопка «назад» не вернёт в этот же редирект
+                location.replace(target.url);
+                return;
+            }
+            numEl.textContent = left;
+        }, 1000);
+
+        /* ---------- «Отменить» ---------- */
+        cancelBtn.addEventListener('click', () => {
+            clearInterval(tick);
+            bar.style.animationPlayState = 'paused';
+
+            eyebrow.textContent = 'Отменено';
+            titleEl.textContent = 'Переход отменён';
+            noteEl.textContent  = 'Никуда не уводим. Можно перейти вручную или вернуться на сайт.';
+            dial.hidden = true;
+            hint.hidden = true;
+
+            goLabel.textContent = 'Всё-таки перейти в ' + (target.label || 'ссылку');
+            cancelBtn.hidden = true;
+            homeBtn.hidden = false;
+            goNow.focus();
+        });
+
+        // Esc тоже отменяет — привычно
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape' && !cancelBtn.hidden) cancelBtn.click();
+        });
+    }
+
+    /* ---------- звёзды на фоне (как на index и 404) ---------- */
+    (function generateStars() {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        const container = document.getElementById('bgStars');
+        const count = window.innerWidth < 768 ? 35 : 70;
+
+        for (let i = 0; i < count; i++) {
+            const star = document.createElement('span');
+            star.className = 'star';
+            star.textContent = '*';
+
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.fontSize = (10 + Math.random() * 22) + 'px';
+            star.style.animationDuration = (3 + Math.random() * 5) + 's';
+            star.style.animationDelay = (Math.random() * 8) + 's';
+            star.style.opacity = '0';
+
+            container.appendChild(star);
+        }
+    })();
+    </script>
+
+</body>
+</html>
