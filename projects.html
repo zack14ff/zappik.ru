@@ -10,6 +10,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Проекты — Zakodka">
 <meta property="og:description" content="SCAG mod loader, моды для Minecraft и архив проектов.">
+<meta property="og:site_name" content="Zakodka">
+<meta property="og:url" content="https://zakodka.ru/projects.html">
+<meta property="og:image" content="https://zakodka.ru/template/Silly2.jpg">
+<meta property="og:image:alt" content="Zakodka — проекты">
+<meta name="twitter:card" content="summary_large_image">
 <style>
   /* ============================================
      ЛОКАЛЬНЫЕ ШРИФТЫ (те же, что на port.html)
@@ -540,7 +545,8 @@
     font-size:0.82rem; color:var(--muted);
     display:inline-block; min-height:1.4em;
     animation:levitate 4s ease-in-out infinite;
-    transition:opacity .5s ease;
+    opacity:1;
+    transition:none;
   }
   @keyframes levitate{
     0%,100%{transform:translateY(0);}
@@ -570,14 +576,84 @@
        обломки без движения слиплись бы в центре — убираем их */
     .debris{display:none;}
   }
+
+  /* ---------- ЗАГРУЗКА → ОШИБКА (до переключения на старый стиль) ---------- */
+  .retro-only{display:none;}
+  #boot{
+    position:fixed; inset:0; z-index:9000;
+    background:#000;
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+    transition:opacity .35s ease;
+  }
+  #boot.gone{opacity:0; pointer-events:none;}
+  .boot-box{width:min(520px,100%); color:var(--cream);}
+  .boot-logo{
+    width:54px; height:auto; margin-bottom:18px;
+    image-rendering:pixelated;
+    animation:float-loaf 5s ease-in-out infinite;
+  }
+  .boot-log{
+    font-family:'FontLink', monospace; font-size:0.8rem; line-height:1.75;
+    color:var(--muted); min-height:190px; white-space:pre-wrap;
+  }
+  .boot-log b{color:var(--gold); font-weight:400;}
+  .boot-bar{
+    height:16px; margin-top:16px;
+    border:2px solid var(--crust-dark); background:rgba(255,255,255,0.04);
+  }
+  .boot-bar i{display:block; height:100%; width:0; background:var(--gold); transition:width .25s linear;}
+  .fatal{
+    display:none; margin-top:10px;
+    border:3px solid #8a2a2a; background:#1a0909; padding:20px;
+    font-family:'FontLink', monospace;
+  }
+  #boot.error .fatal{display:block;}
+  #boot.error .boot-bar{display:none;}
+  .fatal h3{
+    font-family:'FontSmall', monospace; font-size:0.7rem; letter-spacing:0.12em;
+    text-transform:uppercase; color:#ff6b6b; margin-bottom:12px; font-weight:400;
+  }
+  .fatal p{font-size:0.8rem; color:#e9c9c9; line-height:1.6;}
+  .fatal button{
+    margin-top:16px; font-family:'FontSmall', monospace; font-size:0.66rem;
+    padding:10px 22px; background:#c8c8c8; color:#000; border:2px outset #eee; cursor:pointer;
+  }
+  #boot.glitch .boot-box{animation:boot-glitch .45s steps(2) 2;}
+  @keyframes boot-glitch{
+    0%{transform:translate(5px,0);}
+    50%{transform:translate(-5px,2px);}
+    100%{transform:none;}
+  }
+
+  /* ---------- EMBED-ССЫЛКИ (как в Discord) ---------- */
+  .embeds{display:flex; flex-direction:column; align-items:flex-start; margin-top:26px;}
+  .embeds .dc-embed{width:100%;}
 </style>
+<link id="retro-css" rel="stylesheet" href="projects-retro.css" disabled>
 </head>
 <body>
+
+<!-- ============ ЗАГРУЗКА → ОШИБКА → «старый сайт» ============ -->
+<div id="boot" role="status" aria-live="polite">
+  <div class="boot-box">
+    <img class="boot-logo" src="template/white.png" alt="">
+    <div class="boot-log" id="bootLog"></div>
+    <div class="boot-bar"><i id="bootBar"></i></div>
+    <div class="fatal" role="alert">
+      <h3>Ошибка · stylesheet</h3>
+      <p>Не удалось применить modern.css (код 0x2011). Страница отображается без оформления.</p>
+      <button type="button" id="bootOk">OK</button>
+    </div>
+  </div>
+</div>
 
 <div class="topbar">
   <a class="back-link" href="index.html">← Навигация</a>
   <a class="back-link" href="port.html">Обо мне →</a>
 </div>
+
+<div class="retro-only marquee" aria-hidden="true"><span>★★ ДОБРО ПОЖАЛОВАТЬ НА СТРАНИЦУ ПРОЕКТОВ ★★ ОБНОВЛЕНИЯ ПО СУББОТАМ (НЕ ТОЧНО) ★★ СИГНАТУРА ZAKODKA ★★</span></div>
 
 <!-- ================= HERO ================= -->
 <section class="hero">
@@ -618,10 +694,21 @@
             <div class="spec"><dt>Статус</dt><dd>В разработке</dd></div>
           </dl>
 
-          <div class="btn-row">
-            <!-- ▼ ССЫЛКИ: подставь свои, когда появятся. Пока ведут в Discord -->
-            <a class="mc-btn" href="https://dsc.gg/zakap" target="_blank" rel="noopener">Следить за релизом</a>
-            <a class="mc-btn ghost" href="https://modrinth.com/user/GreenZack" target="_blank" rel="noopener">Мои страницы</a>
+          <!-- ▼ ССЫЛКИ: подставь свои, когда появятся. Пока ведут в Discord.
+               data-embed — ссылка показывается карточкой, как embed в Discord -->
+          <div class="embeds">
+            <a data-embed href="https://gamebanana.com/mods/715475" target="_blank" rel="noopener"
+         data-site="GameBanana" data-color="#7ac143"
+         data-title="SCAG mod loader на GameBanana"
+         data-desc="Страница загрузчика: описание и файлы."></a>
+      <a data-embed href="https://dsc.gg/zakap" target="_blank" rel="noopener"
+               data-site="Discord · zakap" data-color="#5865f2"
+               data-title="Следить за релизом SCAG"
+               data-desc="Сборки, прогресс и тесты — в Discord."></a>
+            <a data-embed href="https://modrinth.com/user/zakap" target="_blank" rel="noopener"
+               data-site="Modrinth" data-color="#1bd96a"
+               data-title="Мои страницы на Modrinth"
+               data-desc="Всё, что доведено до релиза."></a>
           </div>
         </div>
 
@@ -652,8 +739,11 @@
          Пока список пуст — тут стоят пустые слоты, как в инвентаре. -->
     <div class="mod-grid" id="modGrid"></div>
 
-    <div style="text-align:center;">
-      <a class="mc-btn" href="https://modrinth.com/user/GreenZack" target="_blank" rel="noopener">Все моды на Modrinth</a>
+    <div class="embeds">
+      <a data-embed href="https://modrinth.com/user/zakap" target="_blank" rel="noopener"
+         data-site="Modrinth" data-color="#1bd96a"
+         data-title="Все моды на Modrinth"
+         data-desc="Полный список моих модов и версии под каждую сборку."></a>
     </div>
   </div>
 </section>
@@ -688,7 +778,84 @@
   <div class="divider"></div>
   <div class="float-text pixel" id="float-text">???</div>
   <div class="copyright">© zakap · <a href="index.html">Zakodka</a> 2026</div>
+  <div class="retro-only counter">Вы посетитель № <b>004217</b></div>
+  <div class="retro-only badges">
+    <span class="b1">Best viewed 800×600</span>
+    <span class="b2">IE 6+</span>
+    <span class="b3">Flash 9</span>
+  </div>
 </footer>
+<script src="embed.js"></script>
+
+<script>
+/* ---------- загрузка → ошибка → старый сайт ---------- */
+(() => {
+  const boot = document.getElementById('boot');
+  const logEl = document.getElementById('bootLog');
+  const barEl = document.getElementById('bootBar');
+  const okBtn = document.getElementById('bootOk');
+  const retro = document.getElementById('retro-css');
+  if (!boot || !logEl || !barEl || !retro) return;
+
+  const LINES = [
+    'mount /zakodka/projects …',
+    'loading fonts ............ <b>ok</b>',
+    'loading scag/mod-list .... <b>ok</b>',
+    'resolving modrinth ....... <b>ok</b>',
+    'hydrating embeds ......... <b>ok</b>',
+    'applying modern.css ...... <b>…</b>'
+  ];
+
+  let done = false;
+  let autoTimer = null;
+
+  // переключение: глитч, включаем старый CSS, гасим оверлей
+  function toRetro() {
+    if (done) return;
+    done = true;
+    clearTimeout(autoTimer);
+    boot.classList.remove('error');
+    boot.classList.add('glitch');
+    setTimeout(() => {
+      retro.disabled = false;
+      document.body.classList.add('retro');
+      boot.classList.add('gone');
+      setTimeout(() => boot.remove(), 400);
+    }, 450);
+  }
+
+  function showError() {
+    boot.classList.add('error');
+    barEl.parentElement.style.display = 'none';
+    logEl.insertAdjacentHTML('beforeend', '\n<b style="color:#ff6b6b">ERR 0x2011: modern.css</b>');
+    okBtn.focus();
+    // если никто не нажал OK — всё равно превращаемся в старый сайт
+    autoTimer = setTimeout(toRetro, 2600);
+  }
+
+  okBtn.addEventListener('click', toRetro);
+
+  // проигрываем строки лога и двигаем полосу
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const step = reduce ? 0 : 280;
+  let i = 0;
+
+  function next() {
+    if (i < LINES.length) {
+      logEl.textContent = '';
+      LINES.slice(0, i + 1).forEach((l, k) => {
+        logEl.insertAdjacentHTML('beforeend', (k ? '\n' : '') + l);
+      });
+      barEl.style.width = Math.round(((i + 1) / LINES.length) * 100) + '%';
+      i++;
+      setTimeout(next, step);
+    } else {
+      setTimeout(showError, reduce ? 0 : 500);
+    }
+  }
+  next();
+})();
+</script>
 
 <script>
 /* ======================================================================
@@ -724,9 +891,12 @@ const KINDS = {
        url:"https://modrinth.com/mod/...", img:"images/mods/moimod.jpg" },
    ====================================================================== */
 const MODS = [
-  { kind:"qol",   name:"Название мода", note:"Что делает мод — одной строкой.", img:"images/mods/1.jpg", draft:true },
-  { kind:"tech",  name:"Название мода", note:"Механики, блоки, рецепты.",       img:"images/mods/2.jpg", draft:true },
-  { kind:"decor", name:"Название мода", note:"Мебель, декор, мелочи для базы.", img:"images/mods/3.jpg", draft:true },
+  { kind:"qol",   name:"No More Visuals", note:"Страница мода на CurseForge.",
+    url:"https://www.curseforge.com/minecraft/mc-mods/no-more-visuals",
+    img:"https://cdn.modrinth.com/data/cached_images/779906fa68bc898092b3629518f3a96d143c0e33.jpeg" },
+  { kind:"decor", name:"Better Illuminated", note:"Ресурспак на Modrinth.",
+    url:"https://modrinth.com/resourcepack/better-illuminated",
+    img:"https://cdn.modrinth.com/data/YPStNGZz/images/e29cd9ec88a36169c96ef7096b8ea881fd05db3f.png" },
 ];
 
 /* ---------- сборка сетки модов ---------- */
@@ -881,12 +1051,9 @@ const MODS = [
   ];
   const el = document.getElementById('float-text');
   if (!el) return;
+  // без плавного исчезновения: фраза меняется резко
   setInterval(() => {
-    el.style.opacity = 0;
-    setTimeout(() => {
-      el.textContent = phrases[Math.floor(Math.random() * phrases.length)];
-      el.style.opacity = 1;
-    }, 500);
+    el.textContent = phrases[Math.floor(Math.random() * phrases.length)];
   }, 3200);
 })();
 </script>

@@ -1,0 +1,173 @@
+/* ======================================================================
+   projects-retro.css — «старый сайт» 2011–2017.
+   Подключается не сразу: после псевдоошибки на загрузке (см. projects.html).
+   Градиентные шапки, синие ссылки, рамки, счётчик посетителей.
+   ====================================================================== */
+
+html{background:#c9d6e3;}
+
+body{
+  background:
+    linear-gradient(#e9f0f7 0, #c9d6e3 320px),
+    #c9d6e3;
+  color:#222;
+  font-family:Verdana, Tahoma, Arial, sans-serif;
+  font-size:13px;
+  overflow-x:auto;
+}
+body::before{display:none;}
+.retro-only{display:block;}
+
+a{color:#1a4f9c;}
+a:hover{color:#d1202b;}
+
+.wrap{max-width:820px; padding:0 10px;}
+.topbar{max-width:820px; padding:10px 10px 0;}
+.back-link{
+  font-family:Verdana, Arial, sans-serif; font-size:12px;
+  text-transform:none; letter-spacing:0; color:#1a4f9c;
+  background:linear-gradient(#ffffff, #dde7f1);
+  border:1px solid #7f9db9; padding:4px 10px; border-radius:4px;
+}
+.back-link:hover{color:#d1202b;}
+
+/* marquee-строка */
+.marquee{
+  max-width:820px; margin:10px auto 0; overflow:hidden;
+  background:linear-gradient(#ffe97a, #ffd23f);
+  border:1px solid #c9a400; font:bold 12px Verdana, sans-serif; color:#5a3b00;
+  white-space:nowrap; padding:4px 0;
+}
+.marquee span{display:inline-block; padding-left:100%; animation:marq 14s linear infinite;}
+@keyframes marq{to{transform:translateX(-100%);}}
+
+/* герой — как шапка старого сайта */
+.hero{
+  max-width:820px; margin:14px auto 0; padding:0;
+  background:linear-gradient(#5b8fd1, #2c5fa6);
+  border:1px solid #1f4680; border-radius:6px 6px 0 0;
+  color:#fff; text-align:center; padding:22px 16px 18px;
+}
+.logo-mark{animation:none; filter:none; width:56px; margin-bottom:12px; display:inline-block;}
+.eyebrow{
+  font-family:Verdana, sans-serif; font-size:11px; letter-spacing:0;
+  color:#fff; background:#1f4680; border:1px solid #0f2d55; border-radius:3px;
+  padding:3px 8px; margin-bottom:12px;
+}
+h1{
+  font-family:Georgia, 'Times New Roman', serif; font-size:28px; font-weight:bold;
+  letter-spacing:0; text-transform:none; line-height:1.2;
+  background:none; -webkit-text-fill-color:#fff; color:#fff;
+  text-shadow:1px 1px 0 #0f2d55;
+}
+h1 .accent{color:#ffe97a; -webkit-text-fill-color:#ffe97a;}
+.sub{font-family:Verdana, sans-serif; font-size:13px; color:#dfe9f7; line-height:1.5;}
+
+/* блоки — таблица в рамке */
+.scag, .mods{padding:0 0 14px; max-width:820px; margin:0 auto;}
+.section-label{
+  font-family:Verdana, sans-serif; font-size:12px; letter-spacing:0; text-transform:none;
+  background:linear-gradient(#f7fbff, #d6e2ef); color:#2d4a6e;
+  border:1px solid #7f9db9; border-bottom:none; padding:6px 12px; margin:0;
+}
+.section-label span{color:#d1202b;}
+.slab, .mods-wrap{
+  background:#fff; border:1px solid #7f9db9; border-radius:0 0 6px 6px;
+  box-shadow:none; padding:16px;
+}
+.scag .wrap, .mods .wrap{padding:0;}
+
+.scag-inner{grid-template-columns:minmax(0,1fr) 230px; gap:18px;}
+.tag{font-family:Verdana, sans-serif; font-size:11px; letter-spacing:0; text-transform:none;
+  color:#fff; background:linear-gradient(#7fb0e0, #3d75b8); border:1px solid #2c5a92; border-radius:3px; padding:2px 7px;}
+.tag.wip{background:linear-gradient(#ffd66b, #e5a100); color:#3d2a00; border-color:#b07c00;}
+.scag h2{font-family:Georgia, serif; font-size:30px; text-transform:none; letter-spacing:0; color:#1f3f66; text-shadow:none;}
+.scag h2 .accent{color:#d1202b;}
+.scag .kind, .scag p.desc, .spec dt{font-family:Verdana, sans-serif; color:#444; text-transform:none; letter-spacing:0;}
+.scag p.desc{font-size:13px; line-height:1.6;}
+.spec{border-bottom:1px solid #e3e9f1;}
+.spec dd{font-family:Verdana, sans-serif; font-size:12px; color:#222;}
+
+.mc-btn{
+  font-family:Verdana, sans-serif; font-size:12px; text-transform:none; letter-spacing:0; font-weight:normal;
+  color:#fff; background:linear-gradient(#8fc3f0, #2f6fb5); border:1px solid #1f4f86;
+  border-radius:3px; padding:7px 14px; box-shadow:inset 0 1px 0 rgba(255,255,255,.5);
+}
+.mc-btn:hover{transform:none; box-shadow:inset 0 1px 0 rgba(255,255,255,.5); background:linear-gradient(#b5dbff, #3b7fc8); color:#fff;}
+.mc-btn.ghost{background:linear-gradient(#fff, #e6edf5); color:#1f4f86;}
+.loader-box{background:#f3f6fa; border:1px solid #7f9db9; box-shadow:none; border-radius:0;}
+.loader-title{font-family:Verdana, sans-serif; color:#2d4a6e; text-transform:none; letter-spacing:0;}
+.loader-track i{background:#dfe6ee;}
+.loader-track i.on{background:linear-gradient(#8fc3f0, #2f6fb5); box-shadow:none;}
+.loader-log{color:#2f6fb5;}
+
+/* модов */
+.mods-head h2{font-family:Georgia, serif; font-size:24px; text-transform:none; letter-spacing:0; color:#1f3f66;}
+.mods-head p{font-family:Verdana, sans-serif; font-size:12px; text-transform:none; letter-spacing:0; color:#444; line-height:1.6;}
+.mod-grid{gap:10px;}
+.mod-card{background:#f7fafd; border:1px solid #a9bdd3; border-radius:4px; box-shadow:none; color:#222;}
+a.mod-card:hover{background:#eaf3fc; box-shadow:0 0 0 2px #9cc3ea; transform:none;}
+.mod-card .name{font-family:Verdana, sans-serif; font-size:13px; color:#1f3f66;}
+.mod-card .note{font-family:Verdana, sans-serif; font-size:12px; color:#444;}
+.mod-card .go{font-family:Verdana, sans-serif; text-transform:none; letter-spacing:0; font-size:12px; color:#2f6fb5;}
+.mod-shot{border-bottom:1px solid #a9bdd3; background:#dfe8f2;}
+.mod-kind{font-family:Verdana, sans-serif; text-transform:none; letter-spacing:0; background:#fff; border:1px solid #7f9db9; color:#222;}
+.mod-card.is-draft{border-style:dashed; background:#f1f3f6;}
+.mod-card.is-draft .name{color:#6b7b8e;}
+.mod-card.is-draft .note, .mod-card.is-draft .go{color:#8a97a6;}
+.slot{border:1px dashed #a9bdd3; background:#f7f9fb; color:#7b8a9b; box-shadow:none;}
+.slot span{font-family:Verdana, sans-serif; text-transform:none; letter-spacing:0;}
+
+/* «чёрная дыра» превращается в обычный блок «Архив» */
+.void{
+  background:linear-gradient(#e9f0f7, #d4dfeb);
+  padding:0 0 18px; margin:14px auto 0; max-width:820px;
+  border:1px solid #7f9db9; border-radius:6px;
+}
+.void-title{
+  font-family:Georgia, serif; font-size:22px; color:#1f3f66; text-shadow:none;
+  background:linear-gradient(#f7fbff, #d6e2ef); border-bottom:1px solid #7f9db9;
+  padding:10px 14px; margin:0; text-align:left; max-width:none; text-wrap:wrap; border-radius:6px 6px 0 0;
+}
+.void-sub, .void-note{font-family:Verdana, sans-serif; text-transform:none; letter-spacing:0; color:#555;}
+.void-sub{text-align:left; padding:10px 14px 0; margin:0;}
+.void-note{padding:0 14px; margin-top:8px; font-size:11px;}
+.hole-stage, .lens, .disk, .horizon, .debris{display:none;}
+.lost{margin:12px 14px 0; max-width:none; gap:6px;}
+.lost a{
+  background:linear-gradient(#ffffff, #e5edf6); border:1px solid #9bb3cc; color:#1a4f9c;
+  font-family:Verdana, sans-serif; font-size:13px; padding:7px 10px; border-radius:3px;
+}
+.lost a:hover{background:#fff7d6; border-color:#c9a400; color:#d1202b; transform:none;}
+.lost a .dot{background:#2f6fb5; border-radius:50%; width:7px; height:7px;}
+.lost a small{font-family:Verdana, sans-serif; text-transform:none; letter-spacing:0; color:#6b7b8e; font-size:11px;}
+
+/* подвал */
+footer{background:#dfe8f2; border-top:1px solid #7f9db9; padding:18px 14px 24px; margin-top:18px; max-width:820px; margin-left:auto; margin-right:auto;}
+.divider{display:none;}
+.float-text{font-family:Verdana, sans-serif; color:#333; animation:none; font-size:12px;}
+.copyright{color:#555; font-size:11px;}
+.copyright a{color:#1a4f9c;}
+
+/* счётчик и бейджи — только в «старой» версии */
+.counter{
+  margin:14px auto 0; max-width:820px; text-align:center;
+  font-family:'Courier New', monospace; font-size:12px; color:#222;
+}
+.counter b{
+  display:inline-block; background:#000; color:#39ff14; padding:2px 6px; letter-spacing:2px;
+  border:2px inset #888;
+}
+.badges{margin-top:10px; text-align:center;}
+.badges span{
+  display:inline-block; margin:0 3px; padding:3px 6px; font:bold 10px Verdana, sans-serif;
+  color:#fff; border:1px solid #333; border-radius:3px;
+}
+.badges .b1{background:#2b5fa8;} .badges .b2{background:#e46c0a;} .badges .b3{background:#5a8c2f;}
+
+/* embed-список — в старом стиле тоже видно как embed */
+.embeds{display:flex; flex-direction:column; align-items:flex-start; margin-top:20px;}
+.dc-embed{border:1px solid #9bb3cc; border-radius:3px;}
+.dc-embed .dc-bar{background:var(--dc, #2f6fb5);}
+
+.topbar, .hero{font-family:Verdana, sans-serif;}
