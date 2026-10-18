@@ -69,6 +69,10 @@
     const title = a.dataset.title || info.title || a.textContent.trim() || url.href;
     const desc = a.dataset.desc || info.desc || '';
     const image = a.dataset.image || info.image || '';
+    // необязательный перевод: data-title-ru / data-desc-ru (язык берётся из <html lang>)
+    const ru = document.documentElement.lang === 'ru';
+    const titleRu = a.dataset.titleRu || '';
+    const descRu = a.dataset.descRu || '';
 
     const wrap = document.createElement('div');
     wrap.className = 'dc-embed';
@@ -87,7 +91,8 @@
     const titleEl = document.createElement('a');
     titleEl.className = 'dc-title';
     titleEl.href = a.href;
-    titleEl.textContent = title;
+    titleEl.textContent = (ru && titleRu) ? titleRu : title;
+    if (titleRu) { titleEl.dataset.en = title; titleEl.dataset.ru = titleRu; }
     if (a.target) titleEl.target = a.target;
     if (a.rel) titleEl.rel = a.rel;
 
@@ -96,7 +101,8 @@
     if (desc) {
       const descEl = document.createElement('div');
       descEl.className = 'dc-desc';
-      descEl.textContent = desc;
+      descEl.textContent = (ru && descRu) ? descRu : desc;
+      if (descRu) { descEl.dataset.en = desc; descEl.dataset.ru = descRu; }
       body.append(descEl);
     }
 
