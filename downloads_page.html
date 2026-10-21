@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Downloads — Minecraft Mods</title>
+  <style>
+    :root {
+      --page: #202020;
+      --panel: #f5f8fb;
+      --line: #b9c7d3;
+      --text: #263746;
+      --muted: #637586;
+      --link: #1768a8;
+      --button: #e8eef4;
+      --button-hover: #d6e3ef;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 28px 14px;
+      color: var(--text);
+      font: 13px Verdana, Arial, sans-serif;
+      background-color: var(--page);
+      background-image:
+        radial-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        radial-gradient(rgba(0,0,0,.18) 1px, transparent 1px);
+      background-size: 4px 4px, 7px 7px;
+    }
+
+    .page {
+      width: min(900px, 100%);
+      margin: 0 auto;
+      background: var(--panel);
+      border: 1px solid #c5d0d9;
+      box-shadow: 0 0 0 8px rgba(0,0,0,.12);
+      min-height: 600px;
+    }
+
+    .topbar {
+      background: #8392a5;
+      color: #fff;
+      padding: 12px 16px;
+      border-bottom: 1px solid #6f8094;
+      font-size: 12px;
+    }
+
+    .topbar a { color: white; }
+
+    main { padding: 26px 30px 34px; }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 27px;
+      font-weight: normal;
+      color: #344b5e;
+    }
+
+    .subtitle {
+      margin: 0 0 24px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .notice {
+      border: 1px solid var(--line);
+      background: #edf3f8;
+      padding: 12px 14px;
+      margin: 18px 0 24px;
+      line-height: 1.55;
+    }
+
+    h2 {
+      font-size: 18px;
+      font-weight: normal;
+      margin: 25px 0 12px;
+      padding-bottom: 7px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .downloads {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .download {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 15px;
+      min-height: 190px;
+    }
+
+    .download h3 {
+      margin: 0 0 9px;
+      font-size: 15px;
+      color: #29465e;
+    }
+
+    .download p {
+      margin: 0 0 14px;
+      color: #526474;
+      line-height: 1.55;
+      flex: 1;
+    }
+
+    .meta {
+      display: block;
+      margin-bottom: 12px;
+      color: #788896;
+      font-size: 11px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 9px 13px;
+      border: 1px solid #a9bac9;
+      background: var(--button);
+      color: var(--link);
+      font-weight: bold;
+      text-decoration: underline;
+      cursor: pointer;
+      font: bold 12px Verdana, Arial, sans-serif;
+      box-shadow: inset 0 1px 0 #fff;
+    }
+
+    .button:hover, .button:focus {
+      background: var(--button-hover);
+      border-color: #8099ad;
+    }
+
+    .button:focus-visible { outline: 2px solid #1768a8; outline-offset: 2px; }
+
+    .faq {
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 13px 15px;
+      line-height: 1.65;
+    }
+
+    .faq p { margin: 7px 0 12px; }
+    a { color: var(--link); }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 13px 30px;
+      color: #738291;
+      font-size: 11px;
+      background: #edf2f6;
+    }
+
+    @media (max-width: 680px) {
+      body { padding: 12px 8px; }
+      main { padding: 22px 16px; }
+      .downloads { grid-template-columns: 1fr; }
+      .download { min-height: auto; }
+      footer { padding: 13px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <a href="potaalpha.html">Main</a> &nbsp;»&nbsp; Downloads
+      <span style="float:right">Minecraft Mods Archive</span>
+    </div>
+
+    <main>
+      <h1>Downloads</h1>
+      <p class="subtitle">
+        Добро пожаловать на страницу загрузок. Выберите нужный файл ниже.
+        Перед установкой прочитайте описание и сделайте резервную копию файлов.
+      </p>
+
+      <div class="notice">
+        <strong>Внимание:</strong> эта страница не локализирована,
+        переводите сами <code>ПЕРЕВОДЧИКОМ</code> в браузере.
+      </div>
+
+      <h2>Выберите загрузку</h2>
+      <div class="downloads">
+        <section class="download">
+          <h3>PotaAlpha a1.1.2_01</h3>
+          <span class="meta">Версия 1.0 · JAR</span>
+          <p>Most stable version of utlity/client</p>
+          <a class="button" href="https://github.com/zack14ff/potatoalpha/raw/refs/heads/main/PotaAlpha-1.0-a1.1.2_01.jar" download>Client</a>
+          <a class="button" href="https://github.com/zack14ff/potatoalpha/raw/refs/heads/main/PotaAlpha-1.0-ModLoader-a1.1.2_01.jar" download>ULTRA MODLOADER!!!!</a>
+        </section>
+
+        <section class="download">
+          <h3>PotaAlpha b1.7.3</h3>
+          <span class="meta">EARLY TEST CLIENT · JAR</span>
+          <p>no recomend for using</p>
+          <a class="button" href="https://github.com/zack14ff/potatoalpha/raw/refs/heads/main/PotaAlpha-b1.7.3.jar" download>Client + MODLOADER</a>
+        </section>
+
+        <section class="download">
+          <h3>PotaBetter</h3>
+          <span class="meta">VERSION 1.0 · ???</span>
+          <p>soon.</p>
+        </section>
+      </div>
+
+    </main>
+
+    <footer>
+      Downloads · BEST INSTALLER
+    </footer>
+  </div>
+</body>
+</html>

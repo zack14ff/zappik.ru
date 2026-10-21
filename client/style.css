@@ -41,7 +41,7 @@ header.top{
   position:sticky; top:0; z-index:50;
   background:url('bg_top.png');
   image-rendering:pixelated;
-  height:48px;
+  height:50px;
   border-bottom:2px solid rgba(0,0,0,0.55);
   box-shadow:0 2px 0 rgba(255,255,255,0.05), 0 4px 10px rgba(0,0,0,0.5);
   padding:0 16px;
@@ -72,8 +72,8 @@ header.top{
 
 /* ---------- баннер ---------- */
 .banner{
-  position:relative; min-height:430px;
-  background:#6fa0ff url('hero.png') center bottom/cover no-repeat;
+  position:relative; min-height:500px;
+  background:#6fa0ff url('pota.png') center bottom/cover no-repeat;
   image-rendering:pixelated;
   border-bottom:3px solid rgba(0,0,0,0.6);
   display:flex; align-items:center; overflow:hidden;

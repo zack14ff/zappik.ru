@@ -897,3 +897,19 @@ document.querySelectorAll('.win .close').forEach(btn=>{
                     "https://placehold.co/800x500/2F4F4F/FFFFFF?text=Шахта+4"
                 ]
             }
+
+
+
+
+
+            # DOWNLOAD PAGE FAQ
+
+                  <h2>Установка и помощь</h2>
+      <div class="faq">
+        <p><strong>Q: Кнопка не скачивает файл?</strong><br>
+        A: Проверьте ссылку в атрибуте <code>href</code> и убедитесь, что файл размещён по указанному адресу.</p>
+        <p><strong>Q: Можно ли поменять названия кнопок?</strong><br>
+        A: Да. Измените текст внутри любой кнопки и описание над ней.</p>
+        <p><strong>Q: Как добавить свои файлы?</strong><br>
+        A: Загрузите файлы на хостинг и вставьте прямые ссылки вместо примеров <code>files/download-1.zip</code> и т. д.</p>
+      </div>
